@@ -15,11 +15,14 @@ public class Employee {
     @Column(name = "emp_id", length = Constant.ID_LEN)
     private String employeeId;
 
-    @Column(name = "emp_no", length = Constant.EMPLOYEE_NO_LEN)
+    @Column(name = "emp_no", length = Constant.EMPLOYEE_NO_LEN, unique = true)
     private String employeeNo;
 
     @Column(name = "emp_nm", length = Constant.NAME_LEN)
     private String employeeName;
+
+    @Column(name = "emp_email", length = Constant.NAME_LEN, unique = true)
+    private String employeeEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dept_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
