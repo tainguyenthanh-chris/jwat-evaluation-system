@@ -5,6 +5,7 @@ import com.clv.evaluation_system_backend.util.Constant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
+@NoArgsConstructor
 public abstract class AuditableEntity {
 
     @Column(name = "cre_dt", nullable = false, updatable = false)
@@ -23,19 +25,20 @@ public abstract class AuditableEntity {
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cre_usr_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "cre_usr_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     private User createUser;
 
-    @Column(name = "upd_dt", nullable = false)
+    @Column(name = "upd_dt")
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upd_usr_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "upd_usr_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     private User updateUser;
 
     @Column(name = "del_flg", length = 1)
     private String deleteFlag = Constant.DEFAULT_DEL_FLAG;
+
 }

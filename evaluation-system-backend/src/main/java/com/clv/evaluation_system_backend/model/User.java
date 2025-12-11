@@ -4,24 +4,28 @@ import com.clv.evaluation_system_backend.util.Constant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "usr")
 public class User {
     @Id
     @Column(name = "usr_id", length = Constant.ID_LEN)
-    private String userId;
+    private String userId; // is emp_id
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "emp_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    @JsonIgnore
-    private Employee employee;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "emp_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+//    @JsonIgnore
+//    private Employee employee;
 
     @Column(name = "usr_pwd", length = 10)
     private String userPassword;

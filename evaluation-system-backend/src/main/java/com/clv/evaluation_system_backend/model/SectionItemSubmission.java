@@ -29,6 +29,9 @@ public class SectionItemSubmission {
     @JsonIgnore
     private FormSectionItemTemplate formSectionItemTemplate;
 
+    @Column(name="sec_item_type", length = Constant.CODE_LEN)
+    private String sectionItemType;
+
     @Column(name="self_rev_point")
     private Integer selfReviewPoint;
 
