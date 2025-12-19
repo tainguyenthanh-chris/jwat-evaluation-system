@@ -98,6 +98,7 @@ CREATE TABLE team (
                       leader_id VARCHAR(30),
                       manager_id VARCHAR(30),
                       dept_id VARCHAR(30),
+                      parent_id VARCHAR(30) NULL,
 
                       cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                       cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,

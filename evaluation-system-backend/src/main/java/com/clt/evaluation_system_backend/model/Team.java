@@ -19,6 +19,7 @@ public class Team {
     private String leaderId;
     private String managerId;
     private String deptId;
+    private String parentId;
 
     private String creUsrId;
     private LocalDateTime creDt;
