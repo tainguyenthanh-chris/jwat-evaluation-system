@@ -12,11 +12,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SeqTable("form_tmpl")
 public class FormTmpl {
+
+    private String formSecItemTmplId;
     private String formTmplId;
-    private String formTmplTitle;
-    private Integer formTmplVer;
-    private String deptCd;
-    private String posCd;
-    private String lvlCd;
-    private String formTmplStatus;
+    private String secTmplId;
+    private Integer secOrdNo;
+    private String secItemTmplId;
+    private Integer secItemOrdNo;
+
+    private String creUsrId;
+    private LocalDateTime creDt;
+    private String updUsrId;
+    private LocalDateTime updDt;
+    private String delFlg;
 }

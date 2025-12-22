@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PosController {
     private final PosService posService;
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> create(@RequestBody PosRequest req) {
         posService.create(req);
         return ApiResponse.ok("insert position success");

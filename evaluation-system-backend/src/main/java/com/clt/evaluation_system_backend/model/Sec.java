@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SeqTable("sec_tmpl")
-public class SecTmpl {
+@SeqTable("sec")
+public class Sec {
     private String secTmplId;
     private String secTmplTitle;
     private String secTmplAnswerType;

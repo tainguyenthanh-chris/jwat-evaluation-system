@@ -134,26 +134,26 @@ CREATE TABLE usr (
                      del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
--- form_tmpl definition
--- DROP TABLE form_tmpl;
-CREATE TABLE form_tmpl (
-                           form_tmpl_id VARCHAR(30) PRIMARY KEY,
-                           form_tmpl_title VARCHAR(100),
-                           form_tmpl_ver INT4 DEFAULT 1,
+-- form definition
+-- DROP TABLE form;
+CREATE TABLE form (
+                           form_id VARCHAR(30) PRIMARY KEY,
+                           form_title VARCHAR(100),
+                           form_ver INT4 DEFAULT 1,
                            dept_cd VARCHAR(10),
                            pos_cd VARCHAR(10),
                            lvl_cd VARCHAR(10),
-                           form_tmpl_status VARCHAR(10) DEFAULT 'ACTIVE'
+                           form_status VARCHAR(10) DEFAULT 'ACTIVE'
 
 );
 
 
--- sec_tmpl definition
--- DROP TABLE sec_tmpl;
-CREATE TABLE sec_tmpl (
-                          sec_tmpl_id VARCHAR(30) PRIMARY KEY,
-                          sec_tmpl_title VARCHAR(100),
-                          sec_tmpl_answer_type VARCHAR(10) NOT NULL DEFAULT 'NUMBER',
+-- sec definition
+-- DROP TABLE sec;
+CREATE TABLE sec (
+                          sec_id VARCHAR(30) PRIMARY KEY,
+                          sec_title VARCHAR(100),
+                          rev_conf_id  VARCHAR(30) NOT NULL DEFAULT 'default',
 
                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -162,12 +162,12 @@ CREATE TABLE sec_tmpl (
                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
--- sec_item_tmpl definition
--- DROP TABLE sec_item_tmpl;
-CREATE TABLE sec_item_tmpl (
-                               sec_item_tmpl_id VARCHAR(30) PRIMARY KEY,
-                               sec_tmpl_id VARCHAR(30) NULL,
-                               sec_item_tmpl_cnt TEXT DEFAULT 'Content item',
+-- sec_item definition
+-- DROP TABLE sec_item;
+CREATE TABLE sec_item (
+                               sec_item_id VARCHAR(30) PRIMARY KEY,
+                               sec_id VARCHAR(30) NULL,
+                               sec_item_cnt TEXT DEFAULT 'Content item',
 
                                cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                                cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -176,14 +176,14 @@ CREATE TABLE sec_item_tmpl (
                                del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
--- form_sec_item_tmpl definition
--- DROP TABLE form_sec_item_tmpl;
-CREATE TABLE form_sec_item_tmpl (
-                                    form_sec_item_tmpl_id VARCHAR(30) PRIMARY KEY,
-                                    form_tmpl_id VARCHAR(30),
-                                    sec_tmpl_id VARCHAR(30) ,
+-- form_tmpl definition
+-- DROP TABLE form_tmpl;
+CREATE TABLE form_tmpl (
+                                    form_tmpl_id VARCHAR(30) PRIMARY KEY,
+                                    form_id VARCHAR(30),
+                                    sec_id VARCHAR(30) ,
                                     sec_ord_no INT4 DEFAULT 1,
-                                    sec_item_tmpl_id VARCHAR(30),
+                                    sec_item_id VARCHAR(30),
                                     sec_item_ord_no INT4 DEFAULT 1,
 
                                     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
@@ -193,37 +193,68 @@ CREATE TABLE form_sec_item_tmpl (
                                     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
--- form_subm definition
--- DROP TABLE form_subm;
-CREATE TABLE form_subm (
-                           form_subm_id VARCHAR(30) PRIMARY KEY,
-                           form_tmpl_id VARCHAR(30) NOT NULL,
-                           emp_nm VARCHAR(100),
-                           emp_no VARCHAR(6) NOT NULL,
-                           emp_curr_dept_cd VARCHAR(20),
-                           emp_curr_lvl_cd VARCHAR(20),
-                           emp_curr_pos_cd VARCHAR(20),
-                           rev_dt date NULL,
-                           next_rev_dt date NULL,
-                           form_subm_status VARCHAR(10) DEFAULT 'PROCESSING'
-);
-
--- boss_rev definition
--- DROP TABLE boss_rev;
-CREATE TABLE boss_rev (
-                          form_subm_id VARCHAR(30),
-                          boss_id VARCHAR(30),
-                          boss_comp_role_cd  VARCHAR(10),
-                          boss_rev_ord_no  INT4,
+CREATE TABLE rev_conf (
+                          rev_conf_id VARCHAR(30) PRIMARY KEY,
+                          rev_conf_type VARCHAR(30),
+                          rev_conf_num_usr INT4 NOT NULL DEFAULT 1,
+                          rev_conf_min INT4 NOT NULL DEFAULT 0,
+                          rev_conf_max INT4 NOT NULL DEFAULT 10,
+                          rev_conf_pos_cues JSONB NOT NULL DEFAULT '[]'::jsonb,
 
                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
                           upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                          del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
-                          CONSTRAINT boss_rev_pk PRIMARY KEY (form_subm_id, boss_id)
-
+                          del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
+
+CREATE TABLE rev_conf_item (
+                               rev_conf_item_id VARCHAR(30) PRIMARY KEY,
+                               rev_conf_id VARCHAR(30),
+                               rev_conf_item_role VARCHAR(30) NOT NULL DEFAULT 'MEMBER',
+                               rev_conf_item_ord_no INT4 NOT NULL DEFAULT 1,
+
+                               cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                               cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                               upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                               upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                               del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+);
+
+
+-- form_subm definition
+-- DROP TABLE form_subm;
+CREATE TABLE form_subm (
+                           form_subm_id VARCHAR(30) PRIMARY KEY,
+                           form_id VARCHAR(30) NOT NULL,
+                           emp_nm VARCHAR(100),
+                           emp_no VARCHAR(6) NOT NULL,
+                           emp_curr_dept_cd VARCHAR(20),
+                           emp_curr_pos_cd VARCHAR(20),
+                           emp_curr_lvl_cd VARCHAR(20),
+                           rev_dt date NULL,
+                           next_rev_dt date NULL,
+                           form_subm_status VARCHAR(10) DEFAULT 'PROCESSING'
+);
+
+
+
+-- boss_rev definition
+-- DROP TABLE boss_rev;
+-- CREATE TABLE boss_rev (
+--                           form_subm_id VARCHAR(30),
+--                           boss_id VARCHAR(30),
+--                           boss_comp_role_cd  VARCHAR(10),
+--                           boss_rev_ord_no  INT4,
+--
+--                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+--                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+--                           upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+--                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+--                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
+--                           CONSTRAINT boss_rev_pk PRIMARY KEY (form_subm_id, boss_id)
+--
+-- );
 
 -- seq definition
 -- DROP TABLE seq;
