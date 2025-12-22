@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SeqMapper">
+    <select id="nextSeq"
+            resultType="int">
+
+    <![CDATA[
+        INSERT INTO seq (table_nm, last_idx, last_upd_dt)
+        VALUES (#{tableNm}, 1, CURRENT_DATE)
+        ON CONFLICT (table_nm)
+        DO UPDATE
+               SET
+                   last_idx = CASE
+                                   WHEN seq.last_idx < 999 THEN seq.last_idx + 1
+                                   ELSE 1000
+                                END,
+            last_upd_dt = CURRENT_DATE
+        RETURNING last_idx
+        ]]>
+    </select>
+
+    <update id="resetAllSeq">
+        UPDATE seq
+        SET last_idx = 0
+    </update>
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.PosMapper">
+
+    <!-- ===================== -->
+    <!-- Result Map if names in database and table are different -->
+    <!-- ===================== -->
+<!--    <resultMap id="PosMap" type="com.clt.evaluation_system_backend.model.Pos">-->
+<!--        <id column="pos_id" property="positionId"/>-->
+<!--        <result column="pos_nm" property="positionName"/>-->
+<!--        <result column="pos_cd" property="positionCode"/>-->
+<!--        <result column="pos_desc" property="positionDesc"/>-->
+<!--        <result column="cre_usr_id" property="createUserId"/>-->
+<!--        <result column="cre_dt" property="createDate"/>-->
+<!--        <result column="upd_usr_id" property="updateUserId"/>-->
+<!--        <result column="upd_dt" property="updateDate"/>-->
+<!--        <result column="del_flg" property="deleteFlag"/>-->
+<!--    </resultMap>-->
+
+    <!-- ===================== -->
+    <!-- INSERT -->
+    <insert id="insert">
+        INSERT INTO pos (
+            pos_id,
+            pos_nm,
+            pos_cd,
+            pos_desc,
+            cre_usr_id
+        ) VALUES (
+                     #{posId},
+                     #{posNm},
+                     #{posCd},
+                     #{posDesc},
+                     #{creUsrId}
+                 )
+    </insert>
+
+
+    <!-- ===================== -->
+    <!-- Select -->
+    <!-- ===================== -->
+
+
+<!--    <select id="findAll" resultType="com.clt.evaluation_system_backend.dto.response.PosResponse">-->
+<!--        SELECT-->
+<!--            p.pos_cd,-->
+<!--            p.pos_nm-->
+<!--        FROM pos p-->
+<!--        WHERE del_flg <> 'Y'-->
+<!--    </select>-->
+
+<!--    <select id="findByCode" resultMap="PosMap">-->
+<!--        SELECT *-->
+<!--        FROM pos-->
+<!--        WHERE pos_cd = #{posCode}-->
+<!--        AND del_flg <> 'Y'-->
+<!--    </select>-->
+
+<!--    <select id="findAll" resultMap="PosMap">-->
+<!--        SELECT *-->
+<!--        FROM pos-->
+<!--        WHERE del_flg <> 'Y'-->
+<!--        ORDER BY pos_cd-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    &lt;!&ndash; Insert &ndash;&gt;-->
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    <insert id="insert">-->
+<!--        INSERT INTO pos (-->
+<!--            pos_id,-->
+<!--            pos_nm,-->
+<!--            pos_cd,-->
+<!--            pos_desc,-->
+<!--            cre_usr_id,-->
+<!--            cre_dt,-->
+<!--            del_flg-->
+<!--        ) VALUES (-->
+<!--                     #{posId},-->
+<!--                     #{posName},-->
+<!--                     #{posCode},-->
+<!--                     #{posDesc},-->
+<!--                     #{createdUserId},-->
+<!--                     CURRENT_TIMESTAMP,-->
+<!--                     'N'-->
+<!--                 )-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    &lt;!&ndash; Update &ndash;&gt;-->
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    <update id="update">-->
+<!--        UPDATE pos-->
+<!--        SET pos_nm = #{posName},-->
+<!--            pos_cd = #{posCode},-->
+<!--            pos_desc = #{posDesc},-->
+<!--            upd_usr_id = #{updatedUserId},-->
+<!--            upd_dt = CURRENT_TIMESTAMP-->
+<!--        WHERE pos_id = #{posId}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    &lt;!&ndash; Soft Delete &ndash;&gt;-->
+<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
+<!--    <update id="softDelete">-->
+<!--        UPDATE pos-->
+<!--        SET del_flg = 'Y',-->
+<!--            upd_dt = CURRENT_TIMESTAMP-->
+<!--        WHERE pos_id = #{posId}-->
+<!--    </update>-->
+
+</mapper>
