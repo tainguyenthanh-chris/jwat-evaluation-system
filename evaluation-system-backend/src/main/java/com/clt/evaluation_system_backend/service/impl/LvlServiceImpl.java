@@ -28,6 +28,7 @@ public class LvlServiceImpl implements LvlService {
         String newId = req.getLvlId() !=null
                                         ? req.getLvlId()
                                         : seqService.generateNewId(Lvl.class);
+
         Lvl lvl = new Lvl(newId,req.getLvlNm(), req.getLvlCd(),
                 req.getLvlDesc()!=null ? req.getLvlDesc() : "Description for Level",
                 "dev");

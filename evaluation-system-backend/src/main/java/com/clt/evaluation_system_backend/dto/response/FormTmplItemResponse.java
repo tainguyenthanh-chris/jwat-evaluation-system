@@ -7,13 +7,28 @@ import java.util.List;
 
 @Data
 public class FormTmplItemResponse {
-    private String id;
+    private String formId;
     private String formTitle;
+    private String sectionId;
     private String sectionTitle;
-    private String sectionOrderNo;
-    private String sectionItemTitle;
-    private String sectionItemOrderNo;
-    private String reviewConfigItemRole;
-    private String reviewConfigItemOrderNo;
+    private Integer sectionOrderNo;
+    private String sectionItemId;
+    private String sectionItemContent;
+    private Integer sectionItemOrderNo;
+    private String answerType;
 
+    @Override
+    public String toString() {
+        return "FormTmplItemResponse{" +
+                "formId='" + formId + '\'' +
+                ", formTitle='" + formTitle + '\'' +
+                ", sectionId='" + sectionId + '\'' +
+                ", sectionTitle='" + sectionTitle + '\'' +
+                ", sectionOrderNo=" + sectionOrderNo +
+                ", sectionItemId='" + sectionItemId + '\'' +
+                ", sectionItemTitle='" + sectionItemContent + '\'' +
+                ", sectionItemOrderNo=" + sectionItemOrderNo +
+                ", answerType='" + answerType + '\'' +
+                '}';
+    }
 }

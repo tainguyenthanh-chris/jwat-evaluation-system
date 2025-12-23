@@ -185,6 +185,7 @@ CREATE TABLE form_tmpl (
                                     sec_ord_no INT4 DEFAULT 1,
                                     sec_item_id VARCHAR(30),
                                     sec_item_ord_no INT4 DEFAULT 1,
+                                    sec_item_answer_type VARCHAR(30),
 
                                     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                                     cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -207,6 +208,7 @@ CREATE TABLE rev_conf (
                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
+
 
 CREATE TABLE rev_conf_item (
                                rev_conf_item_id VARCHAR(30) PRIMARY KEY,

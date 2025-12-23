@@ -22,4 +22,5 @@ public class FormController {
         FormTmplResponse formTmplResponse = formService.findFormTmplResponse(department,position,level);
         return ApiResponse.ok(formTmplResponse);
     }
+
 }

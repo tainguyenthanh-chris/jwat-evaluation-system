@@ -4,23 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.FormMapper">
-    <select id="findAll" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
-        SELECT f.form_title as formTitle,
-               st.sec_title as sectionTitle,
-               ft.sec_ord_no as sectionOrderNo,
-               si.sec_item_cnt as sectionItemContent,
-               ft.sec_item_ord_no as sectionItemOrderNo,
-               rci.rev_conf_item_role as reviewConfigItemRole,
-               rci.rev_conf_item_ord_no as reviewConfigItemOrderNo
+    <select id="selectFormTmplItem" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
+        SELECT
+            f.form_id AS formId,
+            f.form_title as formTitle,
+            st.sec_id AS sectionId,
+            st.sec_title as sectionTitle,
+            ft.sec_ord_no as sectionOrderNo,
+            si.sec_item_id  AS sectionItemId,
+            si.sec_item_cnt as sectionItemContent,
+            ft.sec_item_ord_no as sectionItemOrderNo,
+            ft.sec_item_answer_type AS answerType
+
         FROM form_tmpl ft
                  LEFT JOIN sec_item si ON si.sec_item_id = ft.sec_item_id
                  LEFT JOIN sec st ON st.sec_id = ft.sec_id
                  LEFT JOIN form f ON f.form_id = ft.form_id
-                 LEFT JOIN rev_conf rc ON rc.rev_conf_id = st.rev_conf_id
-                 LEFT JOIN rev_conf_item rci ON rci.rev_conf_id = rc.rev_conf_id
-        WHERE ft.form_ = 'form20250101001'
-        ORDER BY ft.sec_ord_no, ft.sec_item_ord_no ASC;
 
+        WHERE f.dept_cd = #{department}
+                AND f.pos_cd = #{position}
+                AND f.lvl_cd = #{level}
+        ORDER BY ft.sec_ord_no, ft.sec_item_ord_no ASC;
     </select>
 
 </mapper>

@@ -21,4 +21,5 @@ public class LvlController {
         lvlService.create(dto);
         return ApiResponse.ok("insert lvl success");
     }
+
 }

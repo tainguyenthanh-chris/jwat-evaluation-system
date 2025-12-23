@@ -126,28 +126,29 @@ INSERT INTO sec_item (sec_item_id, sec_id, sec_item_cnt) VALUES
     ('sec_item20250101028','sec20250101004','Speaking and listenning English skill');
 
 -- form_tmpl data
-INSERT INTO form_tmpl (form_tmpl_id, form_id, sec_id, sec_ord_no, sec_item_id, sec_item_ord_no) VALUES
-    ('form_tmpl20250101001','form20250101001','sec20250101001',1,'sec_item20250101001',1),
-    ('form_tmpl20250101002','for20250101001','sec20250101001',1,'sec_item20250101002',2),
-    ('form_tmpl20250101003','form20250101001','sec20250101001',1,'sec_item20250101003',3),
-    ('form_tmpl20250101004','form20250101001','sec20250101001',1,'sec_item20250101004',4),
-    ('form_tmpl20250101005','form20250101001','sec20250101001',1,'sec_item20250101005',5),
-    ('form_tmpl20250101006','form20250101001','sec20250101001',1,'sec_item20250101006',6),
-    ('form_tmpl20250101007','form20250101001','sec20250101002',2,'sec_item20250101014',1),
-    ('form_tmpl20250101008','form20250101001','sec20250101002',2,'sec_item20250101015',2),
-    ('form_tmpl20250101009','form20250101001','sec20250101002',2,'sec_item20250101016',3),
-    ('form_tmpl20250101010','form20250101001','sec20250101002',2,'sec_item20250101017',4),
-    ('form_tmpl20250101011','form20250101001','sec20250101002',2,'sec_item20250101018',5),
-    ('form_tmpl20250101012','form20250101001','sec20250101003',3,'sec_item20250101020',1),
-    ('form_tmpl20250101013','form20250101001','sec20250101003',3,'sec_item20250101021',2),
-    ('form_tmpl20250101014','form20250101001','sec20250101003',3,'sec_item20250101022',3),
-    ('form_tmpl20250101015','form20250101001','sec20250101003',3,'sec_item20250101023',4),
-    ('form_tmpl20250101016','form20250101001','sec20250101004',4,'sec_item20250101025',1),
-    ('form_tmpl20250101017','form20250101001','sec20250101004',4,'sec_item20250101026',2),
-    ('form_tmpl20250101018','form20250101001','sec20250101004',4,'sec_item20250101027',3),
-    ('form_tmpl20250101019','form20250101001','sec20250101004',4,'sec_item20250101028',4),
-    ('form_tmpl20250101020','form20250101001','sec20250101005',5,'',1),
-    ('form_tmpl20250101021','form20250101001','sec20250101006',6,'',1);
+INSERT INTO form_tmpl (form_tmpl_id, form_id, sec_id, sec_ord_no, sec_item_id, sec_item_ord_no, sec_item_answer_type) VALUES
+                                                                                                    ('form_tmpl20250101001','form20250101001','sec20250101001',1,'sec_item20250101001',1,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101002','form20250101001','sec20250101001',1,'sec_item20250101002',2,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101003','form20250101001','sec20250101001',1,'sec_item20250101003',3,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101004','form20250101001','sec20250101001',1,'sec_item20250101004',4,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101005','form20250101001','sec20250101001',1,'sec_item20250101005',5,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101006','form20250101001','sec20250101001',1,'sec_item20250101006',6,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101007','form20250101001','sec20250101002',2,'sec_item20250101014',1,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101008','form20250101001','sec20250101002',2,'sec_item20250101015',2,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101009','form20250101001','sec20250101002',2,'sec_item20250101016',3,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101010','form20250101001','sec20250101002',2,'sec_item20250101017',4,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101011','form20250101001','sec20250101002',2,'sec_item20250101018',5,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101012','form20250101001','sec20250101003',3,'sec_item20250101020',1,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101013','form20250101001','sec20250101003',3,'sec_item20250101021',2,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101014','form20250101001','sec20250101003',3,'sec_item20250101022',3,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101015','form20250101001','sec20250101003',3,'sec_item20250101023',4,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101016','form20250101001','sec20250101004',4,'sec_item20250101025',1,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101017','form20250101001','sec20250101004',4,'sec_item20250101026',2,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101018','form20250101001','sec20250101004',4,'sec_item20250101027',3,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101019','form20250101001','sec20250101004',4,'sec_item20250101028',4,'POINT_SELF_LEADER'),
+                                                                                                    ('form_tmpl20250101020','form20250101001','sec20250101005',5,'',1,'COMMENT_SELF'),
+                                                                                                    ('form_tmpl20250101021','form20250101001','sec20250101006',6,'',1,'COMMENT_MANAGER');
+
 
 -- rev_conf data
 INSERT INTO rev_conf (rev_conf_id, rev_conf_type, rev_conf_num_usr, rev_conf_min, rev_conf_max) VALUES

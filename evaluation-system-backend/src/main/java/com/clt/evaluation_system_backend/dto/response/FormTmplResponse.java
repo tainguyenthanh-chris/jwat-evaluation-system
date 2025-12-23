@@ -2,33 +2,75 @@ package com.clt.evaluation_system_backend.dto.response;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class FormTmplResponse {
     private String id;
     private String title;
-    private String department;
-    private String position;
-    private String level;
+//    private String department;
+//    private String position;
+//    private String level;
     private List<Section> sectionList = new ArrayList<>();
+    private Map<String, Section> sectionData = new LinkedHashMap<>();
+    private Set<String> sectionIdSet = new HashSet<>();
+
+    public void addSection(Section section) {
+        if(!sectionData.containsKey(section.getId())) {
+            sectionData.put(section.getId(), section);
+        }
+    }
+
+    public void addSectionItem(Section.SectionItem sectionItem) {
+        String parentId = sectionItem.getParentId();
+        sectionData.get(parentId).addSectionItem(sectionItem);
+    }
 
     @Data
-    static class Section {
+    public static class Section {
+        private String id;
         private String title;
         private int ordNo;
-        private List<SectionItem> secItemList = new ArrayList<>();
+        private List<SectionItem> sectionItemList = new ArrayList<>();
+        private String answerType;
 
-        // to render cols for each reviewer do review
-        private int reviewerNum; // = reviewerList size
-        private List<String> reviewerRoleList = new ArrayList<>(); // keep order, ex: self, leader
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Section section = (Section) o;
+            return Objects.equals(id, section.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(id);
+        }
+
+        public void addSectionItem(Section.SectionItem sectionItem) {
+            sectionItemList.add(sectionItem);
+        }
 
         @Data
-        static class SectionItem {
-            private String title;
+        public static class SectionItem {
+            private String id;
+            private String content;
             private int ordNo;
+            private String parentId;
+
+            @Override
+            public boolean equals(Object o) {
+                if (o == null || getClass() != o.getClass()) return false;
+                SectionItem that = (SectionItem) o;
+                return Objects.equals(id, that.id);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hashCode(id);
+            }
         }
+
+
 
     }
 
