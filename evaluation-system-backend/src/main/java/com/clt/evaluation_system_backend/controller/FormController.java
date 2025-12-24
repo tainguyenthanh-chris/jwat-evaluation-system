@@ -1,10 +1,8 @@
 package com.clt.evaluation_system_backend.controller;
 
-import com.clt.evaluation_system_backend.dto.request.LvlRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
 import com.clt.evaluation_system_backend.service.FormService;
-import com.clt.evaluation_system_backend.service.LvlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +15,9 @@ public class FormController {
 
     @GetMapping("")
     public ResponseEntity<?> getTemplate(@RequestParam String department,
-                                        @RequestParam String position,
-                                        @RequestParam String level) {
-        FormTmplResponse formTmplResponse = formService.findFormTmplResponse(department,position,level);
+            @RequestParam String position,
+            @RequestParam String level) {
+        FormTmplResponse formTmplResponse = formService.findFormTmplResponse(department, position, level);
         return ApiResponse.ok(formTmplResponse);
     }
 }

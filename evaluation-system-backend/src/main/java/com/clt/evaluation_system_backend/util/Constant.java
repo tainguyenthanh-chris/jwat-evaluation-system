@@ -21,11 +21,10 @@ public class Constant {
     public static final String SectionItemSubmission_TABLE_NM = "sec_item_subm";
     public static final String SectionItemTemplate_TABLE_NM = "sec_item_tmpl";
     public static final String SectionTemplate_TABLE_NM = "sec_tmpl";
-    public static final String TargetItem_TABLE_NM= "target_item";
+    public static final String TargetItem_TABLE_NM = "target_item";
     public static final String User_TABLE_NM = "usr";
     public static final String UserRole_TABLE_NM = "usr_role";
     public static final String Team_TABLE_NM = "team";
-
 
     public static final String POINT_TYPE = "point";
     public static final String TEXT_TYPE = "text";
@@ -42,8 +41,5 @@ public class Constant {
     public static final String MANAGER_ROLE = "manager";
     public static final String LEADER_ROLE = "leader";
     public static final String MEMBER_ROLE = "member";
-
-
-
 
 }

@@ -1,12 +1,8 @@
 package com.clt.evaluation_system_backend.service.impl;
 
 import com.clt.evaluation_system_backend.annotation.SeqTable;
-import com.clt.evaluation_system_backend.dto.request.PosRequest;
 import com.clt.evaluation_system_backend.exception.OverMaxRecordException;
-import com.clt.evaluation_system_backend.mapper.PosMapper;
 import com.clt.evaluation_system_backend.mapper.SeqMapper;
-import com.clt.evaluation_system_backend.model.Pos;
-import com.clt.evaluation_system_backend.service.PosService;
 import com.clt.evaluation_system_backend.service.SeqService;
 import com.clt.evaluation_system_backend.util.Constant;
 import lombok.AccessLevel;
@@ -31,8 +27,7 @@ public class SeqServiceImpl implements SeqService {
         SeqTable seqTable = className.getAnnotation(SeqTable.class);
         if (seqTable == null) {
             throw new IllegalStateException(
-                    "Missing @SeqTable on class " + className.getName()
-            );
+                    "Missing @SeqTable on class " + className.getName());
         }
         Integer nextIdx = seqMapper.nextSeq(seqTable.value());
         if (nextIdx > Constant.MAX_RECORD_A_DAY) {

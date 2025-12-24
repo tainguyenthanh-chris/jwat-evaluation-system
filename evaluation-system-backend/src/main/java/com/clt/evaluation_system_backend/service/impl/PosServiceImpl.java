@@ -1,16 +1,20 @@
 package com.clt.evaluation_system_backend.service.impl;
 
-import com.clt.evaluation_system_backend.dto.request.PosRequest;
+import com.clt.evaluation_system_backend.dto.request.PosCreateRequest;
+import com.clt.evaluation_system_backend.dto.request.PosSearchRequest;
+import com.clt.evaluation_system_backend.dto.request.PosUpdateRequest;
+import com.clt.evaluation_system_backend.dto.response.PosResponse;
 import com.clt.evaluation_system_backend.mapper.PosMapper;
-import com.clt.evaluation_system_backend.mapper.SeqMapper;
-import com.clt.evaluation_system_backend.model.Lvl;
 import com.clt.evaluation_system_backend.model.Pos;
 import com.clt.evaluation_system_backend.service.PosService;
 import com.clt.evaluation_system_backend.service.SeqService;
-import com.clt.evaluation_system_backend.util.Constant;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +26,69 @@ public class PosServiceImpl implements PosService {
     private final PosMapper posMapper;
     private final SeqService seqService;
 
-    @Transactional
-    public void create(PosRequest req) {
-        String newId = req.getPosId() !=null
-                ? req.getPosId()
-                : seqService.generateNewId(Pos.class);
-        Pos pos = new Pos(newId,req.getPosNm(),req.getPosCd(),
-                req.getPosDesc()!=null ? req.getPosDesc() : "Description for Position",
-                "dev");
-        posMapper.insert(pos);
+    @Override
+    public void create(PosCreateRequest req) {
+
+        try {
+            String newId = seqService.generateNewId(Pos.class);
+
+            Pos pos = new Pos(
+                    newId,
+                    req.getPosNm(),
+                    req.getPosCd(),
+                    req.getPosDesc() != null
+                            ? req.getPosDesc()
+                            : "Description for Position",
+                    "dev");
+
+            posMapper.insert(pos);
+        } catch (Exception e) {
+            throw new RuntimeException("Insert Position failed");
+        }
+
     }
+
+    @Override
+    public void deleteById(String posId) {
+        try {
+            posMapper.deleteById(posId);
+        } catch (Exception e) {
+            throw new RuntimeException("Position not found");
+        }
+
+    }
+
+    @Override
+    public void update(PosUpdateRequest req, String posId) {
+        try {
+            Pos pos = new Pos(
+                    posId,
+                    req.getPosNm(),
+                    req.getPosCd(),
+                    req.getPosDesc(),
+                    "dev");
+
+            posMapper.update(pos);
+        } catch (Exception e) {
+            throw new RuntimeException("Position not found");
+        }
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PosResponse findById(String posId) {
+        var pos = posMapper.findById(posId);
+        if (pos == null) {
+            throw new RuntimeException("Position not found");
+        }
+        return pos;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PosResponse> findAll(PosSearchRequest searchRequest) {
+        return posMapper.findAll(searchRequest);
+    }
+
 }
