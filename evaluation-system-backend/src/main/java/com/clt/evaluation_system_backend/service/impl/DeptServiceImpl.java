@@ -24,8 +24,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DeptServiceImpl implements DeptService {
 
-    DeptMapper deptMapper;
-    SeqService seqService;
+    private final DeptMapper deptMapper;
+    private final SeqService seqService;
 
     @Override
     public void create(DeptCreateRequest req) {

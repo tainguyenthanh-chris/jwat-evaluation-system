@@ -128,10 +128,14 @@ CREATE TABLE emp (
 -- usr definition
 -- DROP TABLE usr;
 CREATE TABLE usr (
-                     usr_id VARCHAR(30) PRIMARY KEY,
-                     usr_pwd VARCHAR(10) NOT NULL,
-                     cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+                    usr_id VARCHAR(30) PRIMARY KEY,
+                    usr_pwd VARCHAR(1000) NOT NULL,
+                    usr_email VARCHAR(100) NOT NULL UNIQUE,
+                    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                    cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                    upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                    upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                    del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
 -- form definition

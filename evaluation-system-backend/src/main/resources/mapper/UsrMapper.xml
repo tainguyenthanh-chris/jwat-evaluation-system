@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.UsrMapper">
+
+    <select id="findById"
+        parameterType="String"
+        resultType="com.clt.evaluation_system_backend.model.Usr"> SELECT usr_id AS usrId, usr_pwd AS
+        usrPwd, usr_email AS usrEmail, cre_usr_id AS creUsrId, cre_dt AS creDt, upd_usr_id AS
+        updUsrId, upd_dt AS updDt, del_flg AS delFlg FROM usr WHERE usr_id = #{usrId} AND del_flg =
+        'F' </select>
+
+    <select id="findByEmail"
+        parameterType="String"
+        resultType="com.clt.evaluation_system_backend.model.Usr"> SELECT usr_id AS usrId, usr_pwd AS
+        usrPwd, usr_email AS usrEmail, cre_usr_id AS creUsrId, cre_dt AS creDt, upd_usr_id AS
+        updUsrId, upd_dt AS updDt, del_flg AS delFlg FROM usr WHERE usr_email = #{email} AND del_flg
+        = 'F' </select>
+
+    <select id="existsById" resultType="boolean"> SELECT EXISTS ( SELECT 1 FROM usr WHERE usr_id =
+        #{usrId} ) </select>
+
+    <select id="existsByEmail" resultType="boolean"> SELECT EXISTS ( SELECT 1 FROM usr WHERE
+        usr_email = #{email} ) </select>
+
+    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Usr"> INSERT INTO usr
+        ( usr_id, usr_pwd, usr_email, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
+        #{usrId}, #{usrPwd}, #{usrEmail}, #{creUsrId}, CURRENT_TIMESTAMP, #{updUsrId},
+        CURRENT_TIMESTAMP, 'F' ) </insert>
+
+</mapper>
