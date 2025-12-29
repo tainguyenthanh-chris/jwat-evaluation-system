@@ -49,7 +49,7 @@ INSERT INTO team (team_id, team_nm, team_cd, leader_id, manager_id, dept_id, par
     ('team20250101001','LBU','LBU','emp20250101009','emp20250101099','dept20250101001',NULL),    --leader: 009, manager: 099
     ('team20250101002','ABC','ABC','emp202501010091','emp202501010991','dept20250101001',NULL);   --leader: 0091, manager: 0991
 -- emp data
-INSERT INTO emp (emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id) VALUES
+INSERT INTO emp (emp_id, emp_nm, emp_cd, emp_email, comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id) VALUES
     ('emp20250101001', 'To Minh Nhat','258157','tominhat@cycberlogitec.com',
      'MEMBER','IT','DEV','FRESHER',14000000,'team20250101001'),
     ('emp20250101002', 'Hoang Manh Ha','258158','hoangmanhha@cycberlogitec.com',
@@ -82,7 +82,7 @@ INSERT INTO form (form_id, form_title, dept_cd, pos_cd, lvl_cd) VALUES
     ('form20250101001','IT DEV FRESHER','IT','DEV','FRESHER');
 
 -- sec data
-INSERT INTO sec (sec_id, sec_title,rev_conf_id) VALUES
+INSERT INTO sec (sec_id, sec_title,default_rev_conf_id) VALUES
     ('sec20250101002','Customer Satisfaction','rev_conf20250101001'),
     ('sec20250101001','General Evaluation','rev_conf20250101001'),
     ('sec20250101003','Quality','rev_conf20250101001'),
@@ -94,81 +94,80 @@ INSERT INTO sec (sec_id, sec_title,rev_conf_id) VALUES
     ('sec20250101009','Conclusion & Recommendation of the 1st Line Manager','rev_conf20250101003'),
     ('sec20250101010','General Manager''''s comments and decision','rev_conf20250101002');
 
--- sec_item
-INSERT INTO sec_item (sec_item_id, sec_id, sec_item_cnt) VALUES
-    ('sec_item20250101001','sec20250101001','Background knowledge'),
-    ('sec_item20250101002','sec20250101001','Has good thinking method & problem solving skills'),
-    ('sec_item20250101003','sec20250101001','Cowork with leader'),
-    ('sec_item20250101004','sec20250101001','Ability to adapt with the new environment and new changes'),
-    ('sec_item20250101005','sec20250101001','Knowledges & skills improvement in the past 6 months'),
-    ('sec_item20250101006','sec20250101001','Proactive to find new tasks'),
-    ('sec_item20250101007','sec20250101001','Proactive for OT when necessary'),
-    ('sec_item20250101008','sec20250101001','Having suitable attitude in any situation'),
-    ('sec_item20250101009','sec20250101001','Responsibility'),
-    ('sec_item20250101010','sec20250101001','Cowork with teammate'),
-    ('sec_item20250101011','sec20250101001','Internal communication'),
-    ('sec_item20250101012','sec20250101001','Volunteer spirit'),
-    ('sec_item20250101013','sec20250101001','Follows company process'),
-    ('sec_item20250101014','sec20250101002','Listen and understand leader order carefully'),
-    ('sec_item20250101015','sec20250101002','Communicate with customer/leader efficiently and clearly'),
-    ('sec_item20250101016','sec20250101002','Report job in detail with evidence'),
-    ('sec_item20250101017','sec20250101002','Suggest solution/idea to customer/leader for enhancing system'),
-    ('sec_item20250101018','sec20250101002','Understand what&why about customer requirements'),
-    ('sec_item20250101019','sec20250101002','Working with passion'),
-    ('sec_item20250101020','sec20250101003','No causing basic bugs'),
-    ('sec_item20250101021','sec20250101003','Have ability of understanding all related tasks'),
-    ('sec_item20250101022','sec20250101003','Understand current job fully and deeply'),
-    ('sec_item20250101023','sec20250101003','Causing few bugs'),
-    ('sec_item20250101024','sec20250101003','No repeating bugs'),
-    ('sec_item20250101025','sec20250101004','Comment in code clearly'),
-    ('sec_item20250101026','sec20250101004','Complete more tasks than expected'),
-    ('sec_item20250101027','sec20250101004','Reading and Writing English skill'),
-    ('sec_item20250101028','sec20250101004','Speaking and listenning English skill');
+-- criteria
+INSERT INTO criteria (criteria_id, sec_id, criteria_cnt) VALUES
+    ('criteria20250101001','sec20250101001','Background knowledge'),
+    ('criteria20250101002','sec20250101001','Has good thinking method & problem solving skills'),
+    ('criteria20250101003','sec20250101001','Cowork with leader'),
+    ('criteria20250101004','sec20250101001','Ability to adapt with the new environment and new changes'),
+    ('criteria20250101005','sec20250101001','Knowledges & skills improvement in the past 6 months'),
+    ('criteria20250101006','sec20250101001','Proactive to find new tasks'),
+    ('criteria20250101007','sec20250101001','Proactive for OT when necessary'),
+    ('criteria20250101008','sec20250101001','Having suitable attitude in any situation'),
+    ('criteria20250101009','sec20250101001','Responsibility'),
+    ('criteria20250101010','sec20250101001','Cowork with teammate'),
+    ('criteria20250101011','sec20250101001','Internal communication'),
+    ('criteria20250101012','sec20250101001','Volunteer spirit'),
+    ('criteria20250101013','sec20250101001','Follows company process'),
+    ('criteria20250101014','sec20250101002','Listen and understand leader order carefully'),
+    ('criteria20250101015','sec20250101002','Communicate with customer/leader efficiently and clearly'),
+    ('criteria20250101016','sec20250101002','Report job in detail with evidence'),
+    ('criteria20250101017','sec20250101002','Suggest solution/idea to customer/leader for enhancing system'),
+    ('criteria20250101018','sec20250101002','Understand what&why about customer requirements'),
+    ('criteria20250101019','sec20250101002','Working with passion'),
+    ('criteria20250101020','sec20250101003','No causing basic bugs'),
+    ('criteria20250101021','sec20250101003','Have ability of understanding all related tasks'),
+    ('criteria20250101022','sec20250101003','Understand current job fully and deeply'),
+    ('criteria20250101023','sec20250101003','Causing few bugs'),
+    ('criteria20250101024','sec20250101003','No repeating bugs'),
+    ('criteria20250101025','sec20250101004','Comment in code clearly'),
+    ('criteria20250101026','sec20250101004','Complete more tasks than expected'),
+    ('criteria20250101027','sec20250101004','Reading and Writing English skill'),
+    ('criteria20250101028','sec20250101004','Speaking and listenning English skill');
 
--- form_tmpl data
-INSERT INTO form_tmpl (form_tmpl_id, form_id, sec_id, sec_ord_no, sec_item_id, sec_item_ord_no, sec_item_answer_type) VALUES
-                                                                                                    ('form_tmpl20250101001','form20250101001','sec20250101001',1,'sec_item20250101001',1,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101002','form20250101001','sec20250101001',1,'sec_item20250101002',2,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101003','form20250101001','sec20250101001',1,'sec_item20250101003',3,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101004','form20250101001','sec20250101001',1,'sec_item20250101004',4,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101005','form20250101001','sec20250101001',1,'sec_item20250101005',5,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101006','form20250101001','sec20250101001',1,'sec_item20250101006',6,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101007','form20250101001','sec20250101002',2,'sec_item20250101014',1,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101008','form20250101001','sec20250101002',2,'sec_item20250101015',2,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101009','form20250101001','sec20250101002',2,'sec_item20250101016',3,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101010','form20250101001','sec20250101002',2,'sec_item20250101017',4,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101011','form20250101001','sec20250101002',2,'sec_item20250101018',5,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101012','form20250101001','sec20250101003',3,'sec_item20250101020',1,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101013','form20250101001','sec20250101003',3,'sec_item20250101021',2,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101014','form20250101001','sec20250101003',3,'sec_item20250101022',3,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101015','form20250101001','sec20250101003',3,'sec_item20250101023',4,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101016','form20250101001','sec20250101004',4,'sec_item20250101025',1,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101017','form20250101001','sec20250101004',4,'sec_item20250101026',2,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101018','form20250101001','sec20250101004',4,'sec_item20250101027',3,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101019','form20250101001','sec20250101004',4,'sec_item20250101028',4,'POINT_SELF_LEADER'),
-                                                                                                    ('form_tmpl20250101020','form20250101001','sec20250101005',5,'',1,'COMMENT_SELF'),
-                                                                                                    ('form_tmpl20250101021','form20250101001','sec20250101006',6,'',1,'COMMENT_MANAGER');
+INSERT INTO form_detail (form_id, parent_id, form_detail_ord_no, form_detail_title, rev_conf_cd) VALUES
+    ('form20250101001',NULL,1,'General Evaluation','POINT_SELF_LEADER'),
+    ('form20250101001', 'sec20250101001',2,'Background knowledge','POINT_SELF_LEADER'),
+    ('form20250101001','sec20250101001',3,'Has good thinking method & problem solving skills','POINT_SELF_LEADER'),
+    ('form20250101001','sec20250101001',4,'Cowork with leader','POINT_SELF_LEADER'),
+    ('form20250101001',NULL,5,'Customer Satisfaction','POINT_SELF_LEADER'),
+    ('form20250101001','sec20250101002',6,'Proactive to find new tasks','POINT_SELF_LEADER'),
+    ('form20250101001','sec20250101002',7,'Having suitable attitude in any situation','POINT_SELF_LEADER'),
+    ('form20250101001','sec20250101002',8,'Responsibility','POINT_SELF_LEADER'),
+    ('form20250101001',NULL,9,'Objectives','COMMENT_SELF'),
+    ('form20250101001',NULL,10,'Achievements','COMMENT_LEADER'),
+    ('form20250101001',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
+
+INSERT INTO subm_value(form_subm_id,form_detail_id,subm_value_role,subm_value) VALUES
+                                                                                   ('form_subm20250101001',1,'SELF','10'),
+                                                                                   ('form_subm20250101001',1,'LEADER','9'),
+                                                                                   ('form_subm20250101001',2,'SELF','10'),
+                                                                                   ('form_subm20250101001',2,'LEADER','9'),
+                                                                                   ('form_subm20250101001',3,'SELF','10'),
+                                                                                   ('form_subm20250101001',3,'LEADER','9'),
+                                                                                   ('form_subm20250101001',4,'SELF','10'),
+                                                                                   ('form_subm20250101001',4,'LEADER','9'),
+                                                                                   ('form_subm20250101001',5,'SELF','10'),
+                                                                                   ('form_subm20250101001',5,'LEADER','9'),
+                                                                                   ('form_subm20250101001',6,'SELF','10'),
+                                                                                   ('form_subm20250101001',6,'LEADER','9'),
+                                                                                   ('form_subm20250101001',7,'SELF','10'),
+                                                                                   ('form_subm20250101001',7,'LEADER','9'),
+                                                                                   ('form_subm20250101001',8,'SELF','10'),
+                                                                                   ('form_subm20250101001',8,'LEADER','9'),
+                                                                                   ('form_subm20250101001',9,'SELF','Tuyet voi'),
+                                                                                   ('form_subm20250101001',10,'LEADER','Gioi qua, chuan bi thang chuc nha');
 
 
 -- rev_conf data
-INSERT INTO rev_conf (rev_conf_id, rev_conf_type, rev_conf_num_usr, rev_conf_min, rev_conf_max) VALUES
-    ('rev_conf20250101001','POINT', 2,0,10),
-    ('rev_conf20250101002','COMMENT', 1,0,0),
-    ('rev_conf20250101003','COMMENT', 1,0,0),
-    ('rev_conf20250101004','COMMENT', 1,0,0),
-    ('rev_conf20250101005','COMMENT', 1,0,0);
-
--- rev_conf_item data
-INSERT INTO rev_conf_item (rev_conf_item_id, rev_conf_id, rev_conf_item_role, rev_conf_item_ord_no) VALUES
-    ('rev_conf_item20250101001','rev_conf20250101001','SELF',1),
-    ('rev_conf_item20250101002','rev_conf20250101001','LEADER',2),
-    ('rev_conf_item20250101003','rev_conf20250101002','SELF',1),
-    ('rev_conf_item20250101004','rev_conf20250101003','LEADER',1),
-    ('rev_conf_item20250101005','rev_conf20250101004','GM',1),
-    ('rev_conf_item20250101006','rev_conf20250101005','DIRECTOR',1);
+INSERT INTO rev_conf (rev_conf_id, rev_conf_cd, rev_conf_type, rev_conf_roles) VALUES
+    ('rev_conf20250101001','POINT_SELF_LEADER', 'POINT', '["SELF","LEADER"]'::jsonb),
+    ('rev_conf20250101002','COMMENT_SELF', 'COMMENT', '["SELF"]'::jsonb),
+    ('rev_conf20250101003','COMMENT_LEADER', 'COMMENT', '["LEADER"]'::jsonb),
+    ('rev_conf20250101004','TARGET_LEADER', 'TARGET', '["LEADER"]'::jsonb);
 
 -- form_subm data
-INSERT INTO form_subm (form_subm_id, form_id, emp_nm, emp_no, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt) VALUES
+INSERT INTO form_subm (form_subm_id, form_id, emp_nm, emp_cd, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt) VALUES
     ('form_subm20250101001','form20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01');
 
 

@@ -4,27 +4,106 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.FormMapper">
-    <select id="selectFormTmplItem" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
+
+<!--    selectFormTmplItem by dept, pos, lvl-->
+    <select id="selectActiveFormTmplItem" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
         SELECT
             f.form_id AS formId,
-            f.form_title as formTitle,
+            f.dept_cd AS departmentCode,
+            f.pos_cd AS positionCode,
+            f.lvl_cd AS levelCode,
             st.sec_id AS sectionId,
             st.sec_title as sectionTitle,
             ft.sec_ord_no as sectionOrderNo,
-            si.sec_item_id  AS sectionItemId,
-            si.sec_item_cnt as sectionItemContent,
-            ft.sec_item_ord_no as sectionItemOrderNo,
-            ft.sec_item_answer_type AS answerType
-
+            cri.criteria_id  AS criteriaId,
+            cri.criteria_cnt as criteriaContent,
+            ft.criteria_ord_no as criteriaOrderNo,
+            rc.rev_conf_type AS type,
+            rc.rev_conf_roles AS roles
         FROM form_tmpl ft
-                 LEFT JOIN sec_item si ON si.sec_item_id = ft.sec_item_id
+                 LEFT JOIN criteria cri ON cri.criteria_id = ft.criteria_id
                  LEFT JOIN sec st ON st.sec_id = ft.sec_id
                  LEFT JOIN form f ON f.form_id = ft.form_id
+                 LEFT JOIN rev_conf rc ON rc.rev_conf_cd = ft.rev_conf_cd
 
         WHERE f.dept_cd = #{department}
                 AND f.pos_cd = #{position}
                 AND f.lvl_cd = #{level}
-        ORDER BY ft.sec_ord_no, ft.sec_item_ord_no ASC;
+                AND f.form_status != 'OLD'
+                AND f.del_flg != 'T'
+                AND st.sec_status != 'OLD'
+                AND st.del_flg != 'T'
+                AND cri.criteria_status != 'OLD'
+                AND cri.del_flg != 'T'
+                ORDER BY ft.sec_ord_no, ft.criteria_ord_no ASC;
     </select>
+
+    <select id="selectFormTmplItemByFormId" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
+        SELECT
+            f.form_id AS formId,
+            f.dept_cd AS departmentCode,
+            f.pos_cd AS positionCode,
+            f.lvl_cd AS levelCode,
+            st.sec_id AS sectionId,
+            st.sec_title as sectionTitle,
+            ft.sec_ord_no as sectionOrderNo,
+            cri.criteria_id  AS criteriaId,
+            cri.criteria_cnt as criteriaContent,
+            ft.criteria_ord_no as criteriaOrderNo,
+            rc.rev_conf_type AS type,
+            rc.rev_conf_roles AS roles
+        FROM form_tmpl ft
+                 LEFT JOIN criteria cri ON cri.criteria_id = ft.criteria_id
+                 LEFT JOIN sec st ON st.sec_id = ft.sec_id
+                 LEFT JOIN form f ON f.form_id = ft.form_id
+                 LEFT JOIN rev_conf rc ON rc.rev_conf_cd = ft.rev_conf_cd
+
+        WHERE f.form_id = #{formId}
+        ORDER BY ft.sec_ord_no, ft.criteria_ord_no ASC;
+    </select>
+
+    <select id="selectFormDetail" resultType="com.clt.evaluation_system_backend.dto.response.FormDetailResponse">
+        SELECT
+            F.dept_cd AS departmentCode,
+            F.pos_cd AS positionCode,
+            F.lvl_cd AS levelCode,
+            FD.form_detail_id AS formDetailId,
+            FD.form_id AS formId,
+            FD.parent_id AS parentId,
+            FD.form_detail_ord_no AS formDetailOrderNo,
+            FD.form_detail_title AS formDetailTitle,
+            RC.rev_conf_cd AS reviewConfigCode,
+            RC.rev_conf_type AS reviewConfigType,
+            RC.rev_conf_roles AS reviewConfigRoleJson
+        FROM form F
+             LEFT JOIN form_detail FD ON FD.form_id = F.form_id
+             LEFT JOIN rev_conf RC ON RC.rev_conf_cd = FD.rev_conf_cd
+        WHERE
+            F.del_flg = 'F'
+            AND F.form_status != 'OLD'
+            AND F.dept_cd = #{department}
+            AND F.pos_cd = #{position}
+            AND F.lvl_cd = #{level}
+        ORDER BY FD.form_detail_ord_no;
+    </select>
+
+    <insert id="insertSubmList">
+        INSERT INTO subm_value (
+            form_subm_id,
+            form_detail_id,
+            subm_value_role,
+            subm_value
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.formSubmissionId},
+            #{item.formDetailId},
+            #{item.role},
+            #{item.value}
+            )
+        </foreach>
+    </insert>
+
 
 </mapper>

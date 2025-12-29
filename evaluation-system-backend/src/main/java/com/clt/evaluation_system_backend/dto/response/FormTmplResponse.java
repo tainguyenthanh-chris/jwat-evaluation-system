@@ -1,77 +1,83 @@
 package com.clt.evaluation_system_backend.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.util.*;
 
 @Data
-public class FormTmplResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class FormTmplResponse extends BaseResponse {
     private String id;
-    private String title;
-//    private String department;
-//    private String position;
-//    private String level;
-    private List<Section> sectionList = new ArrayList<>();
-    private Map<String, Section> sectionData = new LinkedHashMap<>();
-    private Set<String> sectionIdSet = new HashSet<>();
+    private String departmentCode;
+    private String positionCode;
+    private String levelCode;
+    private List<SecResponse> sectionList = new ArrayList<>();
 
-    public void addSection(Section section) {
-        if(!sectionData.containsKey(section.getId())) {
-            sectionData.put(section.getId(), section);
+    @JsonIgnore
+    private Map<String, SecResponse> sectionData = new LinkedHashMap<>();
+
+    public void addSectionData(SecResponse section) {
+        if(!sectionData.containsKey(section.getSectionTitle())) {
+            sectionData.put(section.getSectionTitle(), section);
         }
     }
 
-    public void addSectionItem(Section.SectionItem sectionItem) {
-        String parentId = sectionItem.getParentId();
-        sectionData.get(parentId).addSectionItem(sectionItem);
+    public void addCriteria(SecResponse section, CriteriaResponse criteria) {
+        String sectionTitle = section.getSectionTitle();
+        sectionData.get(sectionTitle).addCriteria(criteria);
     }
 
-    @Data
-    public static class Section {
-        private String id;
-        private String title;
-        private int ordNo;
-        private List<SectionItem> sectionItemList = new ArrayList<>();
-        private String answerType;
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Section section = (Section) o;
-            return Objects.equals(id, section.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(id);
-        }
-
-        public void addSectionItem(Section.SectionItem sectionItem) {
-            sectionItemList.add(sectionItem);
-        }
-
-        @Data
-        public static class SectionItem {
-            private String id;
-            private String content;
-            private int ordNo;
-            private String parentId;
-
-            @Override
-            public boolean equals(Object o) {
-                if (o == null || getClass() != o.getClass()) return false;
-                SectionItem that = (SectionItem) o;
-                return Objects.equals(id, that.id);
-            }
-
-            @Override
-            public int hashCode() {
-                return Objects.hashCode(id);
-            }
-        }
-
-
-
+    public void addCriteria(CriteriaResponse criteria) {
+        String sectionId = criteria.getParentId();
+        sectionData.get(sectionId).addCriteria(criteria);
     }
+
+    public void addSectionDataToList() {
+        sectionList.clear();
+        sectionList.addAll(sectionData.values());
+    }
+
+//    @Data
+//    public static class Section {
+//        private String id;
+//        private String title;
+//        private int ordNo;
+//        private List<Criteria> criteriaList = new ArrayList<>();
+//        private String type;
+//        private List<String> roleList;
+//
+//        public void setRolesFromString(String roleListJson) {
+//            if (roleListJson == null || roleListJson.isBlank()) {
+//                this.roleList = List.of();
+//                return;
+//            }
+//            this.roleList = Arrays.stream(roleListJson.split(","))
+//                    .map(String::trim)
+//                    .toList();
+//
+//        }
+//
+//        @Override
+//        public boolean equals(Object o) {
+//            if (o == null || getClass() != o.getClass()) return false;
+//            Section section = (Section) o;
+//            return Objects.equals(id, section.id);
+//        }
+//
+//        @Override
+//        public int hashCode() {
+//            return Objects.hashCode(id);
+//        }
+//
+//        public void addSectionItem(Section.Criteria criteria) {
+//            criteriaList.add(criteria);
+//        }
+//
+//
+//    }
 
 }

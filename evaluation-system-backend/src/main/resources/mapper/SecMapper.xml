@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SecMapper">
+
+<!--    insert section-->
+    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Sec">
+        INSERT INTO sec (
+            sec_id,
+            sec_title,
+            cre_usr_id
+        ) VALUES (
+                     #{secId},
+                     #{secTitle},
+                     #{creUsrId}
+                 )
+    </insert>
+
+    <insert id="insertSectionCue">
+        INSERT INTO sec_cue (
+            sec_id,
+            object_cd_list
+        ) VALUES  (
+                              #{secId},
+                              #{objectCdList,
+                                typeHandler=com.clt.evaluation_system_backend.mybatis.JsonStringListTypeHandler}
+                          )
+    </insert>
+
+    <select id="findActiveSection" resultType="com.clt.evaluation_system_backend.dto.response.SecResponse">
+        SELECT
+            s.sec_id AS sectionId,
+            s.sec_title AS sectionTitle,
+            sc.object_cd_list AS cueListJson,
+            rc.rev_conf_cd AS configCode,
+            rc.rev_conf_type AS configType,
+            rc.rev_conf_roles AS configRoleJson
+
+        FROM  sec s
+                  LEFT JOIN sec_cue sc ON s.sec_id = sc.sec_id
+                  LEFT JOIN rev_conf rc ON s.default_rev_conf_id = rc.rev_conf_id
+        WHERE s.sec_status != 'OLD'
+            AND s.del_flg != 'T'
+    </select>
+
+</mapper>
