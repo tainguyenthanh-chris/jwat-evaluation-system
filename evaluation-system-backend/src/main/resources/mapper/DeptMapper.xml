@@ -3,47 +3,35 @@
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.DeptMapper">
 
-    <!-- ===================== -->
-    <!-- Columns -->
-    <!-- ===================== -->
+
     <sql id="dept_columns"> dept_id AS departmentId, dept_nm AS departmentName, dept_cd AS
         departmentCode, director_id AS directorId, cre_usr_id AS createBy, cre_dt AS createDate,
         upd_usr_id AS updateBy, upd_dt AS updateDate, del_flg AS deleteFlag </sql>
 
-    <!-- ===================== -->
-    <!-- INSERT -->
-    <!-- ===================== -->
+
     <insert id="insert"
         parameterType="com.clt.evaluation_system_backend.model.Dept"> INSERT INTO dept ( dept_id,
         dept_nm, dept_cd, director_id, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
         #{deptId}, #{deptNm}, #{deptCd}, #{directorId}, #{creUsrId}, CURRENT_TIMESTAMP, #{creUsrId},
         CURRENT_TIMESTAMP, 'F' ) </insert>
 
-    <!-- ===================== -->
-    <!-- UPDATE -->
-    <!-- ===================== -->
+
     <update id="update"
         parameterType="com.clt.evaluation_system_backend.model.Dept"> UPDATE dept SET dept_nm =
         #{deptNm}, dept_cd = #{deptCd}, director_id = #{directorId}, upd_usr_id = #{creUsrId},
         upd_dt = CURRENT_TIMESTAMP WHERE dept_id = #{deptId} AND del_flg = 'F' </update>
 
-    <!-- ===================== -->
-    <!-- SOFT DELETE -->
-    <!-- ===================== -->
+
     <update id="deleteById"> UPDATE dept SET del_flg = 'T', upd_usr_id = #{updUsrId}, upd_dt =
         CURRENT_TIMESTAMP WHERE dept_id = #{deptId} </update>
 
-    <!-- ===================== -->
-    <!-- SELECT BY ID -->
-    <!-- ===================== -->
+
     <select id="findById"
         parameterType="String"
         resultType="com.clt.evaluation_system_backend.dto.response.DeptResponse"> SELECT <include
             refid="dept_columns" /> FROM dept WHERE dept_id = #{deptId} AND del_flg = 'F' </select>
 
-    <!-- ===================== -->
-    <!-- SELECT ALL (SEARCH) -->
-    <!-- ===================== -->
+
     <select id="findAll"
         parameterType="com.clt.evaluation_system_backend.dto.request.DeptSearchRequest"
         resultType="com.clt.evaluation_system_backend.dto.response.DeptResponse"> SELECT <include

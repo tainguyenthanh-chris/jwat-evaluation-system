@@ -8,10 +8,16 @@ import com.clt.evaluation_system_backend.config.JwtService;
 import com.clt.evaluation_system_backend.dto.request.LoginRequest;
 import com.clt.evaluation_system_backend.dto.request.RegisterRequest;
 import com.clt.evaluation_system_backend.dto.response.LoginResponse;
-import com.clt.evaluation_system_backend.mapper.UsrMapper;
+import com.clt.evaluation_system_backend.model.SysRole;
 import com.clt.evaluation_system_backend.model.Usr;
 import com.clt.evaluation_system_backend.service.AuthService;
 import com.clt.evaluation_system_backend.service.SeqService;
+import com.clt.evaluation_system_backend.service.SysRoleService;
+import com.clt.evaluation_system_backend.service.UsrService;
+import com.clt.evaluation_system_backend.service.UsrSysRoleService;
+import com.clt.evaluation_system_backend.util.CommonMethods;
+import com.clt.evaluation_system_backend.util.SystemRoleEnum;
+import com.clt.evaluation_system_backend.util.UsrSysRoleStatusEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,14 +26,16 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AuthServiceImpl implements AuthService {
 
-    private final UsrMapper usrMapper;
+    private final UsrService usrService;
     private final PasswordEncoder passwordEncoder;
     private final SeqService seqService;
     private final JwtService jwtService;
+    private final SysRoleService sysRoleService;
+    private final UsrSysRoleService usrSysRoleService;
 
     @Override
     public void register(RegisterRequest request) {
-        if (usrMapper.existsByEmail(request.getEmail())) {
+        if (usrService.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
@@ -42,7 +50,15 @@ public class AuthServiceImpl implements AuthService {
                 .delFlg("F")
                 .build();
 
-        usrMapper.insert(usr);
+        usrService.insert(usr);
+
+        SysRole defaultRole = sysRoleService.getRoleByCode(SystemRoleEnum.USER.getCode());
+        if (defaultRole == null) {
+            throw new RuntimeException("Default role not found");
+        }
+        usrSysRoleService.insertUsrSysRole(CommonMethods.getCurrentUsrId(), UsrSysRoleStatusEnum.ACTIVE.getCode(),
+                newId,
+                defaultRole.getSysRoleId());
     }
 
     @Override
