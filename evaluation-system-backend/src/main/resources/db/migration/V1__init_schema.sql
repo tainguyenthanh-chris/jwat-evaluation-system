@@ -308,16 +308,16 @@ CREATE TABLE seq (
 --     del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
 -- );
 
--- target_item definition
--- DROP TABLE target_item;
+-- target definition
+-- DROP TABLE target;
 
-CREATE TABLE target_item (
-    target_item_id BIGSERIAL PRIMARY KEY,
+CREATE TABLE target (
+    target_id BIGSERIAL PRIMARY KEY,
     form_subm_id VARCHAR(30) NOT NULL,
     form_detail_id BIGINT,
     target_ord_no INT4,
-    target_item_cnt text,
-    target_item_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
+    target_cnt text,
+    target_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
     cre_dt TIMESTAMP(6) NULL,
     rev_usr_id VARCHAR(30) NULL,
