@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SysRoleMapper">
+
+
+    <resultMap id="SysRoleMap" type="com.clt.evaluation_system_backend.model.SysRole">
+        <id column="sys_role_id" property="sysRoleId" />
+        <result column="sys_role_cd" property="sysRoleCd" />
+        <result column="sys_role_desc" property="sysRoleDesc" />
+
+        <result column="cre_usr_id" property="creUsrId" />
+        <result column="cre_dt" property="creDt" />
+        <result column="upd_usr_id" property="updUsrId" />
+        <result column="upd_dt" property="updDt" />
+        <result column="del_flg" property="delFlg" />
+    </resultMap>
+
+
+    <select id="findByCode"
+        parameterType="string"
+        resultMap="SysRoleMap"> select sys_role_id, sys_role_cd, sys_role_desc, cre_usr_id, cre_dt,
+        upd_usr_id, upd_dt, del_flg from sys_role where sys_role_cd = #{roleCode} and del_flg = 'F' </select>
+
+</mapper>

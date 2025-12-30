@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.clt.evaluation_system_backend.model.SysRole;
+import com.clt.evaluation_system_backend.model.Usr;
+import com.clt.evaluation_system_backend.service.UsrService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -26,6 +30,9 @@ public class JwtService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UsrService usrService;
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -38,10 +45,13 @@ public class JwtService {
     @Value("${server.port}")
     private String serverPort;
 
-    public String generateToken(String usrId) {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+    public String generateToken(Usr usr) {
+        String[] roles = usr.getRoles().stream().map(SysRole::getSysRoleCd).toArray(String[]::new);
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(usrId)
+                .subject(usr.getUsrId())
+                .claim("email", usr.getUsrEmail())
+                .claim("roles", roles)
                 .issuer(jwtIssuer)
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -71,12 +81,16 @@ public class JwtService {
 
     }
 
-    public String loginHandle(String usrId, String rawPassword) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(usrId, rawPassword);
+    public String loginHandle(String email, String rawPassword) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, rawPassword);
         Authentication authentication = authenticationManager.authenticate(authToken);
-        if (authentication == null)
-            return null;
-        return generateToken(authToken.getName());
+        if (authentication == null) {
+            throw new RuntimeException("Authentication failed for user: " + email);
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Usr usr = usrService.findByEmail(email);
+
+        return generateToken(usr);
     }
 
 }

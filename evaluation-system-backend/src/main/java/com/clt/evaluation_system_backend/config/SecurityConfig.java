@@ -1,5 +1,6 @@
 package com.clt.evaluation_system_backend.config;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -45,7 +46,7 @@ public class SecurityConfig {
 
         protected static final String[] PUBLIC_PATHS = {
                         "/api/v1/auth/login",
-                        "/api/v1/auth/register",
+                        // "/api/v1/auth/register",
         };
         protected static final String[] PUBLIC_GET_PATHS = {};
 
@@ -78,17 +79,17 @@ public class SecurityConfig {
 
         @Bean
         public JwtDecoder jwtDecoder() {
-                SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(),
-                                "HmacSHA512");
+                SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8),
+                                "HmacSHA256");
                 return NimbusJwtDecoder.withSecretKey(secretKeySpec)
-                                .macAlgorithm(MacAlgorithm.HS512)
+                                .macAlgorithm(MacAlgorithm.HS256)
                                 .build();
         }
 
         @Bean
         public JwtEncoder jwtEncoder() {
-                SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(),
-                                "HmacSHA512");
+                SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8),
+                                "HmacSHA256");
                 return new NimbusJwtEncoder(
                                 new ImmutableSecret<>(secretKeySpec));
         }

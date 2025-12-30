@@ -3,6 +3,25 @@
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.UsrMapper">
 
+    <resultMap id="UsrWithRolesMap" type="com.clt.evaluation_system_backend.model.Usr">
+        <id property="usrId" column="usr_id" />
+
+        <result property="usrPwd" column="usr_pwd" />
+        <result property="usrEmail" column="usr_email" />
+        <result property="creUsrId" column="cre_usr_id" />
+        <result property="creDt" column="cre_dt" />
+        <result property="updUsrId" column="upd_usr_id" />
+        <result property="updDt" column="upd_dt" />
+        <result property="delFlg" column="del_flg" />
+        <collection property="roles"
+            ofType="com.clt.evaluation_system_backend.model.SysRole">
+            <id property="sysRoleId" column="sys_role_id" />
+            <result property="sysRoleCd" column="sys_role_cd" />
+            <result property="sysRoleDesc" column="sys_role_desc" />
+        </collection>
+    </resultMap>
+
+
     <select id="findById"
         parameterType="String"
         resultType="com.clt.evaluation_system_backend.model.Usr"> SELECT usr_id AS usrId, usr_pwd AS
@@ -12,10 +31,12 @@
 
     <select id="findByEmail"
         parameterType="String"
-        resultType="com.clt.evaluation_system_backend.model.Usr"> SELECT usr_id AS usrId, usr_pwd AS
-        usrPwd, usr_email AS usrEmail, cre_usr_id AS creUsrId, cre_dt AS creDt, upd_usr_id AS
-        updUsrId, upd_dt AS updDt, del_flg AS delFlg FROM usr WHERE usr_email = #{email} AND del_flg
-        = 'F' </select>
+        resultMap="UsrWithRolesMap"> SELECT u.usr_id, u.usr_pwd, u.usr_email, u.cre_usr_id,
+        u.cre_dt, u.upd_usr_id, u.upd_dt, u.del_flg, r.sys_role_id, r.sys_role_cd, r.sys_role_desc
+        FROM usr u LEFT JOIN usr_sys_role ur ON u.usr_id = ur.usr_id AND ur.del_flg = 'F' AND
+        ur.usr_role_status_cd = 'ACTIVE' LEFT JOIN sys_role r ON ur.sys_role_id = r.sys_role_id AND
+        r.del_flg = 'F' WHERE u.usr_email = #{email} AND u.del_flg = 'F' </select>
+
 
     <select id="existsById" resultType="boolean"> SELECT EXISTS ( SELECT 1 FROM usr WHERE usr_id =
         #{usrId} ) </select>
