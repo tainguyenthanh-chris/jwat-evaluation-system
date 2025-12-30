@@ -1,115 +1,57 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.LvlMapper">
 
     <!-- ===================== -->
-    <!-- Result Map -->
+    <!-- Columns -->
     <!-- ===================== -->
-<!--    <resultMap id="Lv" type="com.clt.evaluation_system_backend.model.Lvl">-->
-<!--        <id column="pos_id" property="positionId"/>-->
-<!--        <result column="pos_nm" property="positionName"/>-->
-<!--        <result column="pos_cd" property="positionCode"/>-->
-<!--        <result column="pos_desc" property="positionDesc"/>-->
-<!--        <result column="cre_usr_id" property="createUserId"/>-->
-<!--        <result column="cre_dt" property="createDate"/>-->
-<!--        <result column="upd_usr_id" property="updateUserId"/>-->
-<!--        <result column="upd_dt" property="updateDate"/>-->
-<!--        <result column="del_flg" property="deleteFlag"/>-->
-<!--    </resultMap>-->
+    <sql id="lvl_columns"> lvl_id as levelId, lvl_nm as levelName, lvl_cd as levelCode, lvl_desc as
+        levelDescription, cre_usr_id as createBy, cre_dt as createDate, upd_usr_id as updateBy,
+        upd_dt as updateDate, del_flg as deleteFlag </sql>
 
     <!-- ===================== -->
     <!-- INSERT -->
-    <insert id="insert">
-        INSERT INTO lvl (
-            lvl_id,
-            lvl_nm,
-            lvl_cd,
-            lvl_desc,
-            cre_usr_id
-        ) VALUES (
-                     #{lvlId},
-                     #{lvlNm},
-                     #{lvlCd},
-                     #{lvlDesc},
-                     #{creUsrId}
-                 )
-    </insert>
-
+    <!-- ===================== -->
+    <insert id="insert"
+        parameterType="com.clt.evaluation_system_backend.model.Lvl"> INSERT INTO lvl ( lvl_id,
+        lvl_nm, lvl_cd, lvl_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
+        #{lvlId}, #{lvlNm}, #{lvlCd}, #{lvlDesc}, #{creUsrId}, CURRENT_TIMESTAMP, #{creUsrId},
+        CURRENT_TIMESTAMP, 'F' ) </insert>
 
     <!-- ===================== -->
-    <!-- Select -->
+    <!-- UPDATE -->
     <!-- ===================== -->
+    <update id="update"
+        parameterType="com.clt.evaluation_system_backend.model.Lvl"> UPDATE lvl SET lvl_nm =
+        #{lvlNm}, lvl_cd = #{lvlCd}, lvl_desc = #{lvlDesc}, upd_usr_id = #{creUsrId}, upd_dt =
+        CURRENT_TIMESTAMP WHERE lvl_id = #{lvlId} </update>
 
+    <!-- ===================== -->
+    <!-- SOFT DELETE -->
+    <!-- ===================== -->
+    <update id="deleteById" parameterType="String"> UPDATE lvl SET del_flg = 'T', upd_usr_id =
+        'dev', upd_dt = CURRENT_TIMESTAMP WHERE lvl_id = #{lvlId} </update>
 
-<!--    <select id="findAll" resultType="com.clt.evaluation_system_backend.dto.response.PosResponse">-->
-<!--        SELECT-->
-<!--            p.pos_cd,-->
-<!--            p.pos_nm-->
-<!--        FROM pos p-->
-<!--        WHERE del_flg <> 'Y'-->
-<!--    </select>-->
+    <!-- ===================== -->
+    <!-- SELECT BY ID -->
+    <!-- ===================== -->
+    <select id="findById"
+        parameterType="String"
+        resultType="com.clt.evaluation_system_backend.dto.response.LvlResponse"> SELECT <include
+            refid="lvl_columns" /> FROM lvl WHERE lvl_id = #{lvlId} AND del_flg = 'F' </select>
 
-<!--    <select id="findByCode" resultMap="PosMap">-->
-<!--        SELECT *-->
-<!--        FROM pos-->
-<!--        WHERE pos_cd = #{posCode}-->
-<!--        AND del_flg <> 'Y'-->
-<!--    </select>-->
+    <!-- ===================== -->
+    <!-- SELECT ALL -->
+    <!-- ===================== -->
+    <select id="findAll"
+        parameterType="com.clt.evaluation_system_backend.dto.request.LvlSearchRequest"
+        resultType="com.clt.evaluation_system_backend.dto.response.LvlResponse"> SELECT <include
+            refid="lvl_columns" /> FROM lvl WHERE del_flg = 'F' <if
+            test="lvlNm != null and lvlNm != ''"> AND lvl_nm ILIKE CONCAT('%', #{lvlNm}, '%') </if>
 
-<!--    <select id="findAll" resultMap="PosMap">-->
-<!--        SELECT *-->
-<!--        FROM pos-->
-<!--        WHERE del_flg <> 'Y'-->
-<!--        ORDER BY pos_cd-->
-<!--    </select>-->
+    <if
+            test="lvlCd != null and lvlCd != ''"> AND lvl_cd = #{lvlCd} </if> ORDER BY cre_dt DESC </select>
 
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    &lt;!&ndash; Insert &ndash;&gt;-->
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    <insert id="insert">-->
-<!--        INSERT INTO pos (-->
-<!--            pos_id,-->
-<!--            pos_nm,-->
-<!--            pos_cd,-->
-<!--            pos_desc,-->
-<!--            cre_usr_id,-->
-<!--            cre_dt,-->
-<!--            del_flg-->
-<!--        ) VALUES (-->
-<!--                     #{posId},-->
-<!--                     #{posName},-->
-<!--                     #{posCode},-->
-<!--                     #{posDesc},-->
-<!--                     #{createdUserId},-->
-<!--                     CURRENT_TIMESTAMP,-->
-<!--                     'N'-->
-<!--                 )-->
-<!--    </insert>-->
-
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    &lt;!&ndash; Update &ndash;&gt;-->
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    <update id="update">-->
-<!--        UPDATE pos-->
-<!--        SET pos_nm = #{posName},-->
-<!--            pos_cd = #{posCode},-->
-<!--            pos_desc = #{posDesc},-->
-<!--            upd_usr_id = #{updatedUserId},-->
-<!--            upd_dt = CURRENT_TIMESTAMP-->
-<!--        WHERE pos_id = #{posId}-->
-<!--    </update>-->
-
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    &lt;!&ndash; Soft Delete &ndash;&gt;-->
-<!--    &lt;!&ndash; ===================== &ndash;&gt;-->
-<!--    <update id="softDelete">-->
-<!--        UPDATE pos-->
-<!--        SET del_flg = 'Y',-->
-<!--            upd_dt = CURRENT_TIMESTAMP-->
-<!--        WHERE pos_id = #{posId}-->
-<!--    </update>-->
 
 </mapper>

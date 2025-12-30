@@ -2,9 +2,6 @@ package com.clt.evaluation_system_backend.dto.response;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 public class FormTmplItemResponse {
     private String formId;
