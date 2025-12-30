@@ -112,7 +112,7 @@ CREATE TABLE team (
 CREATE TABLE emp (
                      emp_id VARCHAR(30) PRIMARY KEY,
                      emp_nm VARCHAR(100),
-                     emp_no VARCHAR(6) NOT NULL UNIQUE,
+                     emp_no VARCHAR(30) NOT NULL UNIQUE,
                      emp_email VARCHAR(100) NOT NULL UNIQUE,
                      comp_role_cd VARCHAR(10),
                      dept_cd VARCHAR(10),
@@ -147,8 +147,13 @@ CREATE TABLE form (
                            dept_cd VARCHAR(10),
                            pos_cd VARCHAR(10),
                            lvl_cd VARCHAR(10),
-                           form_status VARCHAR(10) DEFAULT 'ACTIVE'
+                           form_status VARCHAR(30) NOT NULL DEFAULT 'NEW', -- NEW, ACTIVE, OLD
 
+                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                           upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
 
@@ -157,7 +162,7 @@ CREATE TABLE form (
 CREATE TABLE sec (
                           sec_id VARCHAR(30) PRIMARY KEY,
                           sec_title VARCHAR(100),
-                          rev_conf_id  VARCHAR(30) NOT NULL DEFAULT 'default',
+                          default_rev_conf_cd  VARCHAR(30) NOT NULL DEFAULT 'default',
 
                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -166,44 +171,25 @@ CREATE TABLE sec (
                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
--- sec_item definition
--- DROP TABLE sec_item;
-CREATE TABLE sec_item (
-                               sec_item_id VARCHAR(30) PRIMARY KEY,
-                               sec_id VARCHAR(30) NULL,
-                               sec_item_cnt TEXT DEFAULT 'Content item',
+-- criteria definition
+-- DROP TABLE criteria;
+CREATE TABLE criteria (
+                                criteria_id VARCHAR(30) PRIMARY KEY,
+                                criteria_cnt TEXT DEFAULT 'Content item',
+                                sec_id VARCHAR(30) NULL,
 
                                cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                                cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
                                upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
                                upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
                                del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
-);
-
--- form_tmpl definition
--- DROP TABLE form_tmpl;
-CREATE TABLE form_tmpl (
-                                    form_tmpl_id VARCHAR(30) PRIMARY KEY,
-                                    form_id VARCHAR(30),
-                                    sec_id VARCHAR(30) ,
-                                    sec_ord_no INT4 DEFAULT 1,
-                                    sec_item_id VARCHAR(30),
-                                    sec_item_ord_no INT4 DEFAULT 1,
-
-                                    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
-                                    cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                                    upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
-                                    upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                                    del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
 CREATE TABLE rev_conf (
                           rev_conf_id VARCHAR(30) PRIMARY KEY,
+                          rev_conf_cd VARCHAR(30),
                           rev_conf_type VARCHAR(30),
-                          rev_conf_num_usr INT4 NOT NULL DEFAULT 1,
-                          rev_conf_min INT4 NOT NULL DEFAULT 0,
-                          rev_conf_max INT4 NOT NULL DEFAULT 10,
-                          rev_conf_pos_cues JSONB NOT NULL DEFAULT '[]'::jsonb,
+                          rev_conf_roles JSONB DEFAULT '[]'::jsonb,
 
                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -212,18 +198,23 @@ CREATE TABLE rev_conf (
                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
-CREATE TABLE rev_conf_item (
-                               rev_conf_item_id VARCHAR(30) PRIMARY KEY,
-                               rev_conf_id VARCHAR(30),
-                               rev_conf_item_role VARCHAR(30) NOT NULL DEFAULT 'MEMBER',
-                               rev_conf_item_ord_no INT4 NOT NULL DEFAULT 1,
+-- DROP TABLE form_detail
+CREATE TABLE form_detail (
+                             form_detail_id BIGSERIAL PRIMARY KEY,
+                             form_id  VARCHAR(30) NOT NULL,
+                             sec_id  VARCHAR(30),
+                             parent_sec_id  VARCHAR(30),
+                             form_detail_ord_no int,
+                             form_detail_title TEXT,
+                             rev_conf_cd VARCHAR(30),
 
-                               cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
-                               cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                               upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
-                               upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                               del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+                             cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                             cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                             upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                             upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                             del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
+
 
 
 -- form_subm definition
@@ -231,34 +222,65 @@ CREATE TABLE rev_conf_item (
 CREATE TABLE form_subm (
                            form_subm_id VARCHAR(30) PRIMARY KEY,
                            form_id VARCHAR(30) NOT NULL,
+                           emp_id VARCHAR(30),
                            emp_nm VARCHAR(100),
-                           emp_no VARCHAR(6) NOT NULL,
-                           emp_curr_dept_cd VARCHAR(20),
-                           emp_curr_pos_cd VARCHAR(20),
-                           emp_curr_lvl_cd VARCHAR(20),
+                           emp_no VARCHAR(30) NOT NULL,
+                           emp_curr_dept_cd VARCHAR(30),
+                           emp_curr_pos_cd VARCHAR(30),
+                           emp_curr_lvl_cd VARCHAR(30),
                            rev_dt date NULL,
                            next_rev_dt date NULL,
-                           form_subm_status VARCHAR(10) DEFAULT 'PROCESSING'
+                           form_subm_status VARCHAR(30) NOT NULL DEFAULT 'PENDING'
+);
+
+CREATE TABLE subm_value (
+                            subm_value_id BIGSERIAL PRIMARY KEY,
+                            form_subm_id  VARCHAR(30) NOT NULL,
+                            form_detail_id  BIGINT,
+                            subm_value_role VARCHAR(30) NOT NULL,
+                            subm_value TEXT,
+
+                            cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                            cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                            upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                            upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                            del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+
+
 );
 
 
 
+CREATE TABLE sec_cue (
+                         id BIGSERIAL PRIMARY KEY,
+                         sec_id VARCHAR(30) NOT NULL,
+                         object_cd_list JSONB DEFAULT '[]'::jsonb
+);
+
+CREATE TABLE criteria_cue (
+                         id BIGSERIAL PRIMARY KEY,
+                         criteria_id VARCHAR(30) NOT NULL,
+                         object_cd_list JSONB DEFAULT '[]'::jsonb
+);
+
+
 -- boss_rev definition
 -- DROP TABLE boss_rev;
--- CREATE TABLE boss_rev (
---                           form_subm_id VARCHAR(30),
---                           boss_id VARCHAR(30),
---                           boss_comp_role_cd  VARCHAR(10),
---                           boss_rev_ord_no  INT4,
---
---                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
---                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
---                           upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
---                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
---                           del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
---                           CONSTRAINT boss_rev_pk PRIMARY KEY (form_subm_id, boss_id)
---
--- );
+CREATE TABLE boss_rev (
+                          form_subm_id VARCHAR(30),
+                          emp_cd VARCHAR(30),
+                          boss_id VARCHAR(30),
+                          boss_rev_role VARCHAR(30),
+                          boss_rev_ord_no INT4,
+
+                          cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                          cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                          upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                          upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                          del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
+                          CONSTRAINT boss_rev_pk PRIMARY KEY (form_subm_id, boss_id)
+
+);
 
 -- seq definition
 -- DROP TABLE seq;
@@ -290,12 +312,12 @@ CREATE TABLE seq (
 -- DROP TABLE target_item;
 
 CREATE TABLE target_item (
-    target_item_id VARCHAR(30)  PRIMARY KEY,
+    target_item_id BIGSERIAL PRIMARY KEY,
     form_subm_id VARCHAR(30) NOT NULL,
-    sec_tmpl_id VARCHAR(30),
+    form_detail_id BIGINT,
     target_ord_no INT4,
     target_item_cnt text,
-    target_item_status VARCHAR(10) NOT NULL DEFAULT 'NEW',
+    target_item_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
     cre_dt TIMESTAMP(6) NULL,
     rev_usr_id VARCHAR(30) NULL,

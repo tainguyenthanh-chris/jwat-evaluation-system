@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SeqTable("sec_item_tmpl")
-public class SecItemTmpl {
+@SeqTable("criteria")
+public class Criteria {
 
-    private String secItemTmplId;
-    private String secTmplId;
-    private String secItemTmplCnt;
+    private String criteriaId;
+    private String criteriaCnt;
 
     private String creUsrId;
     private LocalDateTime creDt;

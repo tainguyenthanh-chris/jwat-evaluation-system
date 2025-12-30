@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SeqTable("team")
 public class Team {
-
     private String teamId;
     private String teamNm;
     private String teamCd;

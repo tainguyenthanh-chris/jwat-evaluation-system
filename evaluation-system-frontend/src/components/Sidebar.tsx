@@ -41,6 +41,11 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       Icon: FaHome,
       href: "/",
     },
+    {
+      name: "Review",
+      Icon: FaHome,
+      href: "/review",
+    },
   ];
 
   const toggleGroup = (name: string): void => {
