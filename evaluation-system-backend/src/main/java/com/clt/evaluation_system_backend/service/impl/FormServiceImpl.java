@@ -27,7 +27,7 @@ public class FormServiceImpl implements FormService {
     public FormTmplResponse findFormTmplResponse(String department, String position, String level) {
         List<FormDetailResponse> formDetailResponseList = formMapper.selectFormDetail(department, position, level);
         if(formDetailResponseList == null || formDetailResponseList.isEmpty()) throw new FormException("Form does not have details");
-        if(formDetailResponseList.get(0).getParentId() != null) throw new FormException("First section is null");
+//        if(formDetailResponseList.get(0).getParentSectionId() != null) throw new FormException("First section is null");
         FormTmplResponse form = new FormTmplResponse();
         ConfigResponse config = new ConfigResponse();
         SecResponse section = new SecResponse();
@@ -44,9 +44,11 @@ public class FormServiceImpl implements FormService {
                 form.setPositionCode(item.getPositionCode());
                 form.setLevelCode(item.getLevelCode());
             }
-           if(item.getParentId()==null) {
+
+           if(item.getSectionId()!=null) {
                section = new SecResponse();
-               section.setSectionId(item.getFormDetailId());
+               section.setSectionId(item.getSectionId());
+               section.setFormDetailId(item.getFormDetailId());
                section.setSectionTitle(item.getFormDetailTitle());
                section.setSectionOrderNo(sectionOrder++);
                if(item.getReviewConfigCode()!=null){
@@ -61,11 +63,12 @@ public class FormServiceImpl implements FormService {
                form.addSectionData(section);
            } else {
                criteria = new CriteriaResponse();
-               criteria.setCriteriaId(item.getFormDetailId());
+               criteria.setFormDetailId(item.getFormDetailId());
+//               criteria.setCriteriaId(item.getFormDetailId());
                criteria.setCriteriaContent(item.getFormDetailTitle());
                criteria.setCriteriaOrdNo(criteriaOrder++);
-               criteria.setParentId(item.getParentId());
-               form.addCriteria(section, criteria);
+               criteria.setParentSectionId(item.getParentSectionId());
+               form.addCriteria(criteria);
            }
         }
         form.addSectionDataToList();

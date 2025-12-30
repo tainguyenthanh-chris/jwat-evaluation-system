@@ -6,7 +6,8 @@ import lombok.Data;
 public class FormDetailResponse {
     private String formDetailId;
     private String formId;
-    private String parentId;
+    private String sectionId;
+    private String parentSectionId;
     private Integer formDetailOrderNo;
     private String formDetailTitle;
     private String reviewConfigCode;

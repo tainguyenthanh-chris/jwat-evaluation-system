@@ -28,6 +28,7 @@ public class SecResponse extends BaseResponse {
     private List<CriteriaResponse> criteriaList = new ArrayList<>();
     private int sectionOrderNo;
     private SubmValueResponse submValueResponse;
+    private String formDetailId;
 
 
     public void setCueList() {

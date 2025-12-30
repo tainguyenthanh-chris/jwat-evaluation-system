@@ -11,8 +11,10 @@ public class CriteriaResponse extends BaseResponse {
     private String criteriaId;
     private String criteriaContent;
     private int criteriaOrdNo;
-    private String parentId;
+    private String parentSectionId;
     private SubmValueResponse submValueResponse;
+    private String formDetailId;
+
 
     @Override
     public boolean equals(Object o) {

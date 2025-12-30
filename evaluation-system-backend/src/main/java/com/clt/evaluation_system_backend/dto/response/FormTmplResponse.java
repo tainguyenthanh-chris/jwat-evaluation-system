@@ -21,8 +21,9 @@ public class FormTmplResponse extends BaseResponse {
     private Map<String, SecResponse> sectionData = new LinkedHashMap<>();
 
     public void addSectionData(SecResponse section) {
-        if(!sectionData.containsKey(section.getSectionTitle())) {
-            sectionData.put(section.getSectionTitle(), section);
+        System.out.println("Add section data: " + section.getSectionId());
+        if(!sectionData.containsKey(section.getSectionId())) {
+            sectionData.put(section.getSectionId(), section);
         }
     }
 
@@ -32,8 +33,11 @@ public class FormTmplResponse extends BaseResponse {
     }
 
     public void addCriteria(CriteriaResponse criteria) {
-        String sectionId = criteria.getParentId();
-        sectionData.get(sectionId).addCriteria(criteria);
+        System.out.println("addCriteria: parent: " + criteria.getParentSectionId());
+        String sectionId = criteria.getParentSectionId();
+        if (sectionData.containsKey(sectionId)) {
+            sectionData.get(sectionId).addCriteria(criteria);
+        }
     }
 
     public void addSectionDataToList() {

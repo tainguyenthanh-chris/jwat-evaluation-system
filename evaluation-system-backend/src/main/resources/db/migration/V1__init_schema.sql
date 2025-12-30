@@ -200,9 +200,10 @@ CREATE TABLE rev_conf (
 
 -- DROP TABLE form_detail
 CREATE TABLE form_detail (
-                             form_detail_id VARCHAR(30) PRIMARY KEY,
+                             form_detail_id BIGSERIAL PRIMARY KEY,
                              form_id  VARCHAR(30) NOT NULL,
-                             parent_id  VARCHAR(30),
+                             sec_id  VARCHAR(30),
+                             parent_sec_id  VARCHAR(30),
                              form_detail_ord_no int,
                              form_detail_title TEXT,
                              rev_conf_cd VARCHAR(30),

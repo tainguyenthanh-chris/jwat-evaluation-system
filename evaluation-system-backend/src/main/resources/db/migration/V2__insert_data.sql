@@ -56,7 +56,21 @@ VALUES
         'admin',
         CURRENT_TIMESTAMP,
         'F'
+    ),
+    (
+    'admin1',
+    '$2a$10$LHLVDiLYyMnm8m4/0ufJq.uDD9NER/wBvd18gqUiNavViDvfKMwyO',
+    'ad@company.com',
+    'admin',
+    CURRENT_TIMESTAMP,
+    'admin',
+    CURRENT_TIMESTAMP,
+    'F'
     );
+--pwd: 123456
+
+
+
 
 -- comp_role data
 INSERT INTO comp_role (comp_role_id, comp_role_cd, comp_role_desc) VALUES
@@ -129,3 +143,15 @@ INSERT INTO form_subm (form_subm_id, form_id, emp_id, emp_nm, emp_no, emp_curr_d
     ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01');
 
 
+INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd) VALUES
+                                                                                                             ('form20250101001','sec20250101001',NULL,1,'General Evaluation','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101001',2,'Background knowledge','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101001',3,'Has good thinking method & problem solving skills','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101001',4,'Cowork with leader','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001','sec20250101002',NULL,5,'Customer Satisfaction','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101002',6,'Proactive to find new tasks','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101002',7,'Having suitable attitude in any situation','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001',NULL,'sec20250101002',8,'Responsibility','POINT_SELF_LEADER'),
+                                                                                                             ('form20250101001','sec20250101003',NULL,9,'Objectives','COMMENT_SELF'),
+                                                                                                             ('form20250101001','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
+                                                                                                             ('form20250101001','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
