@@ -5,12 +5,27 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "./components/ui/provider.tsx";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </StrictMode>
 );

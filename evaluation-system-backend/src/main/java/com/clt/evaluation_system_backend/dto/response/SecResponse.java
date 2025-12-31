@@ -24,6 +24,7 @@ public class SecResponse extends BaseResponse {
     private String configRoleJson;
 
     private List<String> cueList;
+
     private ConfigResponse config;
     private List<CriteriaResponse> criteriaList = new ArrayList<>();
     private int sectionOrderNo;
