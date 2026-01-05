@@ -19,7 +19,7 @@ const DashboardLayout = () => {
   }, [isMobile]);
 
   return (
-    <Flex direction="column" height="100vh" backgroundColor="bg.muted">
+    <Flex direction="column" minHeight="100vh" backgroundColor="bg.muted">
       <Sidebar isMobile={isMobile} isSidebarOpen={isSidebarOpen} />
       <Flex
         marginLeft={!isMobile ? (isSidebarOpen ? "240px" : 0) : 0}

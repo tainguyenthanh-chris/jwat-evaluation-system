@@ -5,44 +5,140 @@
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.SecMapper">
 
-<!--    insert section-->
+    <sql id="sec_columns">
+        sec_id AS secId,
+        sec_title AS secTitle,
+        default_rev_conf_cd AS defaultRevConfCd,
+        cre_usr_id AS creUsrId,
+        upd_usr_id AS updUsrId,
+        cre_dt AS creDt,
+        upd_dt AS updDt
+    </sql>
+
+    <resultMap id="SecResponseMap" type="com.clt.evaluation_system_backend.dto.response.section.SecResponse">
+        <id property="secId" column="sec_id"/>
+        <result property="secTitle" column="sec_title"/>
+        <result property="defaultRevConfCd" column="default_rev_conf_cd"/>
+        <result property="revConfType" column="rev_conf_type"/>
+
+        <collection property="cueList" ofType="com.clt.evaluation_system_backend.dto.response.section.SecResponse$SecCue">
+            <result property="cueCd" column="cue_cd"/>
+        </collection>
+    </resultMap>
+
+
     <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Sec">
         INSERT INTO sec (
             sec_id,
             sec_title,
-            cre_usr_id
-        ) VALUES (
-                     #{secId},
-                     #{secTitle},
-                     #{creUsrId}
-                 )
+            default_rev_conf_cd,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES (
+            #{secId},
+            #{secTitle},
+            #{defaultRevConfCd},
+            #{creUsrId},
+            CURRENT_TIMESTAMP,
+            'F'
+        )
     </insert>
 
-    <insert id="insertSectionCue">
-        INSERT INTO sec_cue (
-            sec_id,
-            object_cd_list
-        ) VALUES  (
-                              #{secId},
-                              #{objectCdList,
-                                typeHandler=com.clt.evaluation_system_backend.mybatis.JsonStringListTypeHandler}
-                          )
-    </insert>
+     <update id="update" parameterType="com.clt.evaluation_system_backend.model.Sec">
+        UPDATE sec 
+            SET
+                sec_title = #{secTitle},
+                default_rev_conf_cd = #{defaultRevConfCd},
+                upd_usr_id = #{updUsrId},
+                upd_dt = CURRENT_TIMESTAMP
+        WHERE 
+            sec_id = #{secId} 
+            AND 
+            del_flg = 'F'
+    </update>
 
-    <select id="findActiveSection" resultType="com.clt.evaluation_system_backend.dto.response.SecResponse">
+    <update id="delete" parameterType="com.clt.evaluation_system_backend.model.Sec">
+        UPDATE sec
+            SET
+                del_flg = 'T',
+                upd_usr_id = #{updUsrId},
+                upd_dt = CURRENT_TIMESTAMP
+        WHERE 
+            sec_id = #{secId}
+            AND
+            del_flg = 'F'
+    </update>
+
+
+    <select id="selectById" parameterType="string" resultMap="SecResponseMap">
         SELECT
-            s.sec_id AS sectionId,
-            s.sec_title AS sectionTitle,
-            sc.object_cd_list AS cueListJson,
-            rc.rev_conf_cd AS configCode,
-            rc.rev_conf_type AS configType,
-            rc.rev_conf_roles AS configRoleJson
-
-        FROM  sec s
-                  LEFT JOIN sec_cue sc ON s.sec_id = sc.sec_id
-                  LEFT JOIN rev_conf rc ON s.default_rev_conf_id = rc.rev_conf_id
-        WHERE s.sec_status != 'OLD'
-            AND s.del_flg != 'T'
+            s.sec_id,
+            s.sec_title,
+            s.default_rev_conf_cd,
+            sc.cue_cd,
+            rc.rev_conf_type
+        FROM sec s
+        LEFT JOIN sec_cue sc
+            ON s.sec_id = sc.sec_id
+            AND sc.del_flg = 'F'
+        LEFT JOIN rev_conf rc
+            ON rc.rev_conf_cd = default_rev_conf_cd
+        WHERE
+            s.sec_id = #{secId}
+          AND
+            s.del_flg = 'F'
     </select>
 
+
+
+    <select id="selectAll" resultMap="SecResponseMap">
+        SELECT
+        s.sec_id,
+        s.sec_title,
+        s.default_rev_conf_cd,
+        sc.cue_cd,
+        rc.rev_conf_type
+        FROM sec s
+        LEFT JOIN sec_cue sc
+            ON s.sec_id = sc.sec_id
+            AND sc.del_flg = 'F'
+        LEFT JOIN rev_conf rc
+            ON rc.rev_conf_cd = s.default_rev_conf_cd
+        WHERE s.del_flg = 'F'
+            <if test="search != null and search != ''">
+                AND LOWER(s.sec_title) LIKE LOWER(CONCAT('%', #{search}, '%'))
+            </if>
+        ORDER BY
+            <choose>
+                <when test="(deptCd != null and deptCd != '') or (posCd != null and posCd != '')">
+                    CASE
+                    WHEN EXISTS (
+                    SELECT 1 FROM sec_cue sc2
+                    WHERE sc2.sec_id = s.sec_id
+                    AND sc2.del_flg = 'F'
+                    AND sc2.cue_cd IN (
+                    <trim suffixOverrides=",">
+                        <if test="deptCd != null and deptCd != ''">#{deptCd},</if>
+                        <if test="posCd != null and posCd != ''">#{posCd}</if>
+                    </trim>
+                    )
+                    ) THEN 0
+                    ELSE 1
+                    END,
+                </when>
+            </choose>
+        s.cre_dt DESC
+    </select>
+
+
+    <select id="existsById" parameterType="string" resultType="int">
+        SELECT COUNT(1)
+        FROM sec
+        WHERE 
+            sec_id = #{secId}
+            AND 
+            del_flg = 'F'
+    </select>
 </mapper>

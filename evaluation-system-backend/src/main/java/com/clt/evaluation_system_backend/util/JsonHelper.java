@@ -11,14 +11,12 @@ public class JsonHelper {
         if (json == null) {return List.of();}
         try {
             ObjectMapper mapper = new ObjectMapper();
-            List<String> list = mapper.readValue(
+            return mapper.readValue(
                     json,
                     new TypeReference<List<String>>() {}
             );
-            return list;
         } catch (JsonProcessingException e) {
             return List.of();
-//            throw new RuntimeException(e);
         }
     }
 }

@@ -5,7 +5,7 @@ import {
   Text,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { FaHome, FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { FaHome, FaChevronUp, FaChevronDown, FaWpforms } from "react-icons/fa";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import type { IconType } from "react-icons";
@@ -46,6 +46,7 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       Icon: FaHome,
       href: "/review",
     },
+    { name: "Form Builder", Icon: FaWpforms, href: "/form-builder" },
   ];
 
   const toggleGroup = (name: string): void => {

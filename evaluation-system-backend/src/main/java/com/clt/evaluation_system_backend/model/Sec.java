@@ -14,15 +14,10 @@ import java.time.LocalDateTime;
 public class Sec {
     private String secId;
     private String secTitle;
-
+    private String defaultRevConfCd;
     private String creUsrId;
-    private LocalDateTime creDt;
     private String updUsrId;
+    private LocalDateTime creDt;
     private LocalDateTime updDt;
     private String delFlg;
-
-    public Sec(String secId, String secTitle) {
-        this.secId = secId;
-        this.secTitle = secTitle;
-    }
 }
