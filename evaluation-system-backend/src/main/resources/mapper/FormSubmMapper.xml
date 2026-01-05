@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.FormSubmMapper">
+
+    <!-- ===================== -->
+    <!-- Target ResultMap -->
+    <!-- ===================== -->
+    <resultMap id="TargetResultMap"
+        type="com.clt.evaluation_system_backend.model.Target">
+
+        <id property="targetId" column="t_target_id" />
+        <result property="formSubmId" column="t_form_subm_id" />
+        <result property="formDetailId" column="t_form_detail_id" />
+        <result property="targetOrdNo" column="t_target_ord_no" />
+        <result property="targetCnt" column="t_target_cnt" />
+        <result property="targetStatus" column="t_target_status" />
+        <result property="revUsrId" column="t_rev_usr_id" />
+        <result property="revDt" column="t_rev_dt" />
+        <result property="creDt" column="t_cre_dt" />
+        <result property="updDt" column="t_upd_dt" />
+    </resultMap>
+
+    <!-- ===================== -->
+    <!-- FormSubm + Targets -->
+    <!-- ===================== -->
+    <resultMap id="FormSubmWithTargetMap"
+        type="com.clt.evaluation_system_backend.dto.response.FormSubmResponse">
+
+        <!-- Parent -->
+        <id property="formSubmId" column="form_subm_id" />
+        <result property="formId" column="form_id" />
+        <result property="empId" column="emp_id" />
+        <result property="empNm" column="emp_nm" />
+        <result property="empNo" column="emp_no" />
+        <result property="empCurrDeptCd" column="emp_curr_dept_cd" />
+        <result property="empCurrPosCd" column="emp_curr_pos_cd" />
+        <result property="empCurrLvlCd" column="emp_curr_lvl_cd" />
+        <result property="revDt" column="fs_rev_dt" />
+        <result property="nextRevDt" column="next_rev_dt" />
+        <result property="formSubmStatus" column="form_subm_status" />
+        <result property="updDt" column="fs_upd_dt" />
+
+        <!-- Child -->
+        <collection property="targets"
+            resultMap="TargetResultMap" />
+    </resultMap>
+
+    <!-- ===================== -->
+    <!-- Queries -->
+    <!-- ===================== -->
+
+    <select id="findLatestByEmpIdWithTargets"
+        parameterType="string"
+        resultMap="FormSubmWithTargetMap"> SELECT fs.form_subm_id, fs.form_id, fs.emp_id, fs.emp_nm,
+        fs.emp_no, fs.emp_curr_dept_cd, fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt AS
+        fs_rev_dt, fs.next_rev_dt, fs.form_subm_status, fs.upd_dt AS fs_upd_dt, t.target_id AS
+        t_target_id, t.form_subm_id AS t_form_subm_id, t.form_detail_id AS t_form_detail_id,
+        t.target_ord_no AS t_target_ord_no, t.target_cnt AS t_target_cnt, t.target_status AS
+        t_target_status, t.rev_usr_id AS t_rev_usr_id, t.rev_dt AS t_rev_dt, t.cre_dt AS t_cre_dt,
+        t.upd_dt AS t_upd_dt FROM form_subm fs LEFT JOIN target t ON fs.form_subm_id =
+        t.form_subm_id AND t.del_flg = 'F' WHERE fs.form_subm_id = ( SELECT form_subm_id FROM
+        form_subm WHERE emp_id = #{empId} AND del_flg = 'F' ORDER BY upd_dt DESC LIMIT 1 ) ORDER BY
+        t.target_ord_no </select>
+
+
+    <select id="findByIdWithTargets"
+        parameterType="string"
+        resultMap="FormSubmWithTargetMap"> SELECT fs.form_subm_id, fs.form_id, fs.emp_id, fs.emp_nm,
+        fs.emp_no, fs.emp_curr_dept_cd, fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt AS
+        fs_rev_dt, fs.next_rev_dt, fs.form_subm_status, fs.upd_dt AS fs_upd_dt, t.target_id AS
+        t_target_id, t.form_subm_id AS t_form_subm_id, t.form_detail_id AS t_form_detail_id,
+        t.target_ord_no AS t_target_ord_no, t.target_cnt AS t_target_cnt, t.target_status AS
+        t_target_status, t.rev_usr_id AS t_rev_usr_id, t.rev_dt AS t_rev_dt, t.cre_dt AS t_cre_dt,
+        t.upd_dt AS t_upd_dt FROM form_subm fs LEFT JOIN target t ON fs.form_subm_id =
+        t.form_subm_id AND t.del_flg = 'F' WHERE fs.form_subm_id = #{formSubmId} AND fs.del_flg =
+        'F' ORDER BY t.target_ord_no </select>
+
+</mapper>

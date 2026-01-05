@@ -1,19 +1,15 @@
-package com.clt.evaluation_system_backend.model;
-
-import com.clt.evaluation_system_backend.annotation.SeqTable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.clt.evaluation_system_backend.dto.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.clt.evaluation_system_backend.model.Target;
+
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@SeqTable("form_subm")
-public class FormSubm {
-
+public class FormSubmResponse {
     private String formSubmId;
     private String formId;
 
@@ -37,4 +33,6 @@ public class FormSubm {
     private LocalDateTime updDt;
 
     private String delFlg;
+
+    private List<Target> targets;
 }

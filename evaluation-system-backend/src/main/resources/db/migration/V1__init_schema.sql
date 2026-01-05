@@ -220,17 +220,22 @@ CREATE TABLE form_detail (
 -- form_subm definition
 -- DROP TABLE form_subm;
 CREATE TABLE form_subm (
-                           form_subm_id VARCHAR(30) PRIMARY KEY,
-                           form_id VARCHAR(30) NOT NULL,
-                           emp_id VARCHAR(30),
-                           emp_nm VARCHAR(100),
-                           emp_no VARCHAR(30) NOT NULL,
-                           emp_curr_dept_cd VARCHAR(30),
-                           emp_curr_pos_cd VARCHAR(30),
-                           emp_curr_lvl_cd VARCHAR(30),
-                           rev_dt date NULL,
-                           next_rev_dt date NULL,
-                           form_subm_status VARCHAR(30) NOT NULL DEFAULT 'PENDING'
+                        form_subm_id VARCHAR(30) PRIMARY KEY,
+                        form_id VARCHAR(30) NOT NULL,
+                        emp_id VARCHAR(30),
+                        emp_nm VARCHAR(100),
+                        emp_no VARCHAR(30) NOT NULL,
+                        emp_curr_dept_cd VARCHAR(30),
+                        emp_curr_pos_cd VARCHAR(30),
+                        emp_curr_lvl_cd VARCHAR(30),
+                        rev_dt date NULL,
+                        next_rev_dt date NULL,
+                        form_subm_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+                        cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                        cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                        upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                        upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                        del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
 CREATE TABLE subm_value (
@@ -318,10 +323,13 @@ CREATE TABLE target (
     target_ord_no INT4,
     target_cnt text,
     target_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
-    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
-    cre_dt TIMESTAMP(6) NULL,
     rev_usr_id VARCHAR(30) NULL,
     rev_dt TIMESTAMP(6) NULL,
+    
+    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+    cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+    upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 

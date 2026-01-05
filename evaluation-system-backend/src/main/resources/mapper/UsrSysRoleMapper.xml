@@ -5,7 +5,7 @@
 
     <insert id="insertUsrSysRole"> INSERT INTO usr_sys_role ( usr_id, sys_role_id,
         usr_role_status_cd, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES ( #{usrId},
-        #{sysRoleId}, #{status}, #{createBy}, NOW(), #{createBy}, NOW(), '0' ) </insert>
+        #{sysRoleId}, #{status}, #{createBy}, NOW(), #{createBy}, NOW(), 'F' ) </insert>
 
     <update id="delete"> UPDATE usr_sys_role SET del_flg = '1', upd_usr_id = #{updateBy}, upd_dt =
         NOW() WHERE usr_id = #{usrId} AND sys_role_id = #{sysRoleId} AND del_flg = 'F' </update>
