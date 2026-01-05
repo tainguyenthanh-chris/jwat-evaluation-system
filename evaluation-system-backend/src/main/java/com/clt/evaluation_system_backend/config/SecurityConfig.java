@@ -2,7 +2,6 @@ package com.clt.evaluation_system_backend.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,50 +45,50 @@ public class SecurityConfig {
 
         protected static final String[] PUBLIC_PATHS = {
                         "/api/v1/auth/login",
-                         "/api/v1/auth/register",
+                        "/api/v1/auth/register",
         };
         protected static final String[] PUBLIC_GET_PATHS = {};
 
-//        @Bean
-//        public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//                httpSecurity
-//                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                                .authorizeHttpRequests(
-//                                                requests -> requests
-//                                                                .requestMatchers(HttpMethod.POST, PUBLIC_PATHS)
-//                                                                .permitAll()
-//                                                                .requestMatchers(HttpMethod.GET, PUBLIC_GET_PATHS)
-//                                                                .permitAll()
-//                                                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
-//                                                                                "/swagger-ui.html")
-//                                                                .permitAll()
-//                                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                                                                .anyRequest().authenticated())
-//                                .oauth2ResourceServer(oauth2 -> oauth2
-//                                                .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
-//
-//                                                .authenticationEntryPoint((req, resp, ex) -> resp
-//                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-//
-//                                .sessionManagement(session -> session
-//                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//                httpSecurity.csrf(AbstractHttpConfigurer::disable);
-//                return httpSecurity.build();
-//        }
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(req -> req
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .csrf(AbstractHttpConfigurer::disable);
-        return httpSecurity.build();
-}
+                httpSecurity
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .authorizeHttpRequests(
+                                                requests -> requests
+                                                                .requestMatchers(HttpMethod.POST, PUBLIC_PATHS)
+                                                                .permitAll()
+                                                                .requestMatchers(HttpMethod.GET, PUBLIC_GET_PATHS)
+                                                                .permitAll()
+                                                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
+                                                                                "/swagger-ui.html")
+                                                                .permitAll()
+                                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                                .anyRequest().authenticated())
+                                .oauth2ResourceServer(oauth2 -> oauth2
+                                                .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
 
+                                                .authenticationEntryPoint((req, resp, ex) -> resp
+                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                httpSecurity.csrf(AbstractHttpConfigurer::disable);
+                return httpSecurity.build();
+        }
+        // @Bean
+        // public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws
+        // Exception {
+        // httpSecurity
+        // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        // .authorizeHttpRequests(req -> req
+        // .anyRequest().permitAll()
+        // )
+        // .sessionManagement(session ->
+        // session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        // )
+        // .csrf(AbstractHttpConfigurer::disable);
+        // return httpSecurity.build();
+        // }
 
         @Bean
         public JwtDecoder jwtDecoder() {

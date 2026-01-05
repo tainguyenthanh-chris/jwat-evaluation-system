@@ -10,21 +10,27 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SeqTable("target_item")
-public class TargetItem {
+@SeqTable("target")
+public class Target {
 
-    private String targetItemId;
+    private Long targetId;
+
     private String formSubmId;
-    private String secTmplId;
+    private Long formDetailId;
+
     private Integer targetOrdNo;
-    private String targetItemCnt;
-    private String targetItemStatus;
+    private String targetCnt;
+
+    private String targetStatus;
+
+    private String revUsrId;
+    private LocalDateTime revDt;
 
     private String creUsrId;
     private LocalDateTime creDt;
 
-    private String revUsrId;
-    private LocalDateTime revDt;
+    private String updUsrId;
+    private LocalDateTime updDt;
 
     private String delFlg;
 }

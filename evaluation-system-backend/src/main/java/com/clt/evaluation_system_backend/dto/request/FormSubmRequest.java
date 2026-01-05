@@ -7,8 +7,11 @@ import java.util.List;
 @Data
 public class FormSubmRequest {
     private String formSubmissionId;
-    private Long formDetailId;
-    private String role;
-    private String value;
+
+    private List<SubmissionValueDto> submissionValueList;
+
+    private List<NewTargetDto> newTargetList;
+
+    private List<CurrentTargetDto> currentTargetList;
 
 }
