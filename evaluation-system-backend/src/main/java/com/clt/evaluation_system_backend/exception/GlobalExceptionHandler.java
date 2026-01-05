@@ -22,6 +22,13 @@ public class GlobalExceptionHandler {
         return ApiResponse.fail(ex.getMessage());
     }
 
+    @ExceptionHandler(AnyException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAnyException(
+            AnyException ex) {
+        return ApiResponse.fail(ex.getMessage());
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception ex) {
         log.error("Unhandled exception", ex);

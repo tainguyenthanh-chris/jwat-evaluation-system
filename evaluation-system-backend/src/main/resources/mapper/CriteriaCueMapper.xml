@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.CriteriaCueMapper">
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO criteria_cue (
+            criteria_id,
+            cue_cd
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.criteriaId},
+            #{item.cueCd}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByCriteria" parameterType="com.clt.evaluation_system_backend.model.CriteriaCue">
+        DELETE FROM criteria_cue
+        WHERE
+            criteria_id = #{criteriaId}
+    </delete>
+
+
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.CriteriaMapper">
+
+<!--    insert criteria-->
+    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Criteria">
+        INSERT INTO criteria (
+            criteria_id,
+            criteria_cnt,
+            sec_id
+        ) VALUES (
+                     #{criteriaId},
+                     #{criteriaCnt},
+                     #{secId}
+                 )
+    </insert>
+
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO criteria (
+            criteria_id,
+            criteria_cnt,
+            sec_id
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.criteriaId},
+            #{item.criteriaCnt},
+            #{item.secId}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.clt.evaluation_system_backend.model.Criteria">
+        UPDATE criteria
+        <set>
+            <if test="criteriaCnt != null">
+                criteria_cnt = #{criteriaCnt},
+            </if>
+            <if test="secId != null">
+                sec_id = #{secId},
+            </if>
+            <if test="delFlg != null">
+                del_flg = #{delFlg},
+            </if>
+        </set>
+        WHERE criteria_id = #{criteriaId}
+    </update>
+
+    <select id="select" resultType="com.clt.evaluation_system_backend.dto.response.CriteriaResponse">
+        SELECT
+            C.criteria_id AS criteriaId,
+            C.criteria_cnt AS criteriaContent,
+            C.sec_id AS sectionId,
+            string_agg(CC.cue_cd, ',') AS cueList
+        FROM criteria C
+                 LEFT JOIN criteria_cue CC ON CC.criteria_id = C.criteria_id
+        WHERE C.del_flg = 'F'
+            <if test="sectionId != null">
+                AND C.sec_id = #{sectionId}
+            </if>
+            <if test="criteriaId != null">
+                AND C.criteria_id = #{criteriaId}
+            </if>
+        GROUP BY C.criteria_id, C.criteria_cnt, C.sec_id
+    </select>
+
+
+
+</mapper>

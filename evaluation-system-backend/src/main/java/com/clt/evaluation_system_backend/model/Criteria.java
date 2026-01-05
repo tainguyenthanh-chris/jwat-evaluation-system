@@ -15,10 +15,16 @@ public class Criteria {
 
     private String criteriaId;
     private String criteriaCnt;
-
+    private String secId;
     private String creUsrId;
     private LocalDateTime creDt;
     private String updUsrId;
     private LocalDateTime updDt;
     private String delFlg;
+
+    public Criteria(String criteriaId, String criteriaCnt, String secId) {
+        this.criteriaId = criteriaId;
+        this.criteriaCnt = criteriaCnt;
+        this.secId = secId;
+    }
 }

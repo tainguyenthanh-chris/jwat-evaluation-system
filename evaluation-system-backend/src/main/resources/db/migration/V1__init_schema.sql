@@ -260,7 +260,7 @@ CREATE TABLE sec_cue (
 CREATE TABLE criteria_cue (
                          id BIGSERIAL PRIMARY KEY,
                          criteria_id VARCHAR(30) NOT NULL,
-                         object_cd_list JSONB DEFAULT '[]'::jsonb
+                         cue_cd VARCHAR(30)
 );
 
 
