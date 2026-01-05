@@ -1,15 +1,20 @@
 package com.clt.evaluation_system_backend.service;
 
-import com.clt.evaluation_system_backend.dto.request.SecRequest;
-import com.clt.evaluation_system_backend.dto.response.SecResponse;
-
 import java.util.List;
 
-public interface SecService {
-    int create(SecRequest request);
-    // use when query active tmpl
-    List<SecResponse> findActiveSection();
+import com.clt.evaluation_system_backend.dto.request.section.CreateSectionRequest;
+import com.clt.evaluation_system_backend.dto.request.section.SectionFilterCriteria;
+import com.clt.evaluation_system_backend.dto.request.section.UpdateSecRequest;
+import com.clt.evaluation_system_backend.dto.response.section.SecResponse;
 
-    // use when query tmpl for subm (don't care the status of sec)
-    List<SecResponse> findByTmpl(String tmplId);
+public interface SecService {
+    SecResponse createSection(CreateSectionRequest request);
+
+    void updateSection(UpdateSecRequest request, String secId);
+
+    void deleteSection(String secId);
+
+    SecResponse getSectionById(String secId);
+
+    List<SecResponse> getAllSections(SectionFilterCriteria filter);
 }
