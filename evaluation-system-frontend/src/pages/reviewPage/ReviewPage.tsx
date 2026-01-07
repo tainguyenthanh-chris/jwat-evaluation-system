@@ -19,6 +19,15 @@ export type SubmitEvaluationPayload = {
   submissionValueList: SubmissionValue[];
   newTargetList: Partial<Target>[];
   currentTargetList: Partial<Target>[];
+  summarySubmissionList: Partial<SummarySubmission>[];
+};
+
+export type SummarySubmission = {
+  summarySubmissionId?: string;
+  sectionTitle: string;
+  summaryPoint: string;
+  summaryGrade: string;
+  summaryOrderNo: number;
 };
 
 const ReviewPage = () => {
@@ -81,11 +90,18 @@ const ReviewPage = () => {
       sectionRefs.current
     ).flatMap((ref) => ref?.getData().currentTargetListLocal ?? []);
 
+    const summarySubmissionList: Partial<SummarySubmission>[] = Object.values(
+      sectionRefs.current
+    )
+      .map((ref) => ref?.getData().summarySubmission)
+      .filter((s): s is SummarySubmission => !!s && s.summaryPoint !== null);
+
     const payload: SubmitEvaluationPayload = {
       submissionValueList,
       newTargetList,
       currentTargetList,
       formSubmissionId: submissionInfo.formSubmissionId!,
+      summarySubmissionList: summarySubmissionList,
     };
     console.log("SUBMIT PAYLOAD:", payload);
     submitMutation.mutate(payload);

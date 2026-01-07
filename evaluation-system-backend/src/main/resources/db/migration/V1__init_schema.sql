@@ -333,5 +333,16 @@ CREATE TABLE target (
     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
+CREATE TABLE sum_subm (
+                              sum_subm_id   VARCHAR(30)  PRIMARY KEY,
+                              form_subm_id      VARCHAR(30)  NOT NULL,
+                              sec_title         TEXT         NOT NULL,
+                              sum_point     VARCHAR(30),
+                              sum_grade     VARCHAR(1),
+                              sum_order_no  int
+
+);
+
+
 
 
