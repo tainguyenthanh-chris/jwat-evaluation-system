@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { FormSectionItem } from "./FormSectionItem";
 export type SectionCriteria = {
@@ -40,6 +40,10 @@ export interface FormSectionHandler {
 export const FormSectionList = forwardRef<FormSectionHandler, {}>(
   (_props, ref) => {
     const [formSections, setFormSections] = useState<FormSection[]>([]);
+
+    useEffect(() => {
+      console.log(formSections);
+    }, [formSections]);
 
     const handleMoveSectionUp = (tempId: string) => {
       const index = formSections.findIndex(

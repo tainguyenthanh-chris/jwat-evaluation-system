@@ -118,16 +118,16 @@ INSERT INTO form (form_id, form_title, dept_cd, pos_cd, lvl_cd) VALUES
 
 -- sec data
 INSERT INTO sec (sec_id, sec_title,default_rev_conf_cd) VALUES
-    ('sec20250101002','Customer Satisfaction','rev_conf20250101001'),
-    ('sec20250101001','General Evaluation','rev_conf20250101001'),
-    ('sec20250101003','Quality','rev_conf20250101001'),
-    ('sec20250101004','Performance','rev_conf20250101001'),
-    ('sec20250101005','Objectives','rev_conf20250101002'),
-    ('sec20250101006','Achievements','rev_conf20250101002'),
-    ('sec20250101007','Need Improvement','rev_conf20250101002'),
-    ('sec20250101008','Employee''''s suggestion/requests to Company','rev_conf20250101002'),
-    ('sec20250101009','Conclusion & Recommendation of the 1st Line Manager','rev_conf20250101003'),
-    ('sec20250101010','General Manager''''s comments and decision','rev_conf20250101002');
+    ('sec20250101002','Customer Satisfaction','POINT_SELF_LEADER'),
+    ('sec20250101001','General Evaluation','POINT_SELF_LEADER'),
+    ('sec20250101003','Quality','POINT_SELF_LEADER'),
+    ('sec20250101004','Performance','POINT_SELF_LEADER'),
+    ('sec20250101005','Objectives','POINT_SELF_LEADER'),
+    ('sec20250101006','Achievements','POINT_SELF_LEADER'),
+    ('sec20250101007','Need Improvement','POINT_SELF_LEADER'),
+    ('sec20250101008','Employee''''s suggestion/requests to Company','POINT_SELF_LEADER'),
+    ('sec20250101009','Conclusion & Recommendation of the 1st Line Manager','POINT_SELF_LEADER'),
+    ('sec20250101010','General Manager''''s comments and decision','POINT_SELF_LEADER');
 
 -- rev_conf data
 INSERT INTO rev_conf (rev_conf_id, rev_conf_cd,rev_conf_type, rev_conf_roles) VALUES
@@ -139,8 +139,9 @@ INSERT INTO rev_conf (rev_conf_id, rev_conf_cd,rev_conf_type, rev_conf_roles) VA
     ('rev_conf20250101006','TARGET_LEADER', 'TARGET', '["LEADER"]'::jsonb);
 
 -- form_subm data
-INSERT INTO form_subm (form_subm_id, form_id, emp_id, emp_nm, emp_no, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt) VALUES
-    ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01');
+INSERT INTO form_subm (form_subm_id, form_id, emp_id, emp_nm, emp_no, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt,form_subm_status) VALUES
+    ('form_subm20250101000','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01','FINAL'),
+    ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01','PENDING');
 
 
 INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd) VALUES
@@ -155,3 +156,21 @@ INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, for
                                                                                                              ('form20250101001','sec20250101003',NULL,9,'Objectives','COMMENT_SELF'),
                                                                                                              ('form20250101001','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
                                                                                                              ('form20250101001','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
+INSERT INTO boss_rev (form_subm_id, emp_no, boss_no, boss_rev_role, boss_rev_ord_no, isFinal) VALUES
+                                                                                                  ('form_subm20250101001','258157','258400','LEADER','1','F'),
+                                                                                                  ('form_subm20250101001','258157','258401','MANAGER','1','F');
+
+INSERT INTO target (form_subm_id,form_detail_id,target_ord_no,target_cnt,target_status) VALUES
+                                                                                            ('form_subm20250101000','10',1,'Ielts 7.0','WAIT'),
+                                                                                            ('form_subm20250101000','10',2,'Join 10 projects','WAIT'),
+                                                                                            ('form_subm20250101001','11',1,'Promote to Middle','NEW'),
+                                                                                            ('form_subm20250101001','11',2,'Lead a team','NEW');
+
+
+INSERT INTO subm_value (subm_value_id,form_subm_id,form_detail_id,subm_value_role,subm_value,cre_usr_id,cre_dt,upd_usr_id,upd_dt,del_flg) VALUES
+                                                                                                                                                     (1,'form_subm20250101001',3,'SELF','10','default','2026-01-06 15:35:16.795686','default','2026-01-06 15:35:16.795686','F'),
+                                                                                                                                                     (2,'form_subm20250101001',3,'LEADER','9','default','2026-01-06 15:35:16.800495','default','2026-01-06 15:35:16.800495','F'),
+                                                                                                                                                     (3,'form_subm20250101001',4,'SELF','10','default','2026-01-06 15:35:16.802848','default','2026-01-06 15:35:16.802848','F'),
+                                                                                                                                                     (4,'form_subm20250101001',4,'LEADER','9','default','2026-01-06 15:35:16.805278','default','2026-01-06 15:35:16.805278','F'),
+                                                                                                                                                     (5,'form_subm20250101001',9,'SELF','tuyet voi','default','2026-01-06 15:35:16.807745','default','2026-01-06 15:35:16.807745','F'),
+                                                                                                                                                     (6,'form_subm20250101001',10,'LEADER','thang chuc','default','2026-01-06 15:35:16.811833','default','2026-01-06 15:35:16.811833','F');

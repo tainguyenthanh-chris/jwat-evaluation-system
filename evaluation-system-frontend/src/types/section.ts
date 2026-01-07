@@ -5,9 +5,11 @@ export interface Section {
   formDetailId: string;
   sectionTitle: string;
   config?: {
-    type?: string;
-    roleList?: string[];
+    configType?: string;
+    configRoleList?: string[];
   };
   criteriaList?: Criteria[];
   targetList?: Target[];
+  configCode?: string;
+
 }

@@ -1,8 +1,11 @@
 package com.clt.evaluation_system_backend.controller;
 
+import com.clt.evaluation_system_backend.dto.request.FormRequest;
 import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
+import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
+import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
 import com.clt.evaluation_system_backend.service.FormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,8 @@ public class FormController {
     private final FormService formService;
 
     @GetMapping("")
-    public ResponseEntity<?> getTemplate(@RequestParam String department,
-                                        @RequestParam String position,
-                                        @RequestParam String level) {
-        FormTmplResponse formTmplResponse = formService.findFormTmplResponse(department,position,level);
+    public ResponseEntity<?> getTemplate(FormRequest request) {
+        FormTmplResponse formTmplResponse = formService.findFormTmplResponse(request);
         return ApiResponse.ok(formTmplResponse);
     }
 
@@ -52,7 +53,11 @@ public class FormController {
         return ApiResponse.success(rows + " are inserted successfully");
     }
 
-
-
+    @GetMapping("/submission/employeeNo")
+    public ResponseEntity<?> getSubmissionDataByEmployee(SubmissionDataRequest request) {
+        System.out.println("/submission/employeeNo");
+        SubmissionDataResponse response = formService.getSubmissionDataByEmployeeNo(request);
+        return ApiResponse.ok(response);
+    }
 
 }

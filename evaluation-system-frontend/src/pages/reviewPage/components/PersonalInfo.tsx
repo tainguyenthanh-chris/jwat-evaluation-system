@@ -1,11 +1,11 @@
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import type { Employee } from "../../../types/employee";
+import type { SubmissionInfo } from "../../../types/submissionInfo";
 
 type Props = {
-  employee: Partial<Employee>;
+  submissionInfo: Partial<SubmissionInfo>;
 };
 
-const PersonalInfo: React.FC<Props> = ({ employee }) => {
+const PersonalInfo: React.FC<Props> = ({ submissionInfo }) => {
   const InfoCell = ({
     label,
     value,
@@ -34,17 +34,23 @@ const PersonalInfo: React.FC<Props> = ({ employee }) => {
       </Box>
 
       <Grid templateColumns="1fr 1fr" fontSize="sm">
-        <InfoCell label="Full name" value={employee.employeeName} />
+        <InfoCell label="Full name" value={submissionInfo.employeeName} />
         <InfoCell
           label="Review by"
-          value={employee.reviewers?.map((r) => r.employeeName).join(", ")}
+          value={submissionInfo.reviewers?.map((r) => r.bossName).join(", ")}
         />
 
-        <InfoCell label="Employee code" value={employee.employeeCode} />
-        <InfoCell label="Review date" value={employee.reviewDate} />
+        <InfoCell label="Employee code" value={submissionInfo.employeeNo} />
+        <InfoCell label="Review date" value={submissionInfo.reviewDate} />
 
-        <InfoCell label="Info" value={employee.position} />
-        <InfoCell label="Next review date" value={employee.nextReviewDate} />
+        <InfoCell
+          label="Info"
+          value={`${submissionInfo.department} - ${submissionInfo.position} - ${submissionInfo.level}`}
+        />
+        <InfoCell
+          label="Next review date"
+          value={submissionInfo.nextReviewDate}
+        />
       </Grid>
     </Box>
   );

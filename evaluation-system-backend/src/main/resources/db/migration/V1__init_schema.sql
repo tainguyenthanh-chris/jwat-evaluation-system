@@ -272,21 +272,21 @@ CREATE TABLE criteria_cue (
 -- boss_rev definition
 -- DROP TABLE boss_rev;
 CREATE TABLE boss_rev (
+                          boss_rev_id BIGSERIAL PRIMARY KEY,
                           form_subm_id VARCHAR(30),
-                          emp_cd VARCHAR(30),
-                          boss_id VARCHAR(30),
+                          emp_no VARCHAR(30),
+                          boss_no VARCHAR(30),
                           boss_rev_role VARCHAR(30),
                           boss_rev_ord_no INT4,
+                          isFinal VARCHAR(1),
 
                           cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                           cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
                           upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
                           upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                          del_flg VARCHAR(1) NOT NULL DEFAULT 'F',
-                          CONSTRAINT boss_rev_pk PRIMARY KEY (form_subm_id, boss_id)
+                          del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 
 );
-
 -- seq definition
 -- DROP TABLE seq;
 CREATE TABLE seq (

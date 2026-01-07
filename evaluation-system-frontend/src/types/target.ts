@@ -4,6 +4,6 @@ export interface Target {
   targetOrderNo: number;
   targetContent: string;
   targetStatus: string;
+  formSubmissionId?: string;
 }
-
 
