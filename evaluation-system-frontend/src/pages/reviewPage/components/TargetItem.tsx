@@ -25,16 +25,16 @@ const TargetItem: React.FC<Props> = ({ item, onChangeStatus, onDelete }) => {
   const getStatusColor = (value: string) => {
     switch (value) {
       case "SUCCESS":
-        return "green.500";
+        return "#98ebb9";
       case "FAIL":
-        return "red.500";
+        return "#f38d8d";
       default:
         return "gray.400";
     }
   };
   return (
     <Flex align="center" justify="space-between" ml={"10px"} my={"5px"}>
-      {!item.targetStatus && (
+      {item.targetStatus === "NEW" && (
         <IconButton
           colorPalette="red"
           size="sm"
@@ -62,16 +62,16 @@ const TargetItem: React.FC<Props> = ({ item, onChangeStatus, onDelete }) => {
           padding={"5px"}
           bgColor={
             item.targetStatus === "SUCCESS"
-              ? "#38A169"
+              ? "#98ebb9"
               : item.targetStatus === "FAIL"
-              ? "#E53E3E"
-              : "yellow.200"
+              ? "#f38d8d"
+              : "#f9f6c2"
           }
         >
           {" "}
           <Text>{item.targetContent}</Text>
         </Box>
-        {item.targetStatus && (
+        {item.targetStatus !== "NEW" && (
           <RadioGroup.Root
             value={item.targetStatus}
             onValueChange={(details) => {

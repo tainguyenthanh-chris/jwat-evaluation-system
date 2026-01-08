@@ -14,4 +14,7 @@ public class FormSubmRequest {
 
     private List<CurrentTargetDto> currentTargetList;
 
+    private Long formDetailId;
+    private String role;
+    private String value;
 }

@@ -1,21 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.TargetMapper">
 
-    <!--    selectFormTmplItem by dept, pos, lvl-->
-    <select id="selectTarget"
-        resultType="com.clt.evaluation_system_backend.dto.response.TargetResponse"> SELECT f.form_id
-        AS formId, f.dept_cd AS departmentCode, f.pos_cd AS positionCode, f.lvl_cd AS levelCode,
-        st.sec_id AS sectionId, st.sec_title as sectionTitle, ft.sec_ord_no as sectionOrderNo,
-        cri.criteria_id AS criteriaId, cri.criteria_cnt as criteriaContent, ft.criteria_ord_no as
-        criteriaOrderNo, rc.rev_conf_type AS type, rc.rev_conf_roles AS roles FROM form_tmpl ft LEFT
-        JOIN criteria cri ON cri.criteria_id = ft.criteria_id LEFT JOIN sec st ON st.sec_id =
-        ft.sec_id LEFT JOIN form f ON f.form_id = ft.form_id LEFT JOIN rev_conf rc ON rc.rev_conf_cd
-        = ft.rev_conf_cd WHERE f.dept_cd = #{department} AND f.pos_cd = #{position} AND f.lvl_cd =
-        #{level} AND f.form_status != 'OLD' AND f.del_flg != 'T' AND st.sec_status != 'OLD' AND
-        st.del_flg != 'T' AND cri.criteria_status != 'OLD' AND cri.del_flg != 'T' ORDER BY
-        ft.sec_ord_no, ft.criteria_ord_no ASC; </select>
+<!--    selectFormTmplItem by dept, pos, lvl-->
+    <select id="selectTarget" resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse$Target">
+        SELECT
+            T.target_id AS targetId,
+            T.form_subm_id AS formSubmissionId,
+            T.form_detail_id AS formDetailId,
+            T.target_ord_no AS targetOrderNo,
+            T.target_cnt AS targetContent,
+            T.target_status AS targetStatus
+        FROM "target" T
+        WHERE T.form_subm_id = #{formSubmissionId}
+            <if test="queryType == 'REVIEW'">
+                OR T.form_subm_id =
+                    (SELECT FS.form_subm_id
+                        FROM form_subm FS
+                        WHERE
+                        FS.form_subm_status = 'FINAL'
+                        ORDER BY FS.rev_dt DESC
+                        LIMIT 1
+                    )
+            </if>
+    </select>
 
     <update id="updateTargets">
         <foreach collection="list"
@@ -30,5 +41,7 @@
         #{t.targetOrdNo}, #{t.targetCnt}, #{t.targetStatus}, #{t.revUsrId}, #{t.revDt},
         #{t.creUsrId}, #{t.updUsrId} ) </foreach>
     </insert>
+
+
 
 </mapper>
