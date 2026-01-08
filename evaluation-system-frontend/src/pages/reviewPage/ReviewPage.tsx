@@ -13,6 +13,7 @@ import {
   type EvaluationQuery,
 } from "../../hooks/useEvaluation";
 import type { BossReview } from "../../types/bossReview";
+import ConfirmDialog from "../../components/dialog/ConfirmDialog";
 
 export type SubmitEvaluationPayload = {
   formSubmissionId: string;
@@ -161,15 +162,13 @@ const ReviewPage = () => {
         />
       ))}
       <Flex>
-        <Button
-          mt={6}
-          colorScheme="blue"
-          loadingText="Submitting..."
-          onClick={handleSubmit}
-          bgColor={"blue.700"}
-        >
-          Submit
-        </Button>
+        <ConfirmDialog
+          triggerButtonTitle="Submit"
+          title="Submit form"
+          secondaryTitle="After submit, you cannot update any more?"
+          onConfirm={handleSubmit}
+          triggerButtonProps={{ colorScheme: "red" }}
+        />
       </Flex>
     </Box>
   );

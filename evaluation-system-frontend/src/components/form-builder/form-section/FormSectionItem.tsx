@@ -112,7 +112,6 @@ export const FormSectionItem = ({
 
   const handleAddCriteria = () => {
     if (!newCriteriaTitle.trim()) return;
-
     onAddCriteria({
       sectionId: formSection.sectionId,
       criteriaId: `criteria_${Date.now()}`,

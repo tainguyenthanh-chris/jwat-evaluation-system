@@ -9,6 +9,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstant, type ApiResponse } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
+import type { SelectionContextRef } from "../../pages/form/FormBuilderPage";
+import type { Criteria } from "../../types/criteria";
 
 export type AddFormTemplate = {
   formTitle: string;
@@ -23,14 +25,17 @@ export interface FormCreatorHandler {
   addSection: (section: Omit<FormSection, "order" | "criteriaList">) => void;
   getSelectedSection: () => FormSection | null;
   getData: () => AddFormTemplate | undefined;
+  addCriteria: (criteria: Partial<Criteria>) => void;
 }
 
 export type FormCreatorProps = {
   onChange: () => void;
+  selectionCtxRef: React.RefObject<SelectionContextRef>;
+  onSectionSelected?: () => void;
 };
 
 export const FormCreator = forwardRef<FormCreatorHandler, FormCreatorProps>(
-  ({ onChange }, ref) => {
+  ({ onChange, selectionCtxRef, onSectionSelected }, ref) => {
     const metaRef = useRef<FormMetaHandler>(null);
     const structureRef = useRef<FormStructureEditorHandler>(null);
 
@@ -80,6 +85,9 @@ export const FormCreator = forwardRef<FormCreatorHandler, FormCreatorProps>(
       getSelectedSection: () =>
         structureRef.current?.getSelectedSection() ?? null,
       getData: () => metaRef?.current?.getData(),
+      addCriteria: (criteria) => {
+        structureRef.current?.addCriteria(criteria);
+      },
     }));
 
     return (
@@ -88,6 +96,8 @@ export const FormCreator = forwardRef<FormCreatorHandler, FormCreatorProps>(
         <FormStructureEditor
           ref={structureRef}
           getFormMeta={() => metaRef.current?.getData()}
+          selectionCtxRef={selectionCtxRef}
+          onSectionSelected={onSectionSelected}
         />
       </Flex>
     );

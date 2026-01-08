@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   Field,
@@ -22,8 +21,6 @@ import { axiosInstant } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
 import { queryClient } from "../../lib/queryClient";
 import { useReviewConfigs } from "../../context/ReviewConfigContext";
-import type { SelectionContextRef } from "../../pages/form/FormBuilderPage";
-import type { Criteria } from "../../types/criteria";
 
 type AddSectionForm = {
   sectionTitle: string;
@@ -38,21 +35,18 @@ export interface FormStructureEditorHandler {
   getSections: () => FormSection[];
   clearSections: () => void;
   getSelectedSection: () => FormSection | null;
-  addCriteria: (criteria: Partial<Criteria>) => void;
 }
 
 export interface FormStructureEditorProps {
   getFormMeta: () =>
     | { departmentCode: string; positionCode: string }
     | undefined;
-  selectionCtxRef: React.RefObject<SelectionContextRef>;
-  onSectionSelected?: () => void;
 }
 
 export const FormStructureEditor = forwardRef<
   FormStructureEditorHandler,
   FormStructureEditorProps
->(({ getFormMeta, selectionCtxRef, onSectionSelected }, ref) => {
+>(({ getFormMeta }, ref) => {
   const formSectionRef = useRef<FormSectionHandler>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,34 +131,15 @@ export const FormStructureEditor = forwardRef<
       setError(null);
       return true;
     },
-    addCriteria: (criteria) => formSectionRef.current?.addCriteria(criteria),
   }));
 
-  // const sectionSuggestions = [
-  //   "Technical Skill",
-  //   "Soft Skill",
-  //   "Work Attitude",
-  //   "Communication",
-  //   "Problem Solving",
-  // ];
-
-  // const [keyword, setKeyword] = useState("");
-  // const filteredSuggestions = keyword
-  //   ? sectionSuggestions.filter((s) =>
-  //       s.toLowerCase().includes(keyword.toLowerCase())
-  //     )
-  //   : [];
   return (
     <Field.Root invalid={!!error}>
       <Field.Label>Form structure</Field.Label>
       <Card.Root width="100%">
         <Card.Body padding="16px" minHeight="360px">
           <Flex flexDirection="column" gap="16px">
-            <FormSectionList
-              ref={formSectionRef}
-              selectionCtxRef={selectionCtxRef}
-              onSectionSelected={onSectionSelected}
-            />
+            <FormSectionList ref={formSectionRef} />
 
             <Card.Root>
               <Card.Body padding="16px">
@@ -186,41 +161,8 @@ export const FormStructureEditor = forwardRef<
                           placeholder="Enter section name..."
                           {...register("sectionTitle", {
                             required: "Section name is required",
-                            // onChange: (e) => {
-                            //   setKeyword(e.target.value);
-                            // },
                           })}
                         />
-                        {/* {filteredSuggestions.length > 0 && (
-                          <Box
-                            mt={1}
-                            border="1px solid"
-                            borderColor="gray.200"
-                            borderRadius="md"
-                            bg="white"
-                            zIndex={10}
-                          >
-                            {filteredSuggestions.map((item) => (
-                              <Box
-                                key={item}
-                                px={3}
-                                py={2}
-                                cursor="pointer"
-                                _hover={{ bg: "gray.100" }}
-                                onClick={() => {
-                                  setKeyword(item); // UI
-                                  // setValue("sectionTitle", item, {
-                                  //   shouldValidate: true,
-                                  //   shouldDirty: true,
-                                  // });
-                                }}
-                              >
-                                {item}
-                              </Box>
-                            ))}
-                          </Box>
-                        )} */}
-
                         {errors.sectionTitle && (
                           <Field.ErrorText>
                             {errors.sectionTitle.message}
