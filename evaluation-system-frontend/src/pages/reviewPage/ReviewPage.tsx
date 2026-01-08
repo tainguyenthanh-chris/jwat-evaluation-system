@@ -76,24 +76,49 @@ const ReviewPage = () => {
 
   const handleSubmit = () => {
     console.log("handleSubmit");
-    const submissionValueList: SubmissionValue[] = Object.values(
-      sectionRefs.current
-    ).flatMap((ref) =>
-      Object.values(ref?.getData().submissionValueMapLocal ?? {})
+
+    const data = Object.values(sectionRefs.current)
+      .map((ref) => ref?.getData())
+      .filter(Boolean);
+
+    const errorSection = data.find((d) => d.error);
+    if (errorSection) {
+      // toast.warning(errorSection.message ?? "Invalid input");
+      alert(errorSection.message ?? "Invalid input");
+      return;
+    }
+
+    // const submissionValueList: SubmissionValue[] = Object.values(
+    //   sectionRefs.current
+    // ).flatMap((ref) =>
+    //   Object.values(ref?.getData().submissionValueMapLocal ?? {})
+    // );
+    const submissionValueList: SubmissionValue[] = data.flatMap((d) =>
+      Object.values(d.submissionValueMapLocal ?? {})
     );
 
-    const newTargetList: Partial<Target>[] = Object.values(
-      sectionRefs.current
-    ).flatMap((ref) => ref?.getData().newTargetListLocal ?? []);
+    // const newTargetList: Partial<Target>[] = Object.values(
+    //   sectionRefs.current
+    // ).flatMap((ref) => ref?.getData().newTargetListLocal ?? []);
 
-    const currentTargetList: Partial<Target>[] = Object.values(
-      sectionRefs.current
-    ).flatMap((ref) => ref?.getData().currentTargetListLocal ?? []);
+    const newTargetList: Partial<Target>[] = data.flatMap(
+      (d) => d.newTargetListLocal ?? []
+    );
 
-    const summarySubmissionList: Partial<SummarySubmission>[] = Object.values(
-      sectionRefs.current
-    )
-      .map((ref) => ref?.getData().summarySubmission)
+    // const currentTargetList: Partial<Target>[] = Object.values(
+    //   sectionRefs.current
+    // ).flatMap((ref) => ref?.getData().currentTargetListLocal ?? []);
+    const currentTargetList: Partial<Target>[] = data.flatMap(
+      (d) => d.currentTargetListLocal ?? []
+    );
+
+    // const summarySubmissionList: Partial<SummarySubmission>[] = Object.values(
+    //   sectionRefs.current
+    // )
+    //   .map((ref) => ref?.getData().summarySubmission)
+    //   .filter((s): s is SummarySubmission => !!s && s.summaryPoint !== null);
+    const summarySubmissionList: Partial<SummarySubmission>[] = data
+      .map((d) => d.summarySubmission)
       .filter((s): s is SummarySubmission => !!s && s.summaryPoint !== null);
 
     const payload: SubmitEvaluationPayload = {

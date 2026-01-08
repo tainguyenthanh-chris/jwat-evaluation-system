@@ -53,6 +53,12 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
     //   // expose to parent
     useImperativeHandle(ref, () => ({
       getData() {
+        if (hasEmptyPointInput()) {
+          return {
+            error: "EMPTY_INPUT",
+            message: "Please fill all required scores before submit",
+          };
+        }
         const hasNewTarget = newTargetListLocal.some((t) => !t.targetId);
 
         const isNewTargetListChanged =
@@ -187,6 +193,24 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
       if (point >= 8) return "B";
       if (point >= 6.5) return "C";
       return "D";
+    };
+
+    const hasEmptyPointInput = (): boolean => {
+      if (config?.configType !== "POINT") return false;
+      if (!section.criteriaList?.length) return false;
+      if (!config.configRoleList?.length) return false;
+
+      return section.criteriaList.some((c) =>
+        config.configRoleList!.some((r) => {
+          if (!checkRole(r)) return false;
+          const key = `${c.formDetailId}_${r}`;
+          const item =
+            submissionValueMapLocal?.[key] ?? submissionValueMap?.[key];
+          const value = item?.formSubmissionValue;
+
+          return value === "" || value === undefined || value === null;
+        })
+      );
     };
 
     return (

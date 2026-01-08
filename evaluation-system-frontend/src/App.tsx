@@ -5,6 +5,7 @@ import ReviewPage from "./pages/reviewPage/ReviewPage";
 import FormBuilderPage from "./pages/form/FormBuilderPage";
 import { Provider } from "./components/ui/provider";
 import { Toaster } from "./components/ui/toaster";
+import EvaluationProgressPage from "./pages/evaluationProgress/EvaluationProgressPage";
 
 function App() {
   return (
@@ -15,6 +16,10 @@ function App() {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/review" element={<ReviewPage />}></Route>
           <Route path="/form-builder" element={<FormBuilderPage />}></Route>
+          <Route
+            path="/evaluation-progress"
+            element={<EvaluationProgressPage />}
+          ></Route>
         </Route>
       </Routes>
     </Provider>
