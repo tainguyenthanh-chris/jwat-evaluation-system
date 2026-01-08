@@ -5,16 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SeqTable("form")
 public class Form {
-    private String formTmplId;
-    private String formTmplTitle;
-    private Integer formTmplVer;
+    private String formId;
+    private String formTitle;
+    private Integer formVer;
     private String deptCd;
     private String posCd;
     private String lvlCd;
-    private String formTmplStatus;
+    private String formStatus;
+    private String creUsrId;
+    private String updUsrId;
+    private LocalDateTime creDt;
+    private LocalDateTime updDt;
+    private String delFlg;
 }

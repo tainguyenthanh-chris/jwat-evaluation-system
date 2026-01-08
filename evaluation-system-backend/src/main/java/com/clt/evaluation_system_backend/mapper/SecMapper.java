@@ -1,6 +1,6 @@
 package com.clt.evaluation_system_backend.mapper;
 
-import com.clt.evaluation_system_backend.dto.request.section.SectionFilterCriteria;
+import com.clt.evaluation_system_backend.dto.request.section.SecFilterCriteria;
 import com.clt.evaluation_system_backend.dto.response.section.SecResponse;
 import com.clt.evaluation_system_backend.model.Sec;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,7 +18,7 @@ public interface SecMapper {
 
     SecResponse selectById(String secId);
 
-    List<SecResponse> selectAll(SectionFilterCriteria filter);
+    List<SecResponse> selectAll(SecFilterCriteria filter);
 
     int existsById(String secId);
 }

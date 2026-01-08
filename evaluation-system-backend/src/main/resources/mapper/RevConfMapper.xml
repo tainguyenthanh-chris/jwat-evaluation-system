@@ -6,10 +6,10 @@
 <mapper namespace="com.clt.evaluation_system_backend.mapper.RevConfMapper">
     <select id="selectAll" resultType="com.clt.evaluation_system_backend.dto.response.config.RevConfResponse">
         SELECT
-            rev_conf_id AS revConfId,
-            rev_conf_cd AS revConfCd,
-            rev_conf_type AS revConfType,
-            rev_conf_roles AS revConfRolesJson
+            rev_conf_id AS reviewConfigId,
+            rev_conf_cd AS reviewConfigCode,
+            rev_conf_type AS reviewConfigType,
+            rev_conf_roles AS reviewConfigRolesJson
         FROM rev_conf
         WHERE del_flg = 'F'
     </select>

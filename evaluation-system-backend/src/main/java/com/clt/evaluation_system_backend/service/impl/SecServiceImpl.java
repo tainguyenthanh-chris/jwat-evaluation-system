@@ -1,7 +1,7 @@
 package com.clt.evaluation_system_backend.service.impl;
 
-import com.clt.evaluation_system_backend.dto.request.section.CreateSectionRequest;
-import com.clt.evaluation_system_backend.dto.request.section.SectionFilterCriteria;
+import com.clt.evaluation_system_backend.dto.request.section.CreateSecRequest;
+import com.clt.evaluation_system_backend.dto.request.section.SecFilterCriteria;
 import com.clt.evaluation_system_backend.dto.request.section.UpdateSecRequest;
 import com.clt.evaluation_system_backend.dto.response.section.SecResponse;
 import com.clt.evaluation_system_backend.exception.custom.NotFoundException;
@@ -32,30 +32,30 @@ public class SecServiceImpl implements SecService {
     private final SecCueMapper secCueMapper;
 
     @Override
-    public SecResponse createSection(CreateSectionRequest request) {
+    public SecResponse createSection(CreateSecRequest request) {
         String secId = seqService.generateNewId(Sec.class);
 
         Sec sec = new Sec();
         sec.setSecId(secId);
-        sec.setSecTitle(request.getSecTitle());
+        sec.setSecTitle(request.getSectionTitle());
         sec.setCreUsrId("system");
-        sec.setDefaultRevConfCd(request.getDefaultRevConfCd());
+        sec.setDefaultRevConfCd(request.getDefaultReviewConfigCode());
 
         secMapper.insert(sec);
 
         List<SecCue> cues = new ArrayList<>();
 
-        if (request.getDeptCd() != null && !request.getDeptCd().isEmpty()) {
+        if (request.getDepartmentCode() != null && !request.getDepartmentCode().isEmpty()) {
             SecCue deptCue = new SecCue();
             deptCue.setSecId(secId);
-            deptCue.setCueCd(request.getDeptCd());
+            deptCue.setCueCd(request.getDepartmentCode());
             cues.add(deptCue);
         }
 
-        if (request.getPosCd() != null && !request.getPosCd().isEmpty()) {
+        if (request.getPositionCode() != null && !request.getPositionCode().isEmpty()) {
             SecCue posCue = new SecCue();
             posCue.setSecId(secId);
-            posCue.setCueCd(request.getPosCd());
+            posCue.setCueCd(request.getPositionCode());
             cues.add(posCue);
         }
 
@@ -63,19 +63,19 @@ public class SecServiceImpl implements SecService {
             secCueMapper.insertBatch(cues);
         }
 
-        return null;
+        return this.secMapper.selectById(secId);
     }
 
     @Override
-    public void updateSection(UpdateSecRequest request, String secId) {
+    public SecResponse updateSection(UpdateSecRequest request, String secId) {
         if (secMapper.existsById(secId) == 0) {
             throw new NotFoundException("Section not found");
         }
 
         Sec updateSec = new Sec();
         updateSec.setSecId(secId);
-        updateSec.setSecTitle(request.getSecTitle());
-        updateSec.setDefaultRevConfCd(request.getDefaultRevConfCd());
+        updateSec.setSecTitle(request.getSectionTitle());
+        updateSec.setDefaultRevConfCd(request.getDefaultReviewConfigCode());
         updateSec.setUpdUsrId("system");
 
         secMapper.update(updateSec);
@@ -85,23 +85,25 @@ public class SecServiceImpl implements SecService {
 
         List<SecCue> cues = new ArrayList<>();
 
-        if (request.getDeptCd() != null && !request.getDeptCd().isEmpty()) {
+        if (request.getDepartmentCode() != null && !request.getDepartmentCode().isEmpty()) {
             SecCue deptCue = new SecCue();
             deptCue.setSecId(secId);
-            deptCue.setCueCd(request.getDeptCd());
+            deptCue.setCueCd(request.getDepartmentCode());
             cues.add(deptCue);
         }
 
-        if (request.getPosCd() != null && !request.getPosCd().isEmpty()) {
+        if (request.getPositionCode() != null && !request.getPositionCode().isEmpty()) {
             SecCue posCue = new SecCue();
             posCue.setSecId(secId);
-            posCue.setCueCd(request.getPosCd());
+            posCue.setCueCd(request.getPositionCode());
             cues.add(posCue);
         }
 
         if (!cues.isEmpty()) {
             secCueMapper.insertBatch(cues);
         }
+
+        return this.secMapper.selectById(secId);
     }
 
     @Override
@@ -124,7 +126,7 @@ public class SecServiceImpl implements SecService {
     }
 
     @Override
-    public List<SecResponse> getAllSections(SectionFilterCriteria filter) {
+    public List<SecResponse> getAllSections(SecFilterCriteria filter) {
         return secMapper.selectAll(filter);
     }
 }

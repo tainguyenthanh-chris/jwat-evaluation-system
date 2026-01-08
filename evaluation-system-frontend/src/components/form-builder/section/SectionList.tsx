@@ -1,31 +1,31 @@
 import { Card, Flex, Spinner, Text } from "@chakra-ui/react";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { SectionItem, type Section } from "./SectionItem";
-import {
-  CreateNewSectionDialog,
-  UpdateSectionDialog,
-  DeleteSectionDialog,
-  type CreateNewSectionDialogRef,
-  type UpdateSectionDialogRef,
-  type DeleteSectionDialogRef,
-} from "./sectionDialogs";
 import { axiosInstant, type ApiResponse } from "../../../lib/axios";
+import {
+  DeleteSectionDialog,
+  UpdateSectionDialog,
+  type DeleteSectionDialogRef,
+  type UpdateSectionDialogRef,
+} from "./SectionDialogs";
+import { queryClient } from "../../../lib/queryClient";
 import { toaster } from "../../ui/toaster";
 
-export interface CreateNewSection {
-  secTitle: string;
-  defaultRevConfCd: string;
-  deptCd: string;
-  posCd: string;
+export interface SectionListHandle {
+  getSection: (sectionId: string) => Section | undefined;
+  updateOrder: (meta: {
+    departmentCode: string;
+    positionCode: string;
+    levelCode: string;
+  }) => void;
 }
 
-export interface SectionListHandle {
-  setSearch: (value: string) => void;
-  getSection: (sectionId: string) => Section | undefined;
-  openCreateDialog: () => void;
-  openEditDialog: (sectionId: string) => void;
-  openDeleteDialog: (sectionId: string) => void;
+export interface updateNewSection {
+  sectionTitle: string;
+  defaultReviewConfigCode: string;
+  departmentCode: string;
+  positionCode: string;
 }
 
 interface SectionListProps {
@@ -34,63 +34,47 @@ interface SectionListProps {
 
 export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
   ({ onAddToForm }, ref) => {
-    const queryClient = useQueryClient();
-    const createDialogRef = useRef<CreateNewSectionDialogRef>(null);
+    const [sectionsState, setSectionsState] = useState<Section[]>([]);
     const updateDialogRef = useRef<UpdateSectionDialogRef>(null);
     const deleteDialogRef = useRef<DeleteSectionDialogRef>(null);
-    const [search, setSearch] = useState("");
 
     const {
-      data: sections = [],
+      // data: sections = [],
       isLoading,
       isError,
       error,
     } = useQuery({
-      queryKey: ["sections", { search }],
+      queryKey: ["sections"],
       queryFn: async () => {
         const response = await axiosInstant.get<ApiResponse<Section[]>>(
-          "/section",
-          {
-            params: { search: search || undefined },
-          }
+          "/section"
         );
+        setSectionsState(response.data.data);
         return response.data.data;
-      },
-    });
-
-    const createMutation = useMutation({
-      mutationFn: async (data: CreateNewSection) => {
-        const response = await axiosInstant.post<ApiResponse<Section>>(
-          "/section",
-          data
-        );
-        return response.data;
-      },
-      onSuccess: (response) => {
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
-        toaster.create({
-          description: response.message || "Section created successfully",
-          type: "success",
-        });
       },
     });
 
     const updateMutation = useMutation({
       mutationFn: async ({
-        secId,
+        sectionId,
         data,
       }: {
-        secId: string;
-        data: CreateNewSection;
+        sectionId: string;
+        data: updateNewSection;
       }) => {
         const response = await axiosInstant.put<ApiResponse<Section>>(
-          `/section/${secId}`,
+          `/section/${sectionId}`,
           data
         );
         return response.data;
       },
       onSuccess: (response) => {
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
+        setSectionsState((prev) =>
+          prev.map((s) =>
+            s.sectionId === response.data.sectionId ? response.data : s
+          )
+        );
+        // queryClient.invalidateQueries({ queryKey: ["sections"] });
         toaster.create({
           description: response.message || "Section updated successfully",
           type: "success",
@@ -99,14 +83,17 @@ export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
     });
 
     const deleteMutation = useMutation({
-      mutationFn: async (secId: string) => {
+      mutationFn: async (sectionId: string) => {
         const response = await axiosInstant.delete<ApiResponse<void>>(
-          `/section/${secId}`
+          `/section/${sectionId}`
         );
         return response.data;
       },
-      onSuccess: (response) => {
-        queryClient.invalidateQueries({ queryKey: ["sections"] });
+      onSuccess: (response, sectionId) => {
+        setSectionsState((prev) =>
+          prev.filter((s) => s.sectionId !== sectionId)
+        );
+        // queryClient.invalidateQueries({ queryKey: ["sections"] });
         toaster.create({
           description: response.message || "Section deleted successfully",
           type: "success",
@@ -114,15 +101,33 @@ export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
       },
     });
 
+    const updateOrder = (meta: {
+      departmentCode: string;
+      positionCode: string;
+      levelCode: string;
+    }) => {
+      const newOrder = [...sectionsState].sort((a, b) => {
+        const score = (section: Section) => {
+          let s = 0;
+          if (section.cueList.some((c) => c.cueCd === meta.departmentCode))
+            s += 1;
+          if (section.cueList.some((c) => c.cueCd === meta.positionCode))
+            s += 1;
+          if (section.cueList.some((c) => c.cueCd === meta.levelCode)) s += 1;
+          return s;
+        };
+        return score(b) - score(a);
+      });
+
+      setSectionsState(newOrder);
+    };
+
     const getSection = (sectionId: string) =>
-      sections.find((section) => section.secId === sectionId);
+      sectionsState.find((section) => section.sectionId === sectionId);
 
     useImperativeHandle(ref, () => ({
-      setSearch,
       getSection,
-      openCreateDialog: () => createDialogRef.current?.open(),
-      openEditDialog: (id: string) => updateDialogRef.current?.open(id),
-      openDeleteDialog: (id: string) => deleteDialogRef.current?.open(id),
+      updateOrder,
     }));
 
     return (
@@ -143,24 +148,22 @@ export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
 
             {!isLoading && !isError && (
               <Flex direction="column" gap="8px">
-                {sections.length === 0 ? (
+                {sectionsState.length === 0 ? (
                   <Text p="12px" fontSize="sm" color="text.muted">
-                    {search
-                      ? "No sections match your search"
-                      : "No sections found"}
+                    No sections found
                   </Text>
                 ) : (
-                  sections.map((section) => (
+                  sectionsState.map((section) => (
                     <SectionItem
-                      key={section.secId}
+                      key={section.sectionId}
                       section={section}
+                      onAddToForm={() => onAddToForm(section)}
                       onEdit={() =>
-                        updateDialogRef.current?.open(section.secId)
+                        updateDialogRef.current?.open(section.sectionId)
                       }
                       onDelete={() =>
-                        deleteDialogRef.current?.open(section.secId)
+                        deleteDialogRef.current?.open(section.sectionId)
                       }
-                      onAddToForm={() => onAddToForm(section)}
                     />
                   ))
                 )}
@@ -168,27 +171,18 @@ export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
             )}
           </Card.Body>
         </Card.Root>
-
-        <CreateNewSectionDialog
-          ref={createDialogRef}
-          onSubmit={async (data) => {
-            await createMutation.mutateAsync(data);
-          }}
-          getSection={getSection}
-        />
-
         <UpdateSectionDialog
           ref={updateDialogRef}
-          onSubmit={async (secId, data) => {
-            await updateMutation.mutateAsync({ secId, data });
+          onSubmit={async (sectionId, data) => {
+            await updateMutation.mutateAsync({ sectionId, data });
           }}
           getSection={getSection}
         />
 
         <DeleteSectionDialog
           ref={deleteDialogRef}
-          onSubmit={async (secId) => {
-            await deleteMutation.mutateAsync(secId);
+          onSubmit={async (sectionId) => {
+            await deleteMutation.mutateAsync(sectionId);
           }}
           getSection={getSection}
         />

@@ -1,6 +1,8 @@
 package com.clt.evaluation_system_backend.controller;
 
 import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
+import com.clt.evaluation_system_backend.dto.request.form.CreateFormTemplateRequest;
+import com.clt.evaluation_system_backend.dto.request.section.CreateSecRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
 import com.clt.evaluation_system_backend.service.FormService;
@@ -22,6 +24,14 @@ public class FormController {
                                         @RequestParam String level) {
         FormTmplResponse formTmplResponse = formService.findFormTmplResponse(department,position,level);
         return ApiResponse.ok(formTmplResponse);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<Void>> createFormTemplate (
+            @RequestBody CreateFormTemplateRequest request
+    ) {
+        this.formService.createFormTemplate(request);
+        return ApiResponse.created(null);
     }
 
     // body

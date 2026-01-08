@@ -8,14 +8,14 @@ import java.util.List;
 
 @Data
 public class RevConfResponse {
-    private String revConfId;
-    private String revConfCd;
-    private String revConfType;
+    private String reviewConfigId;
+    private String reviewConfigCode;
+    private String reviewConfigType;
 
     @JsonIgnore
-    private String revConfRolesJson;
+    private String reviewConfigRolesJson;
 
-    public List<String> getRevConfRoles() {
-        return JsonHelper.toListString(this.revConfRolesJson);
+    public List<String> getReviewConfigRoles() {
+        return JsonHelper.toListString(this.reviewConfigRolesJson);
     }
 }

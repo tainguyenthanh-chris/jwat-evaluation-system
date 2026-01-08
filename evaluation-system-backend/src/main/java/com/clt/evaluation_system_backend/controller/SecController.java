@@ -1,6 +1,6 @@
 package com.clt.evaluation_system_backend.controller;
 
-import com.clt.evaluation_system_backend.dto.request.section.SectionFilterCriteria;
+import com.clt.evaluation_system_backend.dto.request.section.SecFilterCriteria;
 import com.clt.evaluation_system_backend.dto.response.section.SecResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.clt.evaluation_system_backend.dto.request.section.CreateSectionRequest;
+import com.clt.evaluation_system_backend.dto.request.section.CreateSecRequest;
 import com.clt.evaluation_system_backend.dto.request.section.UpdateSecRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.service.SecService;
@@ -22,7 +22,7 @@ public class SecController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<SecResponse>> createSection(
-            @RequestBody CreateSectionRequest request) {
+            @RequestBody CreateSecRequest request) {
         SecResponse created = secService.createSection(request);
         return ApiResponse.created(created);
     }
@@ -31,8 +31,8 @@ public class SecController {
     public ResponseEntity<ApiResponse<SecResponse>> updateSection(
             @PathVariable String secId,
             @RequestBody UpdateSecRequest request) {
-        secService.updateSection(request, secId);
-        return ApiResponse.ok(null);
+        SecResponse updated = secService.updateSection(request, secId);
+        return ApiResponse.ok(updated);
     }
 
     @DeleteMapping("/{secId}")
@@ -49,7 +49,7 @@ public class SecController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<SecResponse>>> getAllSections(
-            @ModelAttribute SectionFilterCriteria filter) {
+            @ModelAttribute SecFilterCriteria filter) {
         List<SecResponse> sections = secService.getAllSections(filter);
         return ApiResponse.ok(sections);
     }
