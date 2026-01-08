@@ -6,6 +6,7 @@ import FormBuilderPage from "./pages/form/FormBuilderPage";
 import { Provider } from "./components/ui/provider";
 import { Toaster } from "./components/ui/toaster";
 import EvaluationProgressPage from "./pages/evaluationProgress/EvaluationProgressPage";
+import EmpTablePage from "./pages/emp/EmpTablePage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             path="/evaluation-progress"
             element={<EvaluationProgressPage />}
           ></Route>
+          <Route path="/employees-list" element={<EmpTablePage />}></Route>
         </Route>
       </Routes>
     </Provider>

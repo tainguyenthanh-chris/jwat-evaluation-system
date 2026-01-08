@@ -13,6 +13,7 @@ import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.row.FormSubmissionRow;
 import com.clt.evaluation_system_backend.exception.FormException;
 import com.clt.evaluation_system_backend.mapper.TargetMapper;
+import com.clt.evaluation_system_backend.model.Form;
 import com.clt.evaluation_system_backend.service.FormService;
 import com.clt.evaluation_system_backend.service.SeqService;
 import com.clt.evaluation_system_backend.util.JsonHelper;
@@ -218,6 +219,11 @@ public class FormServiceImpl implements FormService {
         List<SubmissionDataResponse.Target> targetList = targetMapper.selectTarget(targetFilter);
         response.setTargetList(targetList);
         return response;
+    }
+
+    @Override
+    public List<Form> getAllForms() {
+        return formMapper.selectAllForms();
     }
 
 }

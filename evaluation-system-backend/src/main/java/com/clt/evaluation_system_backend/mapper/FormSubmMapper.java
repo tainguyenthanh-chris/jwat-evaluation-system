@@ -7,4 +7,5 @@ public interface FormSubmMapper {
 
     FormSubmResponse findLatestByEmpIdWithTargets(String empId);
 
+    void updateFormId(String empId, String formId);
 }

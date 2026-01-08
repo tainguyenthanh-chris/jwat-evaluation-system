@@ -1,5 +1,7 @@
 package com.clt.evaluation_system_backend.model;
 
+import java.time.LocalDateTime;
+
 import com.clt.evaluation_system_backend.annotation.SeqTable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +22,8 @@ public class Form {
     private String lvlCd;
     private String formStatus;
     private String creUsrId;
-    private String updUsrId;
     private LocalDateTime creDt;
+    private String updUsrId;
     private LocalDateTime updDt;
     private String delFlg;
 }

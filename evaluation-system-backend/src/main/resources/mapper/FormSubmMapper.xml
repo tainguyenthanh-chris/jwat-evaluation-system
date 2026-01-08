@@ -76,4 +76,6 @@
         t.form_subm_id AND t.del_flg = 'F' WHERE fs.form_subm_id = #{formSubmId} AND fs.del_flg =
         'F' ORDER BY t.target_ord_no </select>
 
+    <update id="updateFormId" parameterType="String">UPDATE form_subm SET form_id = #{formId} WHERE
+        emp_id = #{empId} AND form_subm_status = 'PENDING' AND del_flg = 'F' </update>
 </mapper>

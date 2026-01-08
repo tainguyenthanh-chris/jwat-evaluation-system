@@ -9,6 +9,8 @@ import com.clt.evaluation_system_backend.model.Form;
 import com.clt.evaluation_system_backend.model.FormDetail;
 import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
 import com.clt.evaluation_system_backend.dto.row.FormSubmissionRow;
+import com.clt.evaluation_system_backend.model.Form;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -34,6 +36,8 @@ public interface FormMapper {
 
     List<SubmissionDataResponse.SubmissionValue> selectSubmissionValue(
             @Param("formSubmissionId") String formSubmissionId);
+
+    List<Form> selectAllForms();
 
     void insertFormDetails(List<FormDetail> formDetails);
 }

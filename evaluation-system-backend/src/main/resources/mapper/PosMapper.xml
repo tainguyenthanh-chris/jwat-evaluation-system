@@ -15,16 +15,16 @@
     <!-- ===================== -->
     <insert id="insert"
         parameterType="com.clt.evaluation_system_backend.model.Pos"> INSERT INTO pos ( pos_id,
-        pos_nm, pos_cd, pos_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
-        #{posId}, #{posNm}, #{posCd}, #{posDesc}, #{creUsrId}, CURRENT_TIMESTAMP, #{creUsrId},
-        CURRENT_TIMESTAMP, 'F' ) </insert>
+        pos_nm, pos_cd, pos_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg, dept_id ) VALUES
+        ( #{posId}, #{posNm}, #{posCd}, #{posDesc}, #{creUsrId}, CURRENT_TIMESTAMP, #{updUsrId},
+        CURRENT_TIMESTAMP, 'F', #{deptId} ) </insert>
 
     <!-- ===================== -->
     <!-- UPDATE -->
     <!-- ===================== -->
     <update id="update"
         parameterType="com.clt.evaluation_system_backend.model.Pos"> UPDATE pos SET pos_nm =
-        #{posNm}, pos_cd = #{posCd}, pos_desc = #{posDesc}, upd_usr_id = #{creUsrId}, upd_dt =
+        #{posNm}, pos_cd = #{posCd}, pos_desc = #{posDesc}, upd_usr_id = #{updUsrId}, upd_dt =
         CURRENT_TIMESTAMP WHERE pos_id = #{posId} </update>
 
     <!-- ===================== -->

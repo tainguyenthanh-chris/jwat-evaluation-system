@@ -10,14 +10,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BossRev {
+    private Long bossRevId;
+
     private String formSubmId;
-    private String bossId;
-    private String bossCompRoleCd;
+    private String empNo;
+    private String bossNo;
+    private String bossRevRole;
     private Integer bossRevOrdNo;
+    private String isFinal;
 
     private String creUsrId;
     private LocalDateTime creDt;
     private String updUsrId;
     private LocalDateTime updDt;
     private String delFlg;
+    private Emp bossEmp;
 }

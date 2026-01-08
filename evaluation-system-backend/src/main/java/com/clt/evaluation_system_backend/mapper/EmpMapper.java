@@ -1,0 +1,18 @@
+package com.clt.evaluation_system_backend.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.clt.evaluation_system_backend.model.Emp;
+
+@Mapper
+public interface EmpMapper {
+
+    Emp findByEmail(@Param("email") String email);
+
+    List<Emp> findEmpByBossNo(@Param("bossNo") String bossNo);
+
+    List<Emp> findAll();
+}

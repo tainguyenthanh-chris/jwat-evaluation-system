@@ -13,6 +13,7 @@ import com.clt.evaluation_system_backend.mapper.LvlMapper;
 import com.clt.evaluation_system_backend.model.Lvl;
 import com.clt.evaluation_system_backend.service.LvlService;
 import com.clt.evaluation_system_backend.service.SeqService;
+import com.clt.evaluation_system_backend.util.CommonMethods;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,14 @@ public class LvlServiceImpl implements LvlService {
         try {
             String newId = seqService.generateNewId(Lvl.class);
 
-            Lvl lvl = new Lvl(
-                    newId,
-                    req.getLvlNm(),
-                    req.getLvlCd(),
-                    req.getLvlDesc() != null
-                            ? req.getLvlDesc()
-                            : "Description for Level",
-                    "dev");
+            Lvl lvl = new Lvl();
+            lvl.setLvlId(newId);
+            lvl.setLvlNm(req.getLvlNm());
+            lvl.setLvlCd(req.getLvlCd());
+            lvl.setLvlDesc(req.getLvlDesc());
+            lvl.setPosId(req.getPosId());
+            lvl.setCreUsrId(CommonMethods.getCurrentUsrId());
+            lvl.setUpdUsrId(CommonMethods.getCurrentUsrId());
 
             lvlMapper.insert(lvl);
         } catch (Exception e) {
@@ -62,13 +63,12 @@ public class LvlServiceImpl implements LvlService {
     @Override
     public void update(LvlUpdateRequest req, String lvlId) {
         try {
-            Lvl lvl = new Lvl(
-                    lvlId,
-                    req.getLvlNm(),
-                    req.getLvlCd(),
-                    req.getLvlDesc(),
-                    "dev");
-
+            Lvl lvl = new Lvl();
+            lvl.setLvlId(lvlId);
+            lvl.setLvlNm(req.getLvlNm());
+            lvl.setLvlCd(req.getLvlCd());
+            lvl.setLvlDesc(req.getLvlDesc());
+            lvl.setUpdUsrId(CommonMethods.getCurrentUsrId());
             lvlMapper.update(lvl);
         } catch (Exception e) {
             throw new RuntimeException("Level not found");

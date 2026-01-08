@@ -52,6 +52,11 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       Icon: FaWpforms,
       href: "/evaluation-progress",
     },
+    {
+      name: "Employees",
+      Icon: FaHome,
+      href: "/employees-list",
+    },
   ];
 
   const toggleGroup = (name: string): void => {

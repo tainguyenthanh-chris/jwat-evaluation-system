@@ -10,14 +10,14 @@
 
     <insert id="insert"
         parameterType="com.clt.evaluation_system_backend.model.Lvl"> INSERT INTO lvl ( lvl_id,
-        lvl_nm, lvl_cd, lvl_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
+        lvl_nm, lvl_cd, lvl_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg, pos_id ) VALUES (
         #{lvlId}, #{lvlNm}, #{lvlCd}, #{lvlDesc}, #{creUsrId}, CURRENT_TIMESTAMP, #{creUsrId},
-        CURRENT_TIMESTAMP, 'F' ) </insert>
+        CURRENT_TIMESTAMP, 'F', #{posId} ) </insert>
 
 
     <update id="update"
         parameterType="com.clt.evaluation_system_backend.model.Lvl"> UPDATE lvl SET lvl_nm =
-        #{lvlNm}, lvl_cd = #{lvlCd}, lvl_desc = #{lvlDesc}, upd_usr_id = #{creUsrId}, upd_dt =
+        #{lvlNm}, lvl_cd = #{lvlCd}, lvl_desc = #{lvlDesc}, upd_usr_id = #{updUsrId}, upd_dt =
         CURRENT_TIMESTAMP WHERE lvl_id = #{lvlId} </update>
 
 

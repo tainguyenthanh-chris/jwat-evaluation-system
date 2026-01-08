@@ -1,12 +1,9 @@
 package com.clt.evaluation_system_backend.controller;
 
 import com.clt.evaluation_system_backend.dto.request.CriteriaRequest;
-import com.clt.evaluation_system_backend.dto.request.SecRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.CriteriaResponse;
-import com.clt.evaluation_system_backend.dto.response.SecResponse;
 import com.clt.evaluation_system_backend.service.CriteriaService;
-import com.clt.evaluation_system_backend.service.SecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

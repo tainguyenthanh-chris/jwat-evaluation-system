@@ -14,4 +14,8 @@ public interface SubmValueMapper {
             @Param("formSubmId") String formSubmId,
             @Param("list") List<SubmissionValueDto> list,
             @Param("creUsrId") String creUsrId);
+
+    void updateBatch(
+            @Param("list") List<SubmissionValueDto> list,
+            @Param("updUsrId") String updUsrId);
 }
