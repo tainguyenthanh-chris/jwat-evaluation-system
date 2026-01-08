@@ -16,108 +16,121 @@ import {
   useImperativeHandle,
   useMemo,
   useState,
+  useContext,
 } from "react";
 import { useForm } from "react-hook-form";
-import type { CreateNewSection } from "./SectionList";
 import type { Section } from "./SectionItem";
+import {
+  useReviewConfigs,
+  type ReviewConfig,
+} from "../../../context/ReviewConfigContext";
 
-export const sectionConfigs = [
-  { code: "POINT_SELF_LEADER", type: "POINT", roleList: ["SELF", "LEADER"] },
-  { code: "COMMENT_SELF", type: "COMMENT", roleList: ["SELF"] },
-  { code: "COMMENT_LEADER", type: "COMMENT", roleList: ["LEADER"] },
-  { code: "COMMENT_MANAGER", type: "COMMENT", roleList: ["MANAGER"] },
-  { code: "COMMENT_DIRECTOR", type: "COMMENT", roleList: ["DIRECTOR"] },
-  { code: "TARGET_LEADER", type: "TARGET", roleList: ["LEADER"] },
-] as const;
+const departments = [
+  { departmentId: "dep1", departmentName: "HR", departmentCode: "HR" },
+  { departmentId: "dep2", departmentName: "IT", departmentCode: "IT" },
+  { departmentId: "dep3", departmentName: "Finance", departmentCode: "FIN" },
+  { departmentId: "dep4", departmentName: "Marketing", departmentCode: "MKT" },
+];
 
-export const departments = [
-  { deptId: "dep1", deptNm: "HR", deptCd: "HR" },
-  { deptId: "dep2", deptNm: "IT", deptCd: "IT" },
-  { deptId: "dep3", deptNm: "Finance", deptCd: "FIN" },
-  { deptId: "dep4", deptNm: "Marketing", deptCd: "MKT" },
-] as const;
-
-export const positions = [
-  { posId: "pos1", posNm: "HR Executive", posCd: "HR_EX", depId: "dep1" },
-  { posId: "pos2", posNm: "HR Manager", posCd: "HR_MGR", depId: "dep1" },
-  { posId: "pos3", posNm: "Software Engineer", posCd: "DEV", depId: "dep2" },
-  { posId: "pos4", posNm: "QA Engineer", posCd: "QA", depId: "dep2" },
-] as const;
+const positions = [
+  {
+    positionId: "pos1",
+    positionName: "HR Executive",
+    positionCode: "HR_EX",
+    departmentId: "dep1",
+  },
+  {
+    positionId: "pos2",
+    positionName: "HR Manager",
+    positionCode: "HR_MGR",
+    departmentId: "dep1",
+  },
+  {
+    positionId: "pos3",
+    positionName: "Software Engineer",
+    positionCode: "DEV",
+    departmentId: "dep2",
+  },
+];
 
 interface FormValues {
-  secTitle: string;
-  defaultRevConfCd: string;
-  deptCd: string;
-  posCd: string;
+  sectionTitle: string;
+  defaultReviewConfigCode: string;
+  departmentCode: string;
+  positionCode: string;
 }
 
 const defaultFormValues: FormValues = {
-  secTitle: "",
-  defaultRevConfCd: "",
-  deptCd: "",
-  posCd: "",
+  sectionTitle: "",
+  defaultReviewConfigCode: "",
+  departmentCode: "",
+  positionCode: "",
 };
 
 interface SectionFormFieldsProps {
   register: ReturnType<typeof useForm<FormValues>>["register"];
   errors: ReturnType<typeof useForm<FormValues>>["formState"]["errors"];
-  deptCd: string;
+  departmentCode: string;
   onDeptChange: (value: string) => void;
 }
 
 const SectionFormFields = ({
   register,
   errors,
-  deptCd,
+  departmentCode,
   onDeptChange,
 }: SectionFormFieldsProps) => {
+  const reviewConfigs = useReviewConfigs();
+
   const filteredPositions = useMemo(
-    () => positions.filter((p) => p.depId === deptCd),
-    [deptCd]
+    () => positions.filter((p) => p.departmentId === departmentCode),
+    [departmentCode]
   );
 
   return (
     <Flex direction="column" gap="12px">
-      <Field.Root invalid={!!errors.secTitle}>
+      <Field.Root invalid={!!errors.sectionTitle}>
         <Field.Label>Section title</Field.Label>
         <Input
           size="sm"
-          {...register("secTitle", {
+          {...register("sectionTitle", {
             required: "Section title is required",
-            minLength: {
-              value: 3,
-              message: "Section title must be at least 3 characters",
-            },
+            minLength: { value: 3, message: "Must be at least 3 characters" },
             maxLength: {
               value: 100,
-              message: "Section title must be at most 100 characters",
+              message: "Must be at most 100 characters",
             },
           })}
         />
-        {errors.secTitle && (
-          <Field.ErrorText>{errors.secTitle.message}</Field.ErrorText>
+        {errors.sectionTitle && (
+          <Field.ErrorText>{errors.sectionTitle.message}</Field.ErrorText>
         )}
       </Field.Root>
 
-      <Field.Root invalid={!!errors.defaultRevConfCd}>
+      <Field.Root invalid={!!errors.defaultReviewConfigCode}>
         <Field.Label>Section config</Field.Label>
         <NativeSelect.Root size="sm">
           <NativeSelect.Field
-            {...register("defaultRevConfCd", {
+            {...register("defaultReviewConfigCode", {
               required: "Section config is required",
             })}
           >
             <option value="">Select config</option>
-            {sectionConfigs.map((config) => (
-              <option key={config.code} value={config.code}>
-                {config.code} ({config.type})
+            {reviewConfigs.map((config) => (
+              <option
+                key={config.reviewConfigCode}
+                value={config.reviewConfigCode}
+              >
+                {config.reviewConfigCode} ({config.reviewConfigType})
               </option>
             ))}
           </NativeSelect.Field>
           <NativeSelect.Indicator />
         </NativeSelect.Root>
-        {errors.defaultRevConfCd && (
-          <Field.ErrorText>{errors.defaultRevConfCd.message}</Field.ErrorText>
+        {errors.defaultReviewConfigCode && (
+          <Field.ErrorText>
+            {errors.defaultReviewConfigCode.message}
+          </Field.ErrorText>
         )}
       </Field.Root>
 
@@ -125,15 +138,18 @@ const SectionFormFields = ({
         <Field.Label>Department (optional)</Field.Label>
         <NativeSelect.Root size="sm">
           <NativeSelect.Field
-            {...register("deptCd")}
+            {...register("departmentCode")}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
               onDeptChange(e.target.value);
             }}
           >
             <option value="">Select department</option>
-            {departments.map((dep) => (
-              <option key={dep.deptId} value={dep.deptId}>
-                {dep.deptNm}
+            {departments.map((department) => (
+              <option
+                key={department.departmentId}
+                value={department.departmentCode}
+              >
+                {department.departmentName}
               </option>
             ))}
           </NativeSelect.Field>
@@ -143,14 +159,14 @@ const SectionFormFields = ({
 
       <Field.Root>
         <Field.Label>Position (optional)</Field.Label>
-        <NativeSelect.Root size="sm" disabled={!deptCd}>
-          <NativeSelect.Field {...register("posCd")}>
+        <NativeSelect.Root size="sm" disabled={!departmentCode}>
+          <NativeSelect.Field {...register("positionCode")}>
             <option value="">
-              {deptCd ? "Select position" : "Select department first"}
+              {departmentCode ? "Select position" : "Select department first"}
             </option>
             {filteredPositions.map((pos) => (
-              <option key={pos.posId} value={pos.posId}>
-                {pos.posNm}
+              <option key={pos.positionId} value={pos.positionCode}>
+                {pos.positionName}
               </option>
             ))}
           </NativeSelect.Field>
@@ -161,125 +177,13 @@ const SectionFormFields = ({
   );
 };
 
-export interface CreateNewSectionDialogRef {
-  open: () => void;
-  close: () => void;
-}
-
-interface CreateNewSectionDialogProps {
-  onSubmit: (data: CreateNewSection) => Promise<void>;
-  getSection: (sectionId: string) => Section | undefined;
-}
-
-export const CreateNewSectionDialog = forwardRef<
-  CreateNewSectionDialogRef,
-  CreateNewSectionDialogProps
->(function CreateNewSectionDialog({ onSubmit }, ref) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    reset,
-    setValue,
-  } = useForm<FormValues>({ defaultValues: defaultFormValues });
-
-  const deptCd = watch("deptCd");
-
-  useImperativeHandle(ref, () => ({
-    open: () => {
-      reset(defaultFormValues);
-      setIsOpen(true);
-    },
-    close: () => setIsOpen(false),
-  }));
-
-  const handleDeptChange = useCallback(
-    (value: string) => {
-      setValue("deptCd", value);
-      setValue("posCd", "");
-    },
-    [setValue]
-  );
-
-  const handleCreateSection = async (data: FormValues) => {
-    setIsSubmitting(true);
-    try {
-      await onSubmit(data);
-      setIsOpen(false);
-      reset(defaultFormValues);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleClose = useCallback(() => {
-    if (!isSubmitting) {
-      setIsOpen(false);
-    }
-  }, [isSubmitting]);
-
-  return (
-    <Dialog.Root open={isOpen} onOpenChange={(e) => !e.open && handleClose()}>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content
-            as="form"
-            onSubmit={handleSubmit(handleCreateSection)}
-          >
-            <Dialog.Header>
-              <Dialog.Title>Create new section</Dialog.Title>
-            </Dialog.Header>
-
-            <Dialog.Body>
-              <SectionFormFields
-                register={register}
-                errors={errors}
-                deptCd={deptCd}
-                onDeptChange={handleDeptChange}
-              />
-            </Dialog.Body>
-
-            <Dialog.Footer>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClose}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                size="sm"
-                colorPalette="blue"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <Spinner size="xs" /> : "Create"}
-              </Button>
-            </Dialog.Footer>
-
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" disabled={isSubmitting} />
-            </Dialog.CloseTrigger>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
-  );
-});
-
 export interface UpdateSectionDialogRef {
   open: (sectionId: string) => void;
   close: () => void;
 }
 
 interface UpdateSectionDialogProps {
-  onSubmit: (sectionId: string, data: CreateNewSection) => Promise<void>;
+  onSubmit: (sectionId: string, data: FormValues) => Promise<void>;
   getSection: (sectionId: string) => Section | undefined;
 }
 
@@ -289,40 +193,39 @@ export const UpdateSectionDialog = forwardRef<
 >(function UpdateSectionDialog({ onSubmit, getSection }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentSectionId, setCurrentSectionId] = useState<string>("");
+  const [currentSectionId, setCurrentSectionId] = useState("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     reset,
+    watch,
     setValue,
   } = useForm<FormValues>({ defaultValues: defaultFormValues });
 
-  const deptCd = watch("deptCd");
+  const departmentCode = watch("departmentCode");
 
   useImperativeHandle(ref, () => ({
-    open: (sectionId: string) => {
+    open: (sectionId) => {
       const section = getSection(sectionId);
-      if (section) {
-        setCurrentSectionId(sectionId);
-        reset({
-          secTitle: section.secTitle,
-          defaultRevConfCd: section.defaultRevConfCd,
-          deptCd: section.cueList[0]?.cueCd || "",
-          posCd: section.cueList[1]?.cueCd || "",
-        });
-        setIsOpen(true);
-      }
+      if (!section) return;
+      setCurrentSectionId(sectionId);
+      reset({
+        sectionTitle: section.sectionTitle,
+        defaultReviewConfigCode: section.defaultReviewConfigCode,
+        departmentCode: section.cueList[0]?.cueCd || "",
+        positionCode: section.cueList[1]?.cueCd || "",
+      });
+      setIsOpen(true);
     },
     close: () => setIsOpen(false),
   }));
 
   const handleDeptChange = useCallback(
     (value: string) => {
-      setValue("deptCd", value);
-      setValue("posCd", "");
+      setValue("departmentCode", value);
+      setValue("positionCode", "");
     },
     [setValue]
   );
@@ -338,9 +241,7 @@ export const UpdateSectionDialog = forwardRef<
   };
 
   const handleClose = useCallback(() => {
-    if (!isSubmitting) {
-      setIsOpen(false);
-    }
+    if (!isSubmitting) setIsOpen(false);
   }, [isSubmitting]);
 
   return (
@@ -352,16 +253,14 @@ export const UpdateSectionDialog = forwardRef<
             <Dialog.Header>
               <Dialog.Title>Edit Section</Dialog.Title>
             </Dialog.Header>
-
             <Dialog.Body>
               <SectionFormFields
                 register={register}
                 errors={errors}
-                deptCd={deptCd}
+                departmentCode={departmentCode}
                 onDeptChange={handleDeptChange}
               />
             </Dialog.Body>
-
             <Dialog.Footer>
               <Button
                 variant="outline"
@@ -380,7 +279,6 @@ export const UpdateSectionDialog = forwardRef<
                 {isSubmitting ? <Spinner size="xs" /> : "Save Changes"}
               </Button>
             </Dialog.Footer>
-
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" disabled={isSubmitting} />
             </Dialog.CloseTrigger>
@@ -407,38 +305,34 @@ export const DeleteSectionDialog = forwardRef<
 >(function DeleteSectionDialog({ onSubmit, getSection }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentSectionId, setCurrentSectionId] = useState<string>("");
-  const [sectionTitle, setSectionTitle] = useState<string>("");
+  const [currentSectionId, setCurrentSectionId] = useState("");
+  const [sectionTitle, setSectionTitle] = useState("");
 
   useImperativeHandle(ref, () => ({
-    open: (sectionId: string) => {
+    open: (sectionId) => {
       const section = getSection(sectionId);
-      if (section) {
-        setCurrentSectionId(sectionId);
-        setSectionTitle(section.secTitle);
-        setIsOpen(true);
-      }
+      if (!section) return;
+      setCurrentSectionId(sectionId);
+      setSectionTitle(section.sectionTitle);
+      setIsOpen(true);
     },
     close: () => setIsOpen(false),
   }));
 
   const handleDelete = async () => {
     setIsSubmitting(true);
-
     try {
       await onSubmit(currentSectionId);
-      setIsOpen(false);
       setCurrentSectionId("");
       setSectionTitle("");
+      setIsOpen(false);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClose = useCallback(() => {
-    if (!isSubmitting) {
-      setIsOpen(false);
-    }
+    if (!isSubmitting) setIsOpen(false);
   }, [isSubmitting]);
 
   return (
@@ -454,7 +348,6 @@ export const DeleteSectionDialog = forwardRef<
             <Dialog.Header>
               <Dialog.Title>Delete Section</Dialog.Title>
             </Dialog.Header>
-
             <Dialog.Body>
               <Text>
                 Are you sure you want to delete the section{" "}
@@ -464,7 +357,6 @@ export const DeleteSectionDialog = forwardRef<
                 ? This action cannot be undone.
               </Text>
             </Dialog.Body>
-
             <Dialog.Footer>
               <Button
                 variant="outline"
@@ -483,7 +375,6 @@ export const DeleteSectionDialog = forwardRef<
                 {isSubmitting ? <Spinner size="xs" /> : "Delete"}
               </Button>
             </Dialog.Footer>
-
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" disabled={isSubmitting} />
             </Dialog.CloseTrigger>

@@ -3,8 +3,8 @@ package com.clt.evaluation_system_backend.dto.request.section;
 import lombok.Data;
 
 @Data
-public class SectionFilterCriteria {
+public class SecFilterCriteria {
     private String search;
-    private String deptCd;
-    private String posCd;
+    private String departmentCode;
+    private String positionCode;
 }

@@ -1,53 +1,52 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { FormSectionItem } from "./FormSectionItem";
+import { toaster } from "../../ui/toaster";
+
 export type SectionCriteria = {
   order: number;
-  tempId: string;
+  sectionId: string;
   criteriaId: string;
   criteriaTitle: string;
 };
 
 export type FormSection = {
   order: number;
-  tempId: string;
-  secId: string;
-  secTitle: string;
-  revConfType: string;
-  defaultRevConfCd: string;
+  sectionId: string;
+  sectionTitle: string;
+  reviewConfigType: string;
+  defaultReviewConfigCode: string;
   criteriaList: SectionCriteria[];
 };
 
 export interface FormSectionHandler {
-  addSection: (
-    section: Omit<FormSection, "order" | "tempId" | "criteriaList">
-  ) => void;
+  addSection: (section: Omit<FormSection, "order" | "criteriaList">) => void;
   updateSection: (
-    tempId: string,
+    sectionId: string,
     updates: {
-      secTitle?: string;
-      defaultRevConfCd?: string;
-      revConfType?: string;
+      sectionTitle?: string;
+      defaultReviewConfigCode?: string;
+      reviewConfigType?: string;
     }
   ) => void;
-  removeSection: (tempId: string) => void;
-  moveSectionUp: (tempId: string) => void;
-  moveSectionDown: (tempId: string) => void;
+  removeSection: (sectionId: string) => void;
+  moveSectionUp: (sectionId: string) => void;
+  moveSectionDown: (sectionId: string) => void;
   getSections: () => FormSection[];
   clearSections: () => void;
+  getSelectedSection: () => FormSection | null;
 }
 
 export const FormSectionList = forwardRef<FormSectionHandler, {}>(
   (_props, ref) => {
     const [formSections, setFormSections] = useState<FormSection[]>([]);
+    const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
+      null
+    );
 
-    useEffect(() => {
-      console.log(formSections);
-    }, [formSections]);
-
-    const handleMoveSectionUp = (tempId: string) => {
+    const handleMoveSectionUp = (sectionId: string) => {
       const index = formSections.findIndex(
-        (section) => section.tempId === tempId
+        (section) => section.sectionId === sectionId
       );
       if (index <= 0) return;
 
@@ -61,9 +60,9 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       );
     };
 
-    const handleMoveSectionDown = (tempId: string) => {
+    const handleMoveSectionDown = (sectionId: string) => {
       const index = formSections.findIndex(
-        (section) => section.tempId === tempId
+        (section) => section.sectionId === sectionId
       );
       if (index === -1 || index >= formSections.length - 1) return;
 
@@ -78,14 +77,32 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
     };
 
     const handleAddSection = (
-      section: Omit<FormSection, "order" | "tempId" | "criteriaList">
+      section: Omit<FormSection, "order" | "criteriaList">
     ) => {
+      const duplicateId = formSections.some(
+        (s) => s.sectionId === section.sectionId
+      );
+
+      const duplicateTitle = formSections.some(
+        (s) =>
+          s.sectionTitle.toLowerCase().trim() ===
+          section.sectionTitle.toLowerCase().trim()
+      );
+
+      if (duplicateId || duplicateTitle) {
+        toaster.create({
+          description: "Section already exists in form",
+          type: "error",
+        });
+
+        return;
+      }
+
       setFormSections((prev) => {
         return [
           ...prev,
           {
             ...section,
-            tempId: `section${Date.now()}`,
             order: prev.length,
             criteriaList: [],
           },
@@ -93,31 +110,49 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       });
     };
 
-    const handleRemoveSection = (tempId: string) => {
+    const handleRemoveSection = (sectionId: string) => {
       const filtered = formSections.filter(
-        (section) => section.tempId !== tempId
+        (section) => section.sectionId !== sectionId
       );
       setFormSections(
         filtered.map((section, index) => ({ ...section, order: index }))
       );
+      setSelectedSectionId((prev) => (prev === sectionId ? null : prev));
     };
 
     const handleUpdateSection = (
-      tempId: string,
+      sectionId: string,
       updates: {
-        secTitle?: string;
-        defaultRevConfCd?: string;
-        revConfType?: string;
+        sectionTitle?: string;
+        defaultReviewConfigCode?: string;
+        reviewConfigType?: string;
       }
     ) => {
+      if (updates.sectionTitle) {
+        const duplicateTitle = formSections.some(
+          (s) =>
+            s.sectionId !== sectionId &&
+            s.sectionTitle.toLocaleLowerCase().trim() ===
+              updates.sectionTitle?.toLocaleLowerCase().trim()
+        );
+
+        if (duplicateTitle) {
+          toaster.create({
+            description: "Section name already exists",
+            type: "error",
+          });
+
+          return;
+        }
+      }
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== tempId) return section;
+          if (section.sectionId !== sectionId) return section;
           const updated = { ...section, ...updates };
           if (
-            updates.revConfType &&
-            updates.revConfType !== "POINT" &&
-            section.revConfType === "POINT"
+            updates.reviewConfigType &&
+            updates.reviewConfigType !== "POINT" &&
+            section.reviewConfigType === "POINT"
           ) {
             updated.criteriaList = [];
           }
@@ -136,19 +171,20 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
     };
 
     const handleAddCriteria = (
-      sectionTempId: string,
-      criteria: Omit<SectionCriteria, "order" | "tempId">
+      sectionId: string,
+      criteria: Omit<SectionCriteria, "order">
     ) => {
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== sectionTempId) return section;
+          if (section.sectionId !== sectionId) return section;
           return {
             ...section,
             criteriaList: [
               ...section.criteriaList,
               {
                 ...criteria,
-                tempId: `criteria${Date.now()}`,
+                criteriaId: `criteria${Date.now()}`,
+                sectionId: section.sectionId,
                 order: section.criteriaList.length,
               },
             ],
@@ -157,15 +193,12 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       );
     };
 
-    const handleRemoveCriteria = (
-      sectionTempId: string,
-      criteriaTempId: string
-    ) => {
+    const handleRemoveCriteria = (sectionId: string, criteriaId: string) => {
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== sectionTempId) return section;
+          if (section.sectionId !== sectionId) return section;
           const filtered = section.criteriaList.filter(
-            (criteria) => criteria.tempId !== criteriaTempId
+            (criteria) => criteria.criteriaId !== criteriaId
           );
           return {
             ...section,
@@ -178,16 +211,13 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       );
     };
 
-    const handleMoveCriteriaUp = (
-      sectionTempId: string,
-      criteriaTempId: string
-    ) => {
+    const handleMoveCriteriaUp = (sectionId: string, criteriaId: string) => {
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== sectionTempId) return section;
+          if (section.sectionId !== sectionId) return section;
 
           const index = section.criteriaList.findIndex(
-            (criteria) => criteria.tempId === criteriaTempId
+            (criteria) => criteria.criteriaId === criteriaId
           );
           if (index <= 0) return section;
 
@@ -207,16 +237,13 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       );
     };
 
-    const handleMoveCriteriaDown = (
-      sectionTempId: string,
-      criteriaTempId: string
-    ) => {
+    const handleMoveCriteriaDown = (sectionId: string, criteriaId: string) => {
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== sectionTempId) return section;
+          if (section.sectionId !== sectionId) return section;
 
           const index = section.criteriaList.findIndex(
-            (criteria) => criteria.tempId === criteriaTempId
+            (criteria) => criteria.criteriaId === criteriaId
           );
           if (index === -1 || index >= section.criteriaList.length - 1)
             return section;
@@ -238,22 +265,35 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
     };
 
     const handleUpdateCriteriaTitle = (
-      sectionTempId: string,
-      criteriaTempId: string,
+      sectionId: string,
+      criteriaId: string,
       newTitle: string
     ) => {
       setFormSections((prev) =>
         prev.map((section) => {
-          if (section.tempId !== sectionTempId) return section;
+          if (section.sectionId !== sectionId) return section;
           return {
             ...section,
             criteriaList: section.criteriaList.map((criteria) =>
-              criteria.tempId === criteriaTempId
+              criteria.criteriaId === criteriaId
                 ? { ...criteria, criteriaTitle: newTitle }
                 : criteria
             ),
           };
         })
+      );
+    };
+
+    const handleSelectSection = (section: FormSection) => {
+      setSelectedSectionId((prev) =>
+        prev === section.sectionId ? null : section.sectionId
+      );
+    };
+
+    const handleGetSelectedSection = (): FormSection | null => {
+      console.log(true);
+      return (
+        formSections.find((s) => s.sectionId === selectedSectionId) ?? null
       );
     };
 
@@ -265,6 +305,7 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
       moveSectionDown: handleMoveSectionDown,
       getSections: handleGetSections,
       clearSections: handleClearSections,
+      getSelectedSection: handleGetSelectedSection,
     }));
 
     return (
@@ -276,35 +317,33 @@ export const FormSectionList = forwardRef<FormSectionHandler, {}>(
         ) : (
           formSections.map((section, index) => (
             <FormSectionItem
-              key={section.tempId}
+              key={section.sectionId}
               formSection={section}
               isFirst={index === 0}
               isLast={index === formSections.length - 1}
-              onMoveUp={() => handleMoveSectionUp(section.tempId)}
-              onMoveDown={() => handleMoveSectionDown(section.tempId)}
-              onRemove={() => handleRemoveSection(section.tempId)}
+              onMoveUp={() => handleMoveSectionUp(section.sectionId)}
+              onMoveDown={() => handleMoveSectionDown(section.sectionId)}
+              onRemove={() => handleRemoveSection(section.sectionId)}
               onUpdateSection={(updates) =>
-                handleUpdateSection(section.tempId, updates)
+                handleUpdateSection(section.sectionId, updates)
               }
               onAddCriteria={(criteria) =>
-                handleAddCriteria(section.tempId, criteria)
+                handleAddCriteria(section.sectionId, criteria)
               }
-              onRemoveCriteria={(criteriaTempId) =>
-                handleRemoveCriteria(section.tempId, criteriaTempId)
+              onRemoveCriteria={(sectionId, criteriaId) =>
+                handleRemoveCriteria(sectionId, criteriaId)
               }
-              onMoveCriteriaUp={(criteriaTempId) =>
-                handleMoveCriteriaUp(section.tempId, criteriaTempId)
+              onMoveCriteriaUp={(sectionId, criteriaId) =>
+                handleMoveCriteriaUp(sectionId, criteriaId)
               }
-              onMoveCriteriaDown={(criteriaTempId) =>
-                handleMoveCriteriaDown(section.tempId, criteriaTempId)
+              onMoveCriteriaDown={(sectionId, criteriaId) =>
+                handleMoveCriteriaDown(sectionId, criteriaId)
               }
-              onUpdateCriteriaTitle={(criteriaTempId, newTitle) =>
-                handleUpdateCriteriaTitle(
-                  section.tempId,
-                  criteriaTempId,
-                  newTitle
-                )
+              onUpdateCriteriaTitle={(sectionId, criteriaId, newTitle) =>
+                handleUpdateCriteriaTitle(sectionId, criteriaId, newTitle)
               }
+              isSelected={selectedSectionId === section.sectionId}
+              onSelect={handleSelectSection}
             />
           ))
         )}

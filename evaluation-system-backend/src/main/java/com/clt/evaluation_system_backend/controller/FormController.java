@@ -2,6 +2,8 @@ package com.clt.evaluation_system_backend.controller;
 
 import com.clt.evaluation_system_backend.dto.request.FormRequest;
 import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
+import com.clt.evaluation_system_backend.dto.request.form.CreateFormTemplateRequest;
+import com.clt.evaluation_system_backend.dto.request.section.CreateSecRequest;
 import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
@@ -25,28 +27,35 @@ public class FormController {
         return ApiResponse.ok(formTmplResponse);
     }
 
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<Void>> createFormTemplate(
+            @RequestBody CreateFormTemplateRequest request) {
+        this.formService.createFormTemplate(request);
+        return ApiResponse.created(null);
+    }
+
     // body
-//    [
-//        {
-//            "formSubmissionId": "form_subm20250101001",
-//                "formDetailId": 1,
-//                "role": "SELF",
-//                "value": "10"
-//        },
-//        {
-//            "formSubmissionId": "form_subm20250101001",
-//                "formDetailId": 1,
-//                "role": "LEADER",
-//                "value": "9"
-//        },
-//        {
-//            "formSubmissionId": "form_subm20250101001",
-//                "formDetailId": 2,
-//                "role": "SELF",
-//                "value": "10"
-//        },
-//        ...
-//    ]
+    // [
+    // {
+    // "formSubmissionId": "form_subm20250101001",
+    // "formDetailId": 1,
+    // "role": "SELF",
+    // "value": "10"
+    // },
+    // {
+    // "formSubmissionId": "form_subm20250101001",
+    // "formDetailId": 1,
+    // "role": "LEADER",
+    // "value": "9"
+    // },
+    // {
+    // "formSubmissionId": "form_subm20250101001",
+    // "formDetailId": 2,
+    // "role": "SELF",
+    // "value": "10"
+    // },
+    // ...
+    // ]
     @PostMapping("/subm")
     public ResponseEntity<?> saveSubmList(@RequestBody List<FormSubmRequest> request) {
         int rows = formService.saveSubmList(request);

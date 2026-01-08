@@ -7,148 +7,174 @@ import {
   FaTimes,
   FaTrash,
 } from "react-icons/fa";
-import type { SectionCriteria } from "../form-section/FormSectionList";
 import { useState } from "react";
+import type { SectionCriteria } from "../form-section/FormSectionList";
 
-interface SectionCriteriaItemProps {
-  criteria: SectionCriteria;
+interface SectionCriteriaListProps {
+  criteriaList: SectionCriteria[];
   sectionRoles: string[];
-  isFirst: boolean;
-  isLast: boolean;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-  onRemove: () => void;
-  onUpdateTitle: (newTitle: string) => void;
+  onRemove: (criteriaId: string) => void;
+  onMoveUp: (criteriaId: string) => void;
+  onMoveDown: (criteriaId: string) => void;
+  onUpdateTitle: (criteriaId: string, newTitle: string) => void;
 }
 
-export const SectionCriteriaItem = ({
-  criteria,
+export const SectionCriteriaList = ({
+  criteriaList,
   sectionRoles,
-  isFirst,
-  isLast,
+  onRemove,
   onMoveUp,
   onMoveDown,
-  onRemove,
   onUpdateTitle,
-}: SectionCriteriaItemProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(criteria.criteriaTitle);
+}: SectionCriteriaListProps) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
 
-  const handleStartEdit = () => {
+  if (criteriaList.length === 0) {
+    return (
+      <Text fontSize="xs" color="gray.500" textAlign="center" py="12px">
+        No criteria added yet.
+      </Text>
+    );
+  }
+
+  const startEdit = (criteria: SectionCriteria) => {
+    setEditingId(criteria.criteriaId);
     setEditTitle(criteria.criteriaTitle);
-    setIsEditing(true);
   };
 
-  const handleCancelEdit = () => {
-    setEditTitle(criteria.criteriaTitle);
-    setIsEditing(false);
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditTitle("");
   };
 
-  const handleSaveEdit = () => {
+  const saveEdit = (criteriaId: string) => {
     if (!editTitle.trim()) return;
-    onUpdateTitle(editTitle.trim());
-    setIsEditing(false);
+    onUpdateTitle(criteriaId, editTitle.trim());
+    cancelEdit();
   };
 
   return (
-    <Card.Root>
-      <Card.Body padding="12px">
-        <Flex justifyContent="space-between" alignItems="center" gap="16px">
-          <Flex gap="12px" alignItems="center" minW="150px">
-            <Badge size="sm" colorPalette="orange">
-              {criteria.order + 1}
-            </Badge>
-            {isEditing ? (
-              <Input
-                size="sm"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                placeholder="Criteria title..."
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSaveEdit();
-                  if (e.key === "Escape") handleCancelEdit();
-                }}
-                autoFocus
-              />
-            ) : (
-              <Text fontSize="sm" fontWeight="semibold">
-                {criteria.criteriaTitle}
-              </Text>
-            )}
-          </Flex>
+    <Flex flexDirection="column" gap="8px">
+      {criteriaList.map((criteria, index) => {
+        const isEditing = editingId === criteria.criteriaId;
 
-          <Flex gap="16px" flexWrap="wrap" alignItems="center">
-            <Flex gap="8px">
-              {sectionRoles.map((role: string) => (
-                <Input key={role} size="sm" placeholder={role} width="100px" />
-              ))}
+        return (
+          <Card.Root key={criteria.criteriaId}>
+            <Card.Body padding="12px">
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                gap="16px"
+              >
+                {/* LEFT */}
+                <Flex gap="12px" alignItems="center" minW="150px">
+                  <Badge size="sm" colorPalette="orange">
+                    {criteria.order + 1}
+                  </Badge>
 
-              <Input size="sm" placeholder="FINAL" width="100px"></Input>
-            </Flex>
+                  {isEditing ? (
+                    <Input
+                      size="sm"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      placeholder="Criteria title..."
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveEdit(criteria.criteriaId);
+                        if (e.key === "Escape") cancelEdit();
+                      }}
+                    />
+                  ) : (
+                    <Text fontSize="sm" fontWeight="semibold">
+                      {criteria.criteriaTitle}
+                    </Text>
+                  )}
+                </Flex>
 
-            <Flex gap="4px">
-              {isEditing ? (
-                <>
-                  <IconButton
-                    size="xs"
-                    variant="ghost"
-                    colorPalette="green"
-                    onClick={handleSaveEdit}
-                    disabled={!editTitle.trim()}
-                    aria-label="Save"
-                  >
-                    <FaCheck />
-                  </IconButton>
-                  <IconButton
-                    size="xs"
-                    variant="ghost"
-                    onClick={handleCancelEdit}
-                    aria-label="Cancel"
-                  >
-                    <FaTimes />
-                  </IconButton>
-                </>
-              ) : (
-                <IconButton
-                  size="xs"
-                  variant="ghost"
-                  onClick={handleStartEdit}
-                  aria-label="Edit"
-                >
-                  <FaEdit />
-                </IconButton>
-              )}
-              <IconButton
-                size="xs"
-                variant="ghost"
-                disabled={isFirst}
-                onClick={onMoveUp}
-                aria-label="Move up"
-              >
-                <FaArrowUp />
-              </IconButton>
-              <IconButton
-                size="xs"
-                variant="ghost"
-                disabled={isLast}
-                onClick={onMoveDown}
-                aria-label="Move down"
-              >
-                <FaArrowDown />
-              </IconButton>
-              <IconButton
-                size="xs"
-                variant="ghost"
-                colorPalette="red"
-                onClick={onRemove}
-                aria-label="Remove criteria"
-              >
-                <FaTrash />
-              </IconButton>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Card.Body>
-    </Card.Root>
+                {/* RIGHT */}
+                <Flex gap="16px" flexWrap="wrap" alignItems="center">
+                  <Flex gap="8px">
+                    {sectionRoles.map((role) => (
+                      <Input
+                        key={role}
+                        size="sm"
+                        placeholder={role}
+                        width="100px"
+                      />
+                    ))}
+                    <Input size="sm" placeholder="FINAL" width="100px" />
+                  </Flex>
+
+                  <Flex gap="4px">
+                    {isEditing ? (
+                      <>
+                        <IconButton
+                          size="xs"
+                          variant="ghost"
+                          colorPalette="green"
+                          onClick={() => saveEdit(criteria.criteriaId)}
+                          disabled={!editTitle.trim()}
+                          aria-label="Save"
+                        >
+                          <FaCheck />
+                        </IconButton>
+                        <IconButton
+                          size="xs"
+                          variant="ghost"
+                          onClick={cancelEdit}
+                          aria-label="Cancel"
+                        >
+                          <FaTimes />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <IconButton
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => startEdit(criteria)}
+                        aria-label="Edit"
+                      >
+                        <FaEdit />
+                      </IconButton>
+                    )}
+
+                    <IconButton
+                      size="xs"
+                      variant="ghost"
+                      disabled={index === 0}
+                      onClick={() => onMoveUp(criteria.criteriaId)}
+                      aria-label="Move up"
+                    >
+                      <FaArrowUp />
+                    </IconButton>
+
+                    <IconButton
+                      size="xs"
+                      variant="ghost"
+                      disabled={index === criteriaList.length - 1}
+                      onClick={() => onMoveDown(criteria.criteriaId)}
+                      aria-label="Move down"
+                    >
+                      <FaArrowDown />
+                    </IconButton>
+
+                    <IconButton
+                      size="xs"
+                      variant="ghost"
+                      colorPalette="red"
+                      onClick={() => onRemove(criteria.criteriaId)}
+                      aria-label="Remove criteria"
+                    >
+                      <FaTrash />
+                    </IconButton>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Card.Body>
+          </Card.Root>
+        );
+      })}
+    </Flex>
   );
 };

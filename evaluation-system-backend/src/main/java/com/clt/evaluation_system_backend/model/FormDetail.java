@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SeqTable("form_tmpl")
-public class FormTmpl {
-    private String formSecItemTmplId;
-    private String formTmplId;
-    private String secTmplId;
-    private Integer secOrdNo;
-    private String secItemTmplId;
-    private Integer secItemOrdNo;
-
+@SeqTable("form_detail")
+public class FormDetail {
+    private String formDetailId;
+    private String formId;
+    private String secId;
+    private String parentSecId;
+    private Integer formDetailOrdNo;
+    private String formDetailTitle;
+    private String revConfCd;
     private String creUsrId;
-    private LocalDateTime creDt;
     private String updUsrId;
+    private LocalDateTime creDt;
     private LocalDateTime updDt;
     private String delFlg;
 }

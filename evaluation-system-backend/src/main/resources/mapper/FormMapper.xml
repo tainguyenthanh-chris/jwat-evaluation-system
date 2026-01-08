@@ -119,6 +119,32 @@
         </foreach>
     </insert>
 
+    <insert id="insertForm" parameterType="com.clt.evaluation_system_backend.model.Form">
+        INSERT INTO form (
+            form_id,
+            form_title,
+            form_ver,
+            dept_cd,
+            pos_cd,
+            lvl_cd,
+            form_status,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES (
+            #{formId},
+            #{formTitle},
+            1,
+            #{deptCd},
+            #{posCd},
+            #{lvlCd},
+            'NEW',
+            #{creUsrId},
+            CURRENT_TIMESTAMP,
+            'F'
+        )
+    </insert>
     <select id="selectFormSubmission" resultType="com.clt.evaluation_system_backend.dto.row.FormSubmissionRow">
         SELECT
             FS.form_subm_id AS formSubmissionId,
@@ -165,4 +191,31 @@
                 SV.form_subm_id = #{formSubmissionId}
     </select>
 
+    <insert id="insertFormDetails" parameterType="java.util.List">
+        INSERT INTO form_detail (
+            form_id,
+            sec_id,
+            parent_sec_id,
+            form_detail_ord_no,
+            form_detail_title,
+            rev_conf_cd,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.formId},
+                    #{item.secId},
+                    #{item.parentSecId},
+                    #{item.formDetailOrdNo},
+                    #{item.formDetailTitle},
+                    #{item.revConfCd},
+                    #{item.creUsrId},
+                    CURRENT_TIMESTAMP,
+                    'F'
+                )
+            </foreach>
+    </insert>
 </mapper>

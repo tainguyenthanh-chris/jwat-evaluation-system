@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class SecResponse {
-    private String secId;
-    private String secTitle;
-    private String defaultRevConfCd;
-    private String revConfType;
+    private String sectionId;
+    private String sectionTitle;
+    private String defaultReviewConfigCode;
+    private String reviewConfigType;
     private List<SecCue> cueList;
 
     @Data
