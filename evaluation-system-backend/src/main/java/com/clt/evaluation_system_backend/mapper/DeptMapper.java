@@ -15,9 +15,9 @@ public interface DeptMapper {
 
     void update(Dept dept);
 
-    void deleteById(String deptId);
+    void deleteById(String deptId, String updUsrId);
 
-    DeptResponse findById(String deptId);
+    Dept findById(String deptId);
 
     List<DeptResponse> findAll(DeptSearchRequest searchRequest);
 }

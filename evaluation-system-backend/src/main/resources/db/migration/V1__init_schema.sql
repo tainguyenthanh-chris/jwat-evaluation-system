@@ -5,6 +5,7 @@ CREATE TABLE pos (
                      pos_nm VARCHAR(100) NULL,
                      pos_cd VARCHAR(10) NOT NULL,
                      pos_desc VARCHAR(100) NULL,
+                     dept_id VARCHAR(30) NULL,
 
                      cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                      cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -20,6 +21,7 @@ CREATE TABLE lvl (
                      lvl_nm VARCHAR(100),
                      lvl_cd VARCHAR(10) NOT NULL,
                      lvl_desc VARCHAR(100),
+                     pos_id VARCHAR(30) NULL,
 
                      cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                      cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -110,18 +112,22 @@ CREATE TABLE team (
 -- emp definition
 -- DROP TABLE emp;
 CREATE TABLE emp (
-                     emp_id VARCHAR(30) PRIMARY KEY,
-                     emp_nm VARCHAR(100),
-                     emp_no VARCHAR(30) NOT NULL UNIQUE,
-                     emp_email VARCHAR(100) NOT NULL UNIQUE,
-                     comp_role_cd VARCHAR(10),
-                     dept_cd VARCHAR(10),
-                     pos_cd VARCHAR(10),
-                     lvl_cd VARCHAR(10),
-                     salary_lvl float8 DEFAULT 0,
-                     team_id VARCHAR(30),
-                     emp_status_cd VARCHAR(10) NOT NULL DEFAULT 'ACTIVE',
-                     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+                    emp_id VARCHAR(30) PRIMARY KEY,
+                    emp_nm VARCHAR(100),
+                    emp_no VARCHAR(30) NOT NULL UNIQUE,
+                    emp_email VARCHAR(100) NOT NULL UNIQUE,
+                    comp_role_cd VARCHAR(10),
+                    dept_cd VARCHAR(10),
+                    pos_cd VARCHAR(10),
+                    lvl_cd VARCHAR(10),
+                    salary_lvl float8 DEFAULT 0,
+                    team_id VARCHAR(30),
+                    emp_status_cd VARCHAR(10) NOT NULL DEFAULT 'ACTIVE',
+                    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                    cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                    upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                    upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                    del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 
 );
 

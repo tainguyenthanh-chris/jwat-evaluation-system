@@ -1,21 +1,51 @@
 -- dept data
 INSERT INTO dept (dept_id, dept_nm, dept_cd, director_id) VALUES
-    ('dept20250101001','Information technology','IT','emp20250101999'), --IT director: 999
-    ('dept20250101002','Hiring','HR','emp202501019991'); --HR director: 9991
+('deptIT001','Information Technology','IT','empITDIR01'),
+('deptHR001','Human Resources','HR','empHRDIR01');
 
 -- pos data
-INSERT INTO pos (pos_id, pos_nm, pos_cd, pos_desc) VALUES
-    ('pos20250101001','Developer','DEV','Description for Position'),
-    ('pos20250101002','Tester','TESTER','Description for Position'),
-    ('pos20250101003','Business Analyst','BA','Description for Position'),
-    ('pos20250101004','Product Manager','PM','Description for Position');
+INSERT INTO pos (pos_id, pos_nm, pos_cd, pos_desc, dept_id) VALUES
+-- IT
+('posITDEV','Developer','DEV','Software Developer','deptIT001'),
+('posITTEST','Tester','TEST','Software Tester','deptIT001'),
+('posITBA','Business Analyst','BA','Business Analyst','deptIT001'),
+('posITOPS','IT Operations','OPS','IT Operations','deptIT001'),
+
+-- HR
+('posHRGEN','HR Generalist','HRG','HR Generalist','deptHR001'),
+('posHRREC','Recruiter','REC','Recruiter','deptHR001'),
+('posHRADM','HR Admin','ADM','HR Administrator','deptHR001');
+
 
 -- lvl data
-INSERT INTO lvl (lvl_id, lvl_nm, lvl_cd, lvl_desc) VALUES
-    ('lvl20250101001','Fresher','FRESHER','Description for Level'),
-    ('lvl20250101002','Junior','JUNIOR','Description for Level'),
-    ('lvl20250101003','Middle','MIDDLE','Description for Level'),
-    ('lvl20250101004','Senior','SENIOR','Description for Level');
+INSERT INTO lvl (lvl_id, lvl_nm, lvl_cd, lvl_desc, pos_id) VALUES
+-- DEV
+('lvlDEVF','Fresher','FRESHER','Entry','posITDEV'),
+('lvlDEVJ','Junior','JUNIOR','Junior','posITDEV'),
+('lvlDEVM','Middle','MIDDLE','Middle','posITDEV'),
+('lvlDEVS','Senior','SENIOR','Senior','posITDEV'),
+
+-- TEST
+('lvlTESTF','Fresher','FRESHER','Entry','posITTEST'),
+('lvlTESTJ','Junior','JUNIOR','Junior','posITTEST'),
+('lvlTESTM','Middle','MIDDLE','Middle','posITTEST'),
+('lvlTESTS','Senior','SENIOR','Senior','posITTEST'),
+
+-- BA
+('lvlBAF','Fresher','FRESHER','Entry','posITBA'),
+('lvlBAJ','Junior','JUNIOR','Junior','posITBA'),
+('lvlBAM','Middle','MIDDLE','Middle','posITBA'),
+
+-- OPS
+('lvlOPJ','Junior','JUNIOR','Junior','posITOPS'),
+('lvlOPM','Middle','MIDDLE','Middle','posITOPS'),
+('lvlOPS','Senior','SENIOR','Senior','posITOPS'),
+
+-- HR
+('lvlHRJ','Junior','JUNIOR','Junior','posHRGEN'),
+('lvlHRM','Middle','MIDDLE','Middle','posHRGEN'),
+('lvlHRS','Senior','SENIOR','Senior','posHRGEN');
+
 
 -- sys_role data
 INSERT INTO sys_role (sys_role_id, sys_role_cd, sys_role_desc) VALUES
@@ -84,25 +114,26 @@ INSERT INTO team (team_id, team_nm, team_cd, leader_id, manager_id, dept_id, par
     ('team20250101001','LBU','LBU','emp20250101009','emp20250101099','dept20250101001',NULL),    --leader: 009, manager: 099
     ('team20250101002','ABC','ABC','emp202501010091','emp202501010991','dept20250101001',NULL);   --leader: 0091, manager: 0991
 -- emp data
-INSERT INTO emp (emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id) VALUES
-    ('emp20250101001', 'To Minh Nhat','258157','tominhat@cycberlogitec.com',
-     'MEMBER','IT','DEV','FRESHER',14000000,'team20250101001'),
-    ('emp20250101002', 'Hoang Manh Ha','258158','hoangmanhha@cycberlogitec.com',
-    'MEMBER','IT','DEV','JUNIOR',19000000,'team20250101001'),
-    ('emp20250101003', 'Nguyen Thanh Tai','258159','nguyenthanhtai@cycberlogitec.com',
-    'MEMBER','IT','DEV','MIDDLE',25000000,'team20250101001'),
-    ('emp20250101999', 'Director IT Nguyen','258200','directoritnguyen@cycberlogitec.com',
-    NULL,'IT','DEV','SENIOR',60000000,NULL), -- it director
-    ('emp202501019991', 'Director HR Duong','258201','directorhrduong@cycberlogitec.com',
-    NULL,'HR','HR','SENIOR',60000000,NULL), -- hr director
-    ('emp202501019099', 'Manager Minh','258300','managerminh@cycberlogitec.com',
-    NULL,'IT','DEV','SENIOR',40000000,NULL), -- it manager
-    ('emp2025010190991', 'Manager Hoang','258301','managerhoang@cycberlogitec.com',
-    NULL,'IT','DEV','SENIOR',40000000,NULL), -- it manager
-    ('emp202501019009', 'Leader An Le','258400','leaderanle@cycberlogitec.com',
-    NULL,'IT','DEV','SENIOR',30000000,NULL), -- it leader an le
-    ('emp2025010190091', 'Leader Nguyen Toan','258401','leadertoannguyen@cycberlogitec.com',
-    NULL,'IT','DEV','SENIOR',30000000,NULL); -- it leader toan nguyen
+-- INSERT INTO emp (
+--     emp_id, emp_nm, emp_no, emp_email,
+--     comp_role_cd, dept_cd, pos_cd, lvl_cd,
+--     salary_lvl, team_id
+-- ) VALUES
+-- ('emp20250101001','To Minh Nhat','258157','tominhat@cycberlogitec.com',
+--  'MEMBER','IT','DEV','FRESHER',14000000,'team20250101001'),
+
+-- ('emp20250101002','Hoang Manh Ha','258158','hoangmanhha@cycberlogitec.com',
+--  'MEMBER','IT','DEV','JUNIOR',19000000,'team20250101001'),
+
+-- ('emp20250101003','Nguyen Thanh Tai','258159','nguyenthanhtai@cycberlogitec.com',
+--  'MEMBER','IT','DEV','MIDDLE',25000000,'team20250101001'),
+
+-- ('emp20250101999','Director IT Nguyen','258200','directoritnguyen@cycberlogitec.com',
+--  NULL,'IT','DEV','SENIOR',60000000,NULL),
+
+-- ('emp202501019991','Director HR Duong','258201','directorhrduong@cycberlogitec.com',
+--  NULL,'HR','HR','SENIOR',60000000,NULL);
+
 
 -- usr_sys_role data
 INSERT INTO usr_sys_role (usr_id, sys_role_id) VALUES
@@ -113,8 +144,8 @@ INSERT INTO usr_sys_role (usr_id, sys_role_id) VALUES
     ('emp202501019991','sys_role20250101002'); -- hr director - form
 
 -- form data
-INSERT INTO form (form_id, form_title, dept_cd, pos_cd, lvl_cd) VALUES
-    ('form20250101001','IT DEV FRESHER','IT','DEV','FRESHER');
+-- INSERT INTO form (form_id, form_title, dept_cd, pos_cd, lvl_cd) VALUES
+--     ('form20250101001','IT DEV FRESHER','IT','DEV','FRESHER');
 
 -- sec data
 INSERT INTO sec (sec_id, sec_title,default_rev_conf_cd) VALUES
@@ -156,6 +187,143 @@ INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, for
                                                                                                              ('form20250101001','sec20250101003',NULL,9,'Objectives','COMMENT_SELF'),
                                                                                                              ('form20250101001','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
                                                                                                              ('form20250101001','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
+
+
+/* ---------- DEV / FRESHER (10) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empDEVF' || LPAD(g::text,2,'0'),
+    'Dev Fresher ' || g,
+    '410' || LPAD(g::text,2,'0'),
+    'dev.fresher'||g||'@company.com',
+    'MEMBER','IT','DEV','FRESHER',12000000
+FROM generate_series(1,10) g;
+
+
+/* ---------- DEV / JUNIOR (12) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empDEVJ' || LPAD(g::text,2,'0'),
+    'Dev Junior ' || g,
+    '420' || LPAD(g::text,2,'0'),
+    'dev.junior'||g||'@company.com',
+    'MEMBER','IT','DEV','JUNIOR',18000000
+FROM generate_series(1,12) g;
+
+
+/* ---------- DEV / MIDDLE (10) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empDEVM' || LPAD(g::text,2,'0'),
+    'Dev Middle ' || g,
+    '430' || LPAD(g::text,2,'0'),
+    'dev.middle'||g||'@company.com',
+    'MEMBER','IT','DEV','MIDDLE',25000000
+FROM generate_series(1,10) g;
+
+
+/* ---------- DEV / SENIOR (15 incl director) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empDEVS' || LPAD(g::text,2,'0'),
+    'Dev Senior ' || g,
+    '440' || LPAD(g::text,2,'0'),
+    'dev.senior'||g||'@company.com',
+    'LEADER','IT','DEV','SENIOR',30000000
+FROM generate_series(1,14) g;
+
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+) VALUES (
+    'empITDIR01','IT Director','44999','it.director@company.com',
+    'DIRECTOR','IT','DEV','SENIOR',60000000
+);
+
+
+/* ---------- HR / JUNIOR (10) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empHRJ' || LPAD(g::text,2,'0'),
+    'HR Junior ' || g,
+    '510' || LPAD(g::text,2,'0'),
+    'hr.junior'||g||'@company.com',
+    'MEMBER','HR','HRG','JUNIOR',15000000
+FROM generate_series(1,10) g;
+
+
+/* ---------- HR / MIDDLE (10) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empHRM' || LPAD(g::text,2,'0'),
+    'HR Middle ' || g,
+    '520' || LPAD(g::text,2,'0'),
+    'hr.middle'||g||'@company.com',
+    'MEMBER','HR','HRG','MIDDLE',22000000
+FROM generate_series(1,10) g;
+
+
+/* ---------- HR / SENIOR (12 incl director) ---------- */
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+)
+SELECT
+    'empHRS' || LPAD(g::text,2,'0'),
+    'HR Senior ' || g,
+    '530' || LPAD(g::text,2,'0'),
+    'hr.senior'||g||'@company.com',
+    'LEADER','HR','HRG','SENIOR',28000000
+FROM generate_series(1,11) g;
+
+INSERT INTO emp (
+    emp_id, emp_nm, emp_no, emp_email,
+    comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl
+) VALUES (
+    'empHRDIR01','HR Director','53999','hr.director@company.com',
+    'DIRECTOR','HR','HRG','SENIOR',55000000
+);
+
+
+INSERT INTO form (
+    form_id,
+    form_title,
+    dept_cd,
+    pos_cd,
+    lvl_cd,
+    form_status
+)
+SELECT
+    'form_' || dept_cd || '_' || pos_cd || '_' || lvl_cd,
+    dept_cd || ' ' || pos_cd || ' ' || lvl_cd || ' Evaluation Form',
+    dept_cd,
+    pos_cd,
+    lvl_cd,
+    'ACTIVE'
+FROM (
+    SELECT DISTINCT dept_cd, pos_cd, lvl_cd
+    FROM emp
+    WHERE del_flg = 'F'
+) t;
+
 INSERT INTO boss_rev (form_subm_id, emp_no, boss_no, boss_rev_role, boss_rev_ord_no, isFinal) VALUES
                                                                                                   ('form_subm20250101001','258157','258400','LEADER','1','F'),
                                                                                                   ('form_subm20250101001','258157','258401','MANAGER','1','F');
@@ -174,3 +342,59 @@ INSERT INTO subm_value (subm_value_id,form_subm_id,form_detail_id,subm_value_rol
                                                                                                                                                      (4,'form_subm20250101001',4,'LEADER','9','default','2026-01-06 15:35:16.805278','default','2026-01-06 15:35:16.805278','F'),
                                                                                                                                                      (5,'form_subm20250101001',9,'SELF','tuyet voi','default','2026-01-06 15:35:16.807745','default','2026-01-06 15:35:16.807745','F'),
                                                                                                                                                      (6,'form_subm20250101001',10,'LEADER','thang chuc','default','2026-01-06 15:35:16.811833','default','2026-01-06 15:35:16.811833','F');
+INSERT INTO form_subm (form_subm_id,
+                       form_id,
+                       emp_id,
+                       emp_nm,
+                       emp_no,
+                       emp_curr_dept_cd,
+                        emp_curr_pos_cd,
+                          emp_curr_lvl_cd,
+                          rev_dt,
+                            next_rev_dt,
+                       form_subm_status)
+VALUES ('FS_IT_DEV_FRESHER_41002', 'form_IT_DEV_FRESHER', 'empDEVF02', 'Dev Fresher 2', '41002','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41003', 'form_IT_DEV_FRESHER', 'empDEVF03', 'Dev Fresher 3', '41003', 'IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41004', 'form_IT_DEV_FRESHER', 'empDEVF04', 'Dev Fresher 4', '41004','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41005', 'form_IT_DEV_FRESHER', 'empDEVF05', 'Dev Fresher 5', '41005','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41006', 'form_IT_DEV_FRESHER', 'empDEVF06', 'Dev Fresher 6', '41006','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41007', 'form_IT_DEV_FRESHER', 'empDEVF07', 'Dev Fresher 7', '41007','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41008', 'form_IT_DEV_FRESHER', 'empDEVF08', 'Dev Fresher 8', '41008','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41009', 'form_IT_DEV_FRESHER', 'empDEVF09', 'Dev Fresher 9', '41009','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING'),
+       ('FS_IT_DEV_FRESHER_41010', 'form_IT_DEV_FRESHER', 'empDEVF10', 'Dev Fresher 10', '41010','IT', 'DEV', 'FRESHER', '2025-12-01', '2026-06-01', 'PENDING');
+UPDATE emp SET emp_email = 'tai@gmail.com' WHERE emp_no = '41001';
+UPDATE emp SET emp_email = 'tai2@gmail.com' WHERE emp_no = '53999';
+
+INSERT INTO boss_rev (form_subm_id,
+                      emp_no,
+                      boss_no,
+                      boss_rev_role,
+                      boss_rev_ord_no,
+                      isFinal)
+VALUES ('FS_IT_DEV_FRESHER_41002', '41002', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41003', '41003', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41004', '41004', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41005', '41005', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41006', '41006', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41007', '41007', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41008', '41008', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41009', '41009', '41001', 'LEADER', 1, 'F'),
+       ('FS_IT_DEV_FRESHER_41010', '41010', '41001', 'LEADER', 1, 'F');
+
+INSERT INTO boss_rev (form_subm_id,
+                      emp_no,
+                      boss_no,
+                      boss_rev_role,
+                      boss_rev_ord_no,
+                      isFinal)
+VALUES ('FS_IT_DEV_FRESHER_41002', '41002', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41003', '41003', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41004', '41004', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41005', '41005', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41006', '41006', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41007', '41007', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41008', '41008', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41009', '41009', '53999', 'LEADER', 2, 'T'),
+       ('FS_IT_DEV_FRESHER_41010', '41010', '53999', 'LEADER', 2, 'T');
+
+

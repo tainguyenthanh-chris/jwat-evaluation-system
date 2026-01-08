@@ -13,6 +13,7 @@ import com.clt.evaluation_system_backend.mapper.DeptMapper;
 import com.clt.evaluation_system_backend.model.Dept;
 import com.clt.evaluation_system_backend.service.DeptService;
 import com.clt.evaluation_system_backend.service.SeqService;
+import com.clt.evaluation_system_backend.util.CommonMethods;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +33,13 @@ public class DeptServiceImpl implements DeptService {
         try {
             String newId = seqService.generateNewId(Dept.class);
 
-            Dept dept = new Dept(
-                    newId,
-                    req.getDeptNm(),
-                    req.getDeptCd(),
-                    req.getDirectorId(),
-                    "dev",
-                    null,
-                    null,
-                    null,
-                    "F");
+            Dept dept = new Dept();
+            dept.setDeptId(newId);
+            dept.setDeptNm(req.getDeptNm());
+            dept.setDeptCd(req.getDeptCd());
+            dept.setDirectorId(req.getDirectorId());
+            dept.setCreUsrId(CommonMethods.getCurrentUsrId());
+            dept.setUpdUsrId(CommonMethods.getCurrentUsrId());
 
             deptMapper.insert(dept);
         } catch (Exception e) {
@@ -52,16 +50,12 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public void update(DeptUpdateRequest req, String deptId) {
         try {
-            Dept dept = new Dept(
-                    deptId,
-                    req.getDeptNm(),
-                    req.getDeptCd(),
-                    req.getDirectorId(),
-                    null,
-                    null,
-                    "dev",
-                    null,
-                    null);
+            Dept dept = new Dept();
+            dept.setDeptId(deptId);
+            dept.setDeptNm(req.getDeptNm());
+            dept.setDeptCd(req.getDeptCd());
+            dept.setDirectorId(req.getDirectorId());
+            dept.setUpdUsrId(CommonMethods.getCurrentUsrId());
 
             deptMapper.update(dept);
         } catch (Exception e) {
@@ -72,7 +66,7 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public void deleteById(String deptId) {
         try {
-            deptMapper.deleteById(deptId);
+            deptMapper.deleteById(deptId, CommonMethods.getCurrentUsrId());
         } catch (Exception e) {
             throw new RuntimeException("Department not found");
         }
@@ -80,8 +74,8 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Transactional(readOnly = true)
-    public DeptResponse findById(String deptId) {
-        DeptResponse dept = deptMapper.findById(deptId);
+    public Dept findById(String deptId) {
+        Dept dept = deptMapper.findById(deptId);
         if (dept == null) {
             throw new RuntimeException("Department not found");
         }

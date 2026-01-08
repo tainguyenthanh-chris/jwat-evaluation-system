@@ -16,4 +16,8 @@ public class LvlCreateRequest {
 
     @Size(max = 100, message = "Level description must not exceed 100 characters")
     private String lvlDesc;
+
+    @NotBlank(message = "Position ID is required")
+    @Size(max = 30, message = "Position ID must not exceed 30 characters")
+    private String posId;
 }

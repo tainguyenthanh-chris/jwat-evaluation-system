@@ -8,6 +8,7 @@ import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
 import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
+import com.clt.evaluation_system_backend.model.Form;
 import com.clt.evaluation_system_backend.service.FormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,4 +70,9 @@ public class FormController {
         return ApiResponse.ok(response);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllForms() {
+        List<Form> forms = formService.getAllForms();
+        return ApiResponse.ok(forms);
+    }
 }

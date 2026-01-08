@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.BossRevMapper">
+
+
+    <resultMap id="BossRevResultMap" type="com.clt.evaluation_system_backend.model.BossRev">
+        <id property="bossRevId" column="boss_rev_id" />
+
+        <result property="formSubmId" column="form_subm_id" />
+        <result property="empNo" column="emp_no" />
+        <result property="bossNo" column="boss_no" />
+        <result property="bossRevRole" column="boss_rev_role" />
+        <result property="bossRevOrdNo" column="boss_rev_ord_no" />
+        <result property="isFinal" column="isFinal" />
+
+        <result property="creUsrId" column="cre_usr_id" />
+        <result property="creDt" column="cre_dt" />
+        <result property="updUsrId" column="upd_usr_id" />
+        <result property="updDt" column="upd_dt" />
+        <result property="delFlg" column="del_flg" />
+    </resultMap>
+
+
+    <select id="findByBossNo"
+        parameterType="string"
+        resultMap="BossRevResultMap"> SELECT boss_rev_id, form_subm_id, emp_no, boss_no,
+        boss_rev_role, boss_rev_ord_no, isFinal, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg
+        FROM boss_rev WHERE boss_no = #{bossNo} AND form_subm_id = #{formSubmId} AND del_flg = 'F'
+        ORDER BY boss_rev_ord_no, upd_dt DESC LIMIT 1 </select>
+
+    <insert id="insertBatchBossRev"> INSERT INTO boss_rev ( form_subm_id, emp_no, boss_no,
+        boss_rev_role, boss_rev_ord_no, isFinal, cre_usr_id, upd_usr_id ) VALUES <foreach
+            collection="bossRevs" item="rev" separator=","> ( #{formSubmId}, #{empNo},
+        #{rev.bossEmpNo}, #{rev.bossRevRole}, #{rev.orderNo}, 'F', 'default', 'default' ) </foreach>
+    </insert>
+
+
+    <delete id="deleteBatchBossRev"> DELETE FROM boss_rev WHERE form_subm_id = #{formSubmId} AND
+        emp_no = #{empNo} </delete>
+</mapper>

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,12 +23,6 @@ public class Lvl {
     private String updUsrId;
     private LocalDateTime updDt;
     private String delFlg;
-
-    public Lvl(String lvlId, String lvlNm, String lvlCd, String lvlDesc, String creUsrId) {
-        this.lvlId = lvlId;
-        this.lvlNm = lvlNm;
-        this.lvlCd = lvlCd;
-        this.lvlDesc = lvlDesc;
-        this.creUsrId = creUsrId;
-    }
+    private String posId;
+    private List<Emp> empList;
 }

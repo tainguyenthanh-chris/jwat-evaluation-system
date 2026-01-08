@@ -47,6 +47,11 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       href: "/review",
     },
     { name: "Form Builder", Icon: FaWpforms, href: "/form-builder" },
+    {
+      name: "Employees",
+      Icon: FaHome,
+      href: "/employees-list",
+    },
   ];
 
   const toggleGroup = (name: string): void => {

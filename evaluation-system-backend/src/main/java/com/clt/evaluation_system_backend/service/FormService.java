@@ -6,6 +6,8 @@ import com.clt.evaluation_system_backend.dto.request.form.CreateFormTemplateRequ
 import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
 import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
+import com.clt.evaluation_system_backend.model.Form;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,4 +22,7 @@ public interface FormService {
 
     @Transactional
     SubmissionDataResponse getSubmissionDataByEmployeeNo(SubmissionDataRequest request);
+
+    @Transactional
+    List<Form> getAllForms();
 }

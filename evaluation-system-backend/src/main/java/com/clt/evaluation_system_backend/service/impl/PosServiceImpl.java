@@ -8,6 +8,7 @@ import com.clt.evaluation_system_backend.mapper.PosMapper;
 import com.clt.evaluation_system_backend.model.Pos;
 import com.clt.evaluation_system_backend.service.PosService;
 import com.clt.evaluation_system_backend.service.SeqService;
+import com.clt.evaluation_system_backend.util.CommonMethods;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +33,14 @@ public class PosServiceImpl implements PosService {
         try {
             String newId = seqService.generateNewId(Pos.class);
 
-            Pos pos = new Pos(
-                    newId,
-                    req.getPosNm(),
-                    req.getPosCd(),
-                    req.getPosDesc() != null
-                            ? req.getPosDesc()
-                            : "Description for Position",
-                    "dev");
+            Pos pos = new Pos();
+            pos.setPosId(newId);
+            pos.setPosNm(req.getPosNm());
+            pos.setPosCd(req.getPosCd());
+            pos.setPosDesc(req.getPosDesc());
+            pos.setCreUsrId(CommonMethods.getCurrentUsrId());
+            pos.setUpdUsrId(CommonMethods.getCurrentUsrId());
+            pos.setDeptId(req.getDeptId());
 
             posMapper.insert(pos);
         } catch (Exception e) {
@@ -61,12 +62,12 @@ public class PosServiceImpl implements PosService {
     @Override
     public void update(PosUpdateRequest req, String posId) {
         try {
-            Pos pos = new Pos(
-                    posId,
-                    req.getPosNm(),
-                    req.getPosCd(),
-                    req.getPosDesc(),
-                    "dev");
+            Pos pos = new Pos();
+            pos.setPosId(posId);
+            pos.setPosNm(req.getPosNm());
+            pos.setPosCd(req.getPosCd());
+            pos.setPosDesc(req.getPosDesc());
+            pos.setUpdUsrId(CommonMethods.getCurrentUsrId());
 
             posMapper.update(pos);
         } catch (Exception e) {

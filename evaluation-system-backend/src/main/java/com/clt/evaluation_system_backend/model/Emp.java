@@ -1,5 +1,8 @@
 package com.clt.evaluation_system_backend.model;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.clt.evaluation_system_backend.annotation.SeqTable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,9 +23,14 @@ public class Emp {
     private String deptCd;
     private String posCd;
     private String lvlCd;
-    private Double salary;
+    private Double salaryLvl;
     private String teamId;
     private String empStatusCd;
 
+    private String creUsrId;
+    private LocalDateTime creDt;
+    private String updUsrId;
+    private LocalDateTime updDt;
     private String delFlg;
+    private FormSubm formSubm;
 }

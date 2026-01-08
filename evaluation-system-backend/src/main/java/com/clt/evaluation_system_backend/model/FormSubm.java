@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -37,4 +38,7 @@ public class FormSubm {
     private LocalDateTime updDt;
 
     private String delFlg;
+
+    private Form form;
+    private List<BossRev> bossRevList;
 }

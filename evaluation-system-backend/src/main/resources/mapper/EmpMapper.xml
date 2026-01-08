@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.EmpMapper">
+
+    <resultMap id="EmpResultMap" type="com.clt.evaluation_system_backend.model.Emp">
+        <id property="empId" column="emp_id" />
+
+        <result property="empNm" column="emp_nm" />
+        <result property="empNo" column="emp_no" />
+        <result property="empEmail" column="emp_email" />
+        <result property="compRoleCd" column="comp_role_cd" />
+        <result property="deptCd" column="dept_cd" />
+        <result property="posCd" column="pos_cd" />
+        <result property="lvlCd" column="lvl_cd" />
+        <result property="salaryLvl" column="salary_lvl" />
+        <result property="teamId" column="team_id" />
+        <result property="empStatusCd" column="emp_status_cd" />
+
+        <result property="creUsrId" column="cre_usr_id" />
+        <result property="creDt" column="cre_dt" />
+        <result property="updUsrId" column="upd_usr_id" />
+        <result property="updDt" column="upd_dt" />
+        <result property="delFlg" column="del_flg" />
+    </resultMap>
+
+    <select id="findByEmail"
+        parameterType="string"
+        resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd,
+        pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id, cre_dt, upd_usr_id, upd_dt,
+        del_flg FROM emp WHERE emp_email = #{email} AND del_flg = 'F' </select>
+
+
+    <resultMap id="EmpResultMapListAllBossRev"
+        type="com.clt.evaluation_system_backend.model.Emp">
+
+        <!-- EMP -->
+        <id property="empId" column="emp_id" />
+        <result property="empNm" column="emp_nm" />
+        <result property="empNo" column="emp_no" />
+        <result property="empEmail" column="emp_email" />
+        <result property="compRoleCd" column="comp_role_cd" />
+        <result property="deptCd" column="dept_cd" />
+        <result property="posCd" column="pos_cd" />
+        <result property="lvlCd" column="lvl_cd" />
+        <result property="salaryLvl" column="salary_lvl" />
+        <result property="teamId" column="team_id" />
+        <result property="empStatusCd" column="emp_status_cd" />
+
+        <!-- FORM_SUBM -->
+        <association property="formSubm"
+            javaType="com.clt.evaluation_system_backend.model.FormSubm">
+
+            <id property="formSubmId" column="form_subm_id" />
+            <result property="formId" column="form_id" />
+            <result property="empId" column="fs_emp_id" />
+            <result property="empNm" column="fs_emp_nm" />
+            <result property="empNo" column="fs_emp_no" />
+            <result property="empCurrDeptCd" column="emp_curr_dept_cd" />
+            <result property="empCurrPosCd" column="emp_curr_pos_cd" />
+            <result property="empCurrLvlCd" column="emp_curr_lvl_cd" />
+            <result property="revDt" column="rev_dt" />
+            <result property="nextRevDt" column="next_rev_dt" />
+            <result property="formSubmStatus" column="form_subm_status" />
+
+            <!-- FORM -->
+            <association property="form"
+                javaType="com.clt.evaluation_system_backend.model.Form">
+                <id property="formId" column="f_form_id" />
+                <result property="formTitle" column="form_title" />
+                <result property="formVer" column="form_ver" />
+                <result property="deptCd" column="f_dept_cd" />
+                <result property="posCd" column="f_pos_cd" />
+                <result property="lvlCd" column="f_lvl_cd" />
+                <result property="formStatus" column="form_status" />
+            </association>
+
+            <!-- BOSS_REV LIST -->
+            <collection property="bossRevList"
+                ofType="com.clt.evaluation_system_backend.model.BossRev">
+
+                <id property="bossRevId" column="boss_rev_id" />
+                <result property="formSubmId" column="form_subm_id" />
+                <result property="empNo" column="br_emp_no" />
+                <result property="bossNo" column="boss_no" />
+                <result property="bossRevRole" column="boss_rev_role" />
+                <result property="bossRevOrdNo" column="boss_rev_ord_no" />
+                <result property="isFinal" column="isFinal" />
+
+
+                <association property="bossEmp"
+                    javaType="com.clt.evaluation_system_backend.model.Emp">
+                    <id property="empId" column="boss_emp_id" />
+                    <result property="empNm" column="boss_emp_nm" />
+                    <result property="empNo" column="boss_emp_no" />
+                    <result property="empEmail" column="boss_emp_email" />
+                    <result property="compRoleCd" column="boss_comp_role_cd" />
+                    <result property="deptCd" column="boss_dept_cd" />
+                    <result property="posCd" column="boss_pos_cd" />
+                    <result property="lvlCd" column="boss_lvl_cd" />
+                    <result property="salaryLvl" column="boss_salary_lvl" />
+                    <result property="teamId" column="boss_team_id" />
+                    <result property="empStatusCd" column="boss_emp_status_cd" />
+                </association>
+
+            </collection>
+
+
+        </association>
+
+    </resultMap>
+
+    <!-- =========================
+         SELECT
+    ========================== -->
+    <select id="findEmpByBossNo"
+        parameterType="string"
+        resultMap="EmpResultMapListAllBossRev"> WITH ranked_form_subm AS ( SELECT fs.*, ROW_NUMBER()
+        OVER ( PARTITION BY fs.emp_no ORDER BY CASE WHEN fs.form_subm_status = 'PENDING' THEN 0 ELSE
+        1 END, fs.rev_dt DESC ) AS rn FROM form_subm fs WHERE fs.del_flg = 'F' ) SELECT e.emp_id,
+        e.emp_nm, e.emp_no, e.emp_email, e.comp_role_cd, e.dept_cd, e.pos_cd, e.lvl_cd,
+        e.salary_lvl, e.team_id, e.emp_status_cd, fs.form_subm_id, fs.form_id, fs.emp_id AS
+        fs_emp_id, fs.emp_nm AS fs_emp_nm, fs.emp_no AS fs_emp_no, fs.emp_curr_dept_cd,
+        fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt, fs.next_rev_dt, fs.form_subm_status,
+        f.form_title, f.form_ver, f.dept_cd AS f_dept_cd, f.pos_cd AS f_pos_cd, f.lvl_cd AS
+        f_lvl_cd, f.form_status, br.boss_rev_id, br.boss_no, br.boss_rev_role, br.boss_rev_ord_no,
+        br.isFinal, e2.emp_id AS boss_emp_id, e2.emp_nm AS boss_emp_nm, e2.emp_no AS boss_emp_no
+        FROM emp e JOIN ranked_form_subm fs ON e.emp_no = fs.emp_no AND fs.rn = 1 JOIN form f ON
+        fs.form_id = f.form_id AND f.del_flg = 'F' LEFT JOIN boss_rev br ON fs.form_subm_id =
+        br.form_subm_id AND br.del_flg = 'F' LEFT JOIN emp e2 ON e2.emp_no = br.boss_no AND
+        e2.del_flg = 'F' WHERE e.del_flg = 'F' AND EXISTS ( SELECT 1 FROM boss_rev br2 WHERE
+        br2.form_subm_id = fs.form_subm_id AND br2.boss_no = #{bossNo} AND br2.del_flg = 'F' ) ORDER
+        BY e.emp_no, br.boss_rev_ord_no; </select>
+
+
+    <select id="findAll" resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email,
+        comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id,
+        cre_dt, upd_usr_id, upd_dt, del_flg FROM emp WHERE del_flg = 'F' ORDER BY emp_no ;</select>
+</mapper>
