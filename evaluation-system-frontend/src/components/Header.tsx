@@ -28,8 +28,14 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }: HeaderProps) => {
         overflow="hidden"
         transition="0.3s"
       >
-        <Text whiteSpace="nowrap" overflow="hidden">
-          EVOLUTION SYSTEM
+        <Text
+          fontSize={15}
+          color={"blue.400"}
+          fontWeight={"bolder"}
+          whiteSpace="nowrap"
+          overflow="hidden"
+        >
+          CLV EVALUATION SYSTEM
         </Text>
       </Box>
       <Box flex="1">

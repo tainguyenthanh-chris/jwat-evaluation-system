@@ -197,7 +197,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
                   : "transparent"
               }
               color={
-                emp.formSubm?.formSubmStatus === "PENDING" ? "black" : "white"
+                emp.formSubm?.formSubmStatus === "PENDING" ? "black" : "inherit"
               }
               _hover={{
                 bg:
@@ -432,7 +432,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
                           .map((r) => (
                             <HStack key={r.emp.empId} justify="space-between">
                               <Text>
-                                {r.emp.empNm} — <b>{r.role}</b>
+                                <b>{r.role}</b> - {r.emp.empNm}
                               </Text>
 
                               <Button
