@@ -116,11 +116,11 @@ public class SubmValueServiceImpl implements SubmValueService {
                 }
             }
 
-            if (insertList.isEmpty()) {
+            if (!insertList.isEmpty()) {
                 try {
                     submValueMapper.insertBatch(
                             formSubmRequest.getFormSubmissionId(),
-                            formSubmRequest.getSubmissionValueList(),
+                            insertList,
                             CommonMethods.getCurrentUsrId());
 
                 } catch (Exception e) {
@@ -151,21 +151,23 @@ public class SubmValueServiceImpl implements SubmValueService {
     }
 
     private boolean validateReviewRole(String role, String formSubmId) {
-//        String usrId = CommonMethods.getCurrentUsrId();
-        String usrId = "usr20260108001";
-//        Usr currentUsr = usrMapper.findById(usrId);
-//        if (currentUsr == null) {
-//            throw new RuntimeException("User not found: " + usrId);
-//        }
-//        Emp executor = empMapper.findByEmail(currentUsr.getUsrEmail());
-//        if (executor == null) {
-//            throw new RuntimeException("Employee not found for user: " + usrId);
-//        }
+        // String usrId = CommonMethods.getCurrentUsrId();
+        // String usrId = "usr20260108001";
+        // Usr currentUsr = usrMapper.findById(usrId);
+        // if (currentUsr == null) {
+        // throw new RuntimeException("User not found: " + usrId);
+        // }
+        // Emp executor = empMapper.findByEmail(currentUsr.getUsrEmail());
+        // if (executor == null) {
+        // throw new RuntimeException("Employee not found for user: " + usrId);
+        // }
 
-//        BossRev bossRevRole = bossRevMapper.findByBossNo(executor.getEmpNo(), formSubmId);
-//        if (bossRevRole == null) {
-//            throw new RuntimeException("Boss review role not found for employee: " + executor.getEmpNo());
-//        }
+        // BossRev bossRevRole = bossRevMapper.findByBossNo(executor.getEmpNo(),
+        // formSubmId);
+        // if (bossRevRole == null) {
+        // throw new RuntimeException("Boss review role not found for employee: " +
+        // executor.getEmpNo());
+        // }
 
         // return bossRevRole.getBossRevRole().equalsIgnoreCase(role);
         return true;
