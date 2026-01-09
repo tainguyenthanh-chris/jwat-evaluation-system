@@ -5,7 +5,15 @@ import {
   Text,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { FaHome, FaChevronUp, FaChevronDown, FaWpforms } from "react-icons/fa";
+import {
+  FaHome,
+  FaChevronUp,
+  FaChevronDown,
+  FaWpforms,
+  FaUsers,
+  FaRegChartBar,
+  FaCheckDouble,
+} from "react-icons/fa";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import type { IconType } from "react-icons";
@@ -43,18 +51,18 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
     },
     {
       name: "Review",
-      Icon: FaHome,
+      Icon: FaCheckDouble,
       href: "/review",
     },
     { name: "Form Builder", Icon: FaWpforms, href: "/form-builder" },
     {
       name: "Evaluation Progress",
-      Icon: FaWpforms,
+      Icon: FaRegChartBar,
       href: "/evaluation-progress",
     },
     {
       name: "Employees",
-      Icon: FaHome,
+      Icon: FaUsers,
       href: "/employees-list",
     },
   ];
