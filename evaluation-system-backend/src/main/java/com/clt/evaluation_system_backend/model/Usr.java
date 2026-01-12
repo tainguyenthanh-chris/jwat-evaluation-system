@@ -28,10 +28,18 @@ public class Usr implements UserDetails {
     private LocalDateTime updDt;
     private String delFlg;
 
+    private List<SysRole> roles;
+
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (roles == null || roles.isEmpty()) {
+            return List.of();
+        }
+
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getSysRoleCd()))
+                .toList();
     }
 
     @Override
@@ -43,7 +51,7 @@ public class Usr implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return usrId;
+        return usrEmail;
     }
 
     @Override

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SecCueMapper">
+
+    <sql id="sec_cue_columns">
+        sec_cue_id AS secCueId,
+        sec_id AS secId,
+        cue_cd AS cueCd,
+        del_flg AS delFlg
+    </sql>
+
+    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.SecCue">
+        INSERT INTO sec_cue (
+            cue_cd,
+            del_flg
+        )
+        VALUES (
+            #{secId},
+            #{cueCd},
+            'F'
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO sec_cue (
+            sec_id,
+            cue_cd,
+            del_flg
+        )
+        VALUES
+            <foreach collection="list" item="item" separator=",">
+                (
+                #{item.secId},
+                #{item.cueCd},
+                'F'
+                )
+            </foreach>
+    </insert>
+
+    <update id="deleteBySecId">
+        UPDATE sec_cue
+        SET del_flg = 'T'
+        WHERE sec_id = #{secId}
+    </update>
+</mapper>

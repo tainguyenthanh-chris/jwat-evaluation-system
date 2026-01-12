@@ -4,13 +4,19 @@ import lombok.Data;
 
 @Data
 public class FormTmplItemResponse {
-    private String id;
+    private String formId;
     private String formTitle;
+    private String departmentCode;
+    private String positionCode;
+    private String levelCode;
+    private String sectionId;
     private String sectionTitle;
-    private String sectionOrderNo;
-    private String sectionItemTitle;
-    private String sectionItemOrderNo;
-    private String reviewConfigItemRole;
-    private String reviewConfigItemOrderNo;
+    private Integer sectionOrderNo;
+    private String criteriaId;
+    private String criteriaContent;
+    private Integer criteriaOrderNo;
+    private String type;
+    private String roles;
+
 
 }

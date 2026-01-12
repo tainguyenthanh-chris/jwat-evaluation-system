@@ -1,0 +1,23 @@
+package com.clt.evaluation_system_backend.mapper;
+
+import com.clt.evaluation_system_backend.dto.request.BossRevDto;
+import com.clt.evaluation_system_backend.model.BossRev;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+@Mapper
+public interface BossRevMapper {
+
+        BossRev findByBossNo(@Param("bossNo") String bossNo, @Param("formSubmId") String formSubmId);
+
+        void insertBatchBossRev(List<BossRevDto> bossRevs, @Param("formSubmId") String formSubmId,
+                        @Param("empNo") String empNo);
+
+        void deleteBatchBossRev(
+                        @Param("bossNo") String bossNo,
+                        @Param("formSubmId") String formSubmId,
+                        @Param("empNo") String empNo);
+}

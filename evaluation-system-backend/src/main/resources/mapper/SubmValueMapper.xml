@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SubmValueMapper">
+
+
+    <insert id="insertBatch"> INSERT INTO subm_value ( form_subm_id, form_detail_id,
+        subm_value_role, subm_value, cre_usr_id, upd_usr_id ) VALUES <foreach collection="list"
+            item="item" separator=","> ( #{formSubmId}, #{item.formDetailId},
+        #{item.submissionRole}, #{item.formSubmissionValue}, #{creUsrId}, #{creUsrId} ) </foreach>
+    </insert>
+
+    <update id="updateBatch">
+        <foreach collection="list"
+            item="item" separator=";"> UPDATE subm_value SET subm_value =
+        #{item.formSubmissionValue}, upd_usr_id = #{updUsrId}, upd_dt = CURRENT_TIMESTAMP WHERE
+        subm_value_id = #{item.submissionValueId} </foreach>
+    </update>
+
+</mapper>

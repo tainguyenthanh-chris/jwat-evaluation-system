@@ -1,26 +1,178 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.FormMapper">
-    <select id="findAll" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
-        SELECT f.form_title as formTitle,
-               st.sec_title as sectionTitle,
-               ft.sec_ord_no as sectionOrderNo,
-               si.sec_item_cnt as sectionItemContent,
-               ft.sec_item_ord_no as sectionItemOrderNo,
-               rci.rev_conf_item_role as reviewConfigItemRole,
-               rci.rev_conf_item_ord_no as reviewConfigItemOrderNo
+
+    <!--    selectFormTmplItem by dept, pos, lvl-->
+    <select id="selectActiveFormTmplItem" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
+        SELECT
+            f.form_id AS formId,
+            f.dept_cd AS departmentCode,
+            f.pos_cd AS positionCode,
+            f.lvl_cd AS levelCode,
+            st.sec_id AS sectionId,
+            st.sec_title as sectionTitle,
+            ft.sec_ord_no as sectionOrderNo,
+            cri.criteria_id  AS criteriaId,
+            cri.criteria_cnt as criteriaContent,
+            ft.criteria_ord_no as criteriaOrderNo,
+            rc.rev_conf_type AS type,
+            rc.rev_conf_roles AS roles
         FROM form_tmpl ft
-                 LEFT JOIN sec_item si ON si.sec_item_id = ft.sec_item_id
+                 LEFT JOIN criteria cri ON cri.criteria_id = ft.criteria_id
                  LEFT JOIN sec st ON st.sec_id = ft.sec_id
                  LEFT JOIN form f ON f.form_id = ft.form_id
-                 LEFT JOIN rev_conf rc ON rc.rev_conf_id = st.rev_conf_id
-                 LEFT JOIN rev_conf_item rci ON rci.rev_conf_id = rc.rev_conf_id
-        WHERE ft.form_ = 'form20250101001'
-        ORDER BY ft.sec_ord_no, ft.sec_item_ord_no ASC;
+                 LEFT JOIN rev_conf rc ON rc.rev_conf_cd = ft.rev_conf_cd
 
+        WHERE f.dept_cd = #{department}
+          AND f.pos_cd = #{position}
+          AND f.lvl_cd = #{level}
+          AND f.form_status != 'OLD'
+                AND f.del_flg != 'T'
+                AND st.sec_status != 'OLD'
+                AND st.del_flg != 'T'
+                AND cri.criteria_status != 'OLD'
+                AND cri.del_flg != 'T'
+        ORDER BY ft.sec_ord_no, ft.criteria_ord_no ASC;
     </select>
 
+    <select id="selectFormTmplItemByFormId" resultType="com.clt.evaluation_system_backend.dto.response.FormTmplItemResponse">
+        SELECT
+            f.form_id AS formId,
+            f.dept_cd AS departmentCode,
+            f.pos_cd AS positionCode,
+            f.lvl_cd AS levelCode,
+            st.sec_id AS sectionId,
+            st.sec_title as sectionTitle,
+            ft.sec_ord_no as sectionOrderNo,
+            cri.criteria_id  AS criteriaId,
+            cri.criteria_cnt as criteriaContent,
+            ft.criteria_ord_no as criteriaOrderNo,
+            rc.rev_conf_type AS type,
+            rc.rev_conf_roles AS roles
+        FROM form_tmpl ft
+                 LEFT JOIN criteria cri ON cri.criteria_id = ft.criteria_id
+                 LEFT JOIN sec st ON st.sec_id = ft.sec_id
+                 LEFT JOIN form f ON f.form_id = ft.form_id
+                 LEFT JOIN rev_conf rc ON rc.rev_conf_cd = ft.rev_conf_cd
+
+        WHERE f.form_id = #{formId}
+        ORDER BY ft.sec_ord_no, ft.criteria_ord_no ASC;
+    </select>
+
+
+    <select id="selectFormDetail" resultType="com.clt.evaluation_system_backend.dto.response.FormDetailResponse">
+        SELECT
+            F.dept_cd AS departmentCode,
+            F.pos_cd AS positionCode,
+            F.lvl_cd AS levelCode,
+            FD.form_detail_id AS formDetailId,
+            FD.form_id AS formId,
+            FD.sec_id AS sectionId,
+            FD.parent_sec_id AS parentSectionId,
+            FD.form_detail_ord_no AS formDetailOrderNo,
+            FD.form_detail_title AS formDetailTitle,
+            RC.rev_conf_cd AS reviewConfigCode,
+            RC.rev_conf_type AS reviewConfigType,
+            RC.rev_conf_roles AS reviewConfigRoleJson
+        FROM form F
+        LEFT JOIN form_detail FD ON FD.form_id = F.form_id
+        LEFT JOIN rev_conf RC ON RC.rev_conf_cd = FD.rev_conf_cd
+        WHERE
+        <choose>
+            <when test="formId != null">
+                F.form_id = #{formId}
+            </when>
+            <otherwise>
+                F.del_flg = 'F'
+                AND F.form_status != 'OLD'
+                <if test="department != null">
+                    AND F.dept_cd = #{department}
+                </if>
+                <if test="position != null">
+                    AND F.pos_cd = #{position}
+                </if>
+                <if test="level != null">
+                    AND F.lvl_cd = #{level}
+                </if>
+            </otherwise>
+        </choose>
+        ORDER BY FD.form_detail_ord_no;
+    </select>
+
+    <insert id="insertSubmList"> INSERT INTO subm_value ( form_subm_id, form_detail_id,
+        subm_value_role, subm_value ) VALUES <foreach collection="list" item="item" separator=","> (
+        #{item.formSubmissionId}, #{item.formDetailId}, #{item.role}, #{item.value} ) </foreach>
+    </insert>
+
+    <select id="selectFormSubmission" resultType="com.clt.evaluation_system_backend.dto.row.FormSubmissionRow">
+        SELECT
+            FS.form_subm_id AS formSubmissionId,
+            FS.form_id AS formId,
+            FS.emp_no AS employeeNo,
+            FS.emp_nm AS employeeName,
+            FS.emp_curr_dept_cd AS currentDepartmentCode,
+            FS.emp_curr_pos_cd AS currentPositionCode,
+            FS.emp_curr_lvl_cd AS currentLevelCode,
+            FS.rev_dt AS reviewDate,
+            FS.next_rev_dt AS nextReviewDate,
+            FS.form_subm_status AS submissionStatus,
+            E.emp_no AS bossNo,
+            E.emp_nm AS bossName,
+            BR.boss_rev_ord_no AS bossReviewOrder
+        FROM form_subm FS
+        LEFT JOIN boss_rev BR ON BR.emp_no = FS.emp_no AND BR.form_subm_id = FS.form_subm_id
+        LEFT JOIN emp E ON E.emp_no = BR.boss_no
+        WHERE
+        <choose>
+            <when test="employeeNo != null">
+                FS.emp_no = #{employeeNo}
+                <if test="mode == 'REVIEW'">
+                    AND FS.form_subm_status != 'FINAL'
+                </if>
+            </when>
+            <otherwise>
+                FS.form_subm_id = #{formSubmissonId}
+            </otherwise>
+        </choose>
+
+        ORDER BY BR.boss_rev_ord_no ASC
+    </select>
+
+    <select id="selectSubmissionValue" resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse$SubmissionValue">
+        SELECT
+            SV.subm_value_id AS submissionValueId,
+            SV.form_detail_id AS formDetailId,
+            SV.subm_value_role AS submissionRole,
+            SV.subm_value AS formSubmissionValue
+        FROM
+            subm_value SV
+        WHERE
+            SV.form_subm_id = #{formSubmissionId}
+    </select>
+    <insert id="insertFormDetails" parameterType="java.util.List"> INSERT INTO form_detail (
+        form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd,
+        cre_usr_id, cre_dt, del_flg ) VALUES <foreach collection="list" item="item" separator=","> (
+        #{item.formId}, #{item.secId}, #{item.parentSecId}, #{item.formDetailOrdNo},
+        #{item.formDetailTitle}, #{item.revConfCd}, #{item.creUsrId}, CURRENT_TIMESTAMP, 'F' ) </foreach>
+    </insert>
+
+    <resultMap id="FormResultMap" type="com.clt.evaluation_system_backend.model.Form">
+        <id property="formId" column="form_id" />
+        <result property="formTitle" column="form_title" />
+        <result property="formVer" column="form_ver" />
+        <result property="deptCd" column="dept_cd" />
+        <result property="posCd" column="pos_cd" />
+        <result property="lvlCd" column="lvl_cd" />
+        <result property="formStatus" column="form_status" />
+        <result property="creUsrId" column="cre_usr_id" />
+        <result property="creDt" column="cre_dt" />
+        <result property="updUsrId" column="upd_usr_id" />
+        <result property="updDt" column="upd_dt" />
+        <result property="delFlg" column="del_flg" />
+    </resultMap>
+
+    <select id="selectAllForms" resultMap="FormResultMap"> SELECT form_id, form_title, form_ver,
+        dept_cd, pos_cd, lvl_cd, form_status, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM
+        form WHERE del_flg = 'F' ORDER BY cre_dt DESC </select>
 </mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.TargetMapper">
+
+    <!--    selectFormTmplItem by dept, pos, lvl-->
+    <select id="selectTarget"
+        resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse$Target">
+        SELECT T.target_id AS targetId, T.form_subm_id AS formSubmissionId, T.form_detail_id AS
+        formDetailId, T.target_ord_no AS targetOrderNo, T.target_cnt AS targetContent,
+        T.target_status AS targetStatus FROM "target" T WHERE T.form_subm_id = #{formSubmissionId} <if
+            test="queryType == 'REVIEW'"> OR T.form_subm_id = (SELECT FS.form_subm_id FROM form_subm
+        FS WHERE FS.form_subm_status = 'FINAL' ORDER BY FS.rev_dt DESC LIMIT 1 ) </if>
+    </select>
+
+    <update id="updateTargets">
+        <foreach collection="list"
+            item="t"
+            separator=";"> UPDATE target SET target_status = #{t.targetStatus}, upd_usr_id =
+        #{t.updUsrId}, upd_dt = #{t.updDt} WHERE target_id = #{t.targetId} AND del_flg = 'F' </foreach>
+    </update>
+
+    <insert id="insertTargets"> INSERT INTO target ( form_subm_id, form_detail_id, target_ord_no,
+        target_cnt, target_status, rev_usr_id, rev_dt, cre_usr_id, upd_usr_id ) VALUES <foreach
+            collection="list" item="t" separator=","> ( #{t.formSubmId}, #{t.formDetailId},
+        #{t.targetOrdNo}, #{t.targetCnt}, #{t.targetStatus}, #{t.revUsrId}, #{t.revDt},
+        #{t.creUsrId}, #{t.updUsrId} ) </foreach>
+    </insert>
+
+    <delete id="deleteTargets"> DELETE FROM target WHERE form_subm_id = #{formSubmId} </delete>
+
+</mapper>

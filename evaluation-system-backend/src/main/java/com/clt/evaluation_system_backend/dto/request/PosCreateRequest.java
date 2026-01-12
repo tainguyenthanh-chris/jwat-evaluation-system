@@ -15,4 +15,8 @@ public class PosCreateRequest {
 
     @Size(max = 100, message = "Position description must not exceed 100 characters")
     private String posDesc;
+
+    @NotBlank(message = "Department ID is required")
+    @Size(max = 30, message = "Department ID must not exceed 30 characters")
+    private String deptId;
 }

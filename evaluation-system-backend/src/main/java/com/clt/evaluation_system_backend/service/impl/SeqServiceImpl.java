@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -29,13 +31,34 @@ public class SeqServiceImpl implements SeqService {
             throw new IllegalStateException(
                     "Missing @SeqTable on class " + className.getName());
         }
-        Integer nextIdx = seqMapper.nextSeq(seqTable.value());
+        Integer nextIdx = seqMapper.nextSeq(seqTable.value(),null);
         if (nextIdx > Constant.MAX_RECORD_A_DAY) {
             throw new OverMaxRecordException();
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String todayString = LocalDate.now().format(formatter);
         return seqTable.value() + todayString + String.format("%03d", nextIdx);
+    }
+
+    @Override
+    public List<String> generateListNewId(Class<?> className, int len) {
+        SeqTable seqTable = className.getAnnotation(SeqTable.class);
+        if (seqTable == null) {
+            throw new IllegalStateException(
+                    "Missing @SeqTable on class " + className.getName());
+        }
+        Integer nextIdx = seqMapper.nextSeq(seqTable.value(),len);
+        if (nextIdx > Constant.MAX_RECORD_A_DAY) {
+            throw new OverMaxRecordException();
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String todayString = LocalDate.now().format(formatter);
+        List<String> res = new ArrayList<>();
+        nextIdx = nextIdx-len+1;
+        for(int i = 0; i < len; i++) {
+            res.add(seqTable.value() + todayString + String.format("%03d", nextIdx++));
+        }
+        return res;
     }
 
     @Scheduled(cron = "0 0 0 * * ?")

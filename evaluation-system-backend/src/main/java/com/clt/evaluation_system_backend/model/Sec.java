@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SeqTable("sec")
 public class Sec {
-    private String secTmplId;
-    private String secTmplTitle;
-    private String secTmplAnswerType;
-
+    private String secId;
+    private String secTitle;
+    private String defaultRevConfCd;
     private String creUsrId;
-    private LocalDateTime creDt;
     private String updUsrId;
+    private LocalDateTime creDt;
     private LocalDateTime updDt;
-    private String delFlg;}
+    private String delFlg;
+}

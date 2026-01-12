@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SeqTable("form_tmpl")
 public class FormTmpl {
-
     private String formSecItemTmplId;
     private String formTmplId;
     private String secTmplId;

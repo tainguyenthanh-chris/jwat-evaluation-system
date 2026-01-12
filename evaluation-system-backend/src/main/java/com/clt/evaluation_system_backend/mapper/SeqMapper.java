@@ -5,7 +5,8 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SeqMapper {
-    Integer nextSeq(@Param("tableNm") String tableNm);
+    int nextSeq(@Param("tableNm") String tableNm,
+                @Param("len") Integer len);
 
     int resetAllSeq();
 }
