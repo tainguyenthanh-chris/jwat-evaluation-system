@@ -13,6 +13,8 @@ public interface BossRevMapper {
 
         BossRev findByBossNo(@Param("bossNo") String bossNo, @Param("formSubmId") String formSubmId);
 
+        BossRev findBossRev(@Param("bossNo") String bossNo);
+
         void insertBatchBossRev(List<BossRevDto> bossRevs, @Param("formSubmId") String formSubmId,
                         @Param("empNo") String empNo);
 
