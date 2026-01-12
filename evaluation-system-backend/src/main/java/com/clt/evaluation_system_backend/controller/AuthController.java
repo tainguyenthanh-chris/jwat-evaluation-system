@@ -33,4 +33,6 @@ public class AuthController {
         authService.register(request);
         return ApiResponse.ok("Register success");
     }
+
+    // add logout function
 }

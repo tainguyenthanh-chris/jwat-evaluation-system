@@ -179,8 +179,9 @@ INSERT INTO rev_conf (rev_conf_id, rev_conf_cd,rev_conf_type, rev_conf_roles) VA
 
 -- form_subm data
 INSERT INTO form_subm (form_subm_id, form_id, emp_id, emp_nm, emp_no, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt,form_subm_status) VALUES
-    ('form_subm20250101000','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01','FINAL'),
-    ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-12-01','2026-06-01','PENDING');
+    ('form_subm20250101099','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-01-01','2025-06-01','FINAL'),
+    ('form_subm20250101000','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-06-01','2026-01-01','FINAL'),
+    ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2026-01-01','2026-06-01','PENDING');
 
 
 
@@ -337,11 +338,15 @@ INSERT INTO boss_rev (form_subm_id, emp_no, boss_no, boss_rev_role, boss_rev_ord
                                                                                                   ('form_subm20250101001','258157','258400','LEADER','1','F'),
                                                                                                   ('form_subm20250101001','258157','258401','MANAGER','1','F');
 
-INSERT INTO target (form_subm_id,form_detail_id,target_ord_no,target_cnt,target_status) VALUES
-                                                                                            ('form_subm20250101000','10',1,'Ielts 7.0','WAIT'),
-                                                                                            ('form_subm20250101000','10',2,'Join 10 projects','WAIT'),
-                                                                                            ('form_subm20250101001','11',1,'Promote to Middle','NEW'),
-                                                                                            ('form_subm20250101001','11',2,'Lead a team','NEW');
+INSERT INTO target (form_subm_id,form_detail_id,target_ord_no,target_cnt,target_status,rev_form_subm_id) VALUES
+                                                                                             ('form_subm20250101099','11',1,'Toeic 900','SUCCESS','form_subm20250101000'),
+                                                                                             ('form_subm20250101099','11',2,'Have a presentation','FAIL','form_subm20250101000'),
+                                                                                            ('form_subm20250101000','10',1,'Ielts 7.0','WAIT','form_subm20250101001'),
+                                                                                            ('form_subm20250101000','10',2,'Join 10 projects','WAIT','form_subm20250101001'),
+                                                                                            ('form_subm20250101001','11',1,'Promote to Middle','NEW',NULL),
+                                                                                            ('form_subm20250101001','11',2,'Lead a team','NEW',NULL);
+
+
 
 
 INSERT INTO subm_value (form_subm_id,form_detail_id,subm_value_role,subm_value,cre_usr_id,cre_dt,upd_usr_id,upd_dt,del_flg) VALUES
@@ -418,3 +423,15 @@ INSERT INTO criteria (criteria_id,criteria_cnt,sec_id,cre_usr_id,cre_dt,upd_usr_
                                                                                                               ('9','Responsibility','sec20250101001','default','2026-01-09 00:28:14.335185','default','2026-01-09 00:28:14.335185','F'),
                                                                                                               ('10','Cowork with teammate','sec20250101003','default','2026-01-09 00:28:14.336088','default','2026-01-09 00:28:14.336088','F'),
                                                                                                               ('1','Background knowledge','sec20250101002','default','2026-01-09 00:26:10.650206','default','2026-01-09 00:26:10.650206','F');
+
+
+INSERT INTO sum_subm (sum_subm_id,form_subm_id,sec_title,sum_point,sum_order_no,cre_usr_id,cre_dt,upd_usr_id,upd_dt,del_flg) VALUES
+                                                                                                                                        ('sum20260901001','form_subm20250101000','General','9.9',1,'default','2026-01-09 22:41:28.468339','default','2026-01-09 22:41:28.468339','F'),
+                                                                                                                                        ('sum20260901002','form_subm20250101000','CUSTOMER','10',2,'default','2026-01-09 22:43:48.772862','default','2026-01-09 22:43:48.772862','F'),
+                                                                                                                                        ('sum20260901003','form_subm20250101000','QUALITY','9',3,'default','2026-01-09 22:43:48.784842','default','2026-01-09 22:43:48.784842','F'),
+                                                                                                                                        ('sum20260901004','form_subm20250101000','PERFORMANCE','8',4,'default','2026-01-09 22:43:48.79656','default','2026-01-09 22:43:48.79656','F'),
+                                                                                                                                        ('sum20260901005','form_subm20250101001','GENERAL EVALUATION','7',1,'default','2026-01-09 22:43:48.808347','default','2026-01-09 22:43:48.808347','F'),
+                                                                                                                                        ('sum20260901006','form_subm20250101001','CUSTOMER SATISFACTION','9',2,'default','2026-01-09 22:43:48.820126','default','2026-01-09 22:43:48.820126','F'),
+                                                                                                                                        ('sum20260901007','form_subm20250101001','QUALITY','10',3,'default','2026-01-09 22:43:48.832184','default','2026-01-09 22:43:48.832184','F'),
+                                                                                                                                        ('sum20260901008','form_subm20250101001','PERFORMANCE','9',4,'default','2026-01-09 22:43:48.877769','default','2026-01-09 22:43:48.877769','F');
+

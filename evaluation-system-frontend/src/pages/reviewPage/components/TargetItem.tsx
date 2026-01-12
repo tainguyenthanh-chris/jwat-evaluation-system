@@ -14,13 +14,19 @@ type Props = {
   item: Partial<Target>;
   onChangeStatus?: (targetId: string, status: Target["targetStatus"]) => void;
   onDelete?: (targetContent: string) => void;
+  mode?: "REVIEW" | "HISTORY";
 };
 const statusList = [
   { label: "Success", value: "SUCCESS" },
   { label: "Fail", value: "FAIL" },
 ];
 
-const TargetItem: React.FC<Props> = ({ item, onChangeStatus, onDelete }) => {
+const TargetItem: React.FC<Props> = ({
+  item,
+  onChangeStatus,
+  onDelete,
+  mode,
+}) => {
   if (!item) return;
   const getStatusColor = (value: string) => {
     switch (value) {
@@ -32,9 +38,10 @@ const TargetItem: React.FC<Props> = ({ item, onChangeStatus, onDelete }) => {
         return "gray.400";
     }
   };
+  console.log("mode: " + mode);
   return (
     <Flex align="center" justify="space-between" ml={"10px"} my={"5px"}>
-      {item.targetStatus === "NEW" && (
+      {item.targetStatus === "NEW" && mode !== "HISTORY" && (
         <IconButton
           colorPalette="red"
           size="sm"
@@ -81,6 +88,7 @@ const TargetItem: React.FC<Props> = ({ item, onChangeStatus, onDelete }) => {
                 details.value as Target["targetStatus"]
               );
             }}
+            disabled={mode === "HISTORY"}
           >
             <HStack gap="6">
               {statusList.map((item) => (

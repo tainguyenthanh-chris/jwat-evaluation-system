@@ -9,16 +9,31 @@ export interface EvaluationQuery {
 }
 
 export const useEvaluation = (query: EvaluationQuery) => {
+  const enabled = Boolean(
+    query.formSubmissionId || query.employeeNo
+  );
+  const queryKey = [
+    "evaluation-data",
+    query.formSubmissionId ?? null,
+    query.employeeNo ?? null,
+  ];
+
   return useQuery({
-    queryKey: ["evaluation-data", query],
+    queryKey,
     queryFn: () => fetchEvaluationData(query),
-    enabled:
-      !!query.employeeNo
+    enabled,
   });
 };
 
 export const useSubmitEvaluation = () => {
   return useMutation({
     mutationFn: postEvaluation,
+    onSuccess: (data) => {
+      return true;
+    },
+    onError: (error) => {
+      console.error("SUBMIT ERROR:", error);
+    },
   });
+  
 };

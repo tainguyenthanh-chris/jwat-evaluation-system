@@ -331,6 +331,7 @@ CREATE TABLE target (
     target_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
     rev_usr_id VARCHAR(30) NULL,
     rev_dt TIMESTAMP(6) NULL,
+    rev_form_subm_id VARCHAR(30),
     
     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
     cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -344,8 +345,13 @@ CREATE TABLE sum_subm (
                               form_subm_id      VARCHAR(30)  NOT NULL,
                               sec_title         TEXT         NOT NULL,
                               sum_point     VARCHAR(30),
-                              sum_grade     VARCHAR(1),
-                              sum_order_no  int
+                              sum_order_no  int,
+
+                              cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+                              cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                              upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+                              upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+                              del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 
 );
 

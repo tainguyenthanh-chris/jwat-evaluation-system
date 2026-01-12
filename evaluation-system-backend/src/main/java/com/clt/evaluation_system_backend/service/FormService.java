@@ -21,7 +21,7 @@ public interface FormService {
     void createFormTemplate(CreateFormTemplateRequest request);
 
     @Transactional
-    SubmissionDataResponse getSubmissionDataByEmployeeNo(SubmissionDataRequest request);
+    SubmissionDataResponse getSubmissionData(SubmissionDataRequest request);
 
     @Transactional
     List<Form> getAllForms();

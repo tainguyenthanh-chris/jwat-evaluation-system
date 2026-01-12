@@ -7,8 +7,9 @@ import type { EvaluationData } from "../types/evaluationData";
 export const fetchEvaluationData = async (
   query: EvaluationQuery
 ): Promise<EvaluationData> => {
+  console.log("fetchEvaluationData");
   const { data } = await axiosInstant.get<ApiResponse<EvaluationData>>(
-    "/form/submission/employeeNo",
+    "/form/submission",
     { params: query }
   );
   return data.data;

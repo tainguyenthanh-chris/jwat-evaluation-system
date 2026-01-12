@@ -6,11 +6,23 @@
     <!--    selectFormTmplItem by dept, pos, lvl-->
     <select id="selectTarget"
         resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse$Target">
-        SELECT T.target_id AS targetId, T.form_subm_id AS formSubmissionId, T.form_detail_id AS
-        formDetailId, T.target_ord_no AS targetOrderNo, T.target_cnt AS targetContent,
-        T.target_status AS targetStatus FROM "target" T WHERE T.form_subm_id = #{formSubmissionId} <if
-            test="queryType == 'REVIEW'"> OR T.form_subm_id = (SELECT FS.form_subm_id FROM form_subm
-        FS WHERE FS.form_subm_status = 'FINAL' ORDER BY FS.rev_dt DESC LIMIT 1 ) </if>
+        SELECT T.target_id AS targetId,
+            T.form_subm_id AS formSubmissionId,
+            T.form_detail_id AS formDetailId,
+            T.target_ord_no AS targetOrderNo,
+            T.target_cnt AS targetContent,
+            T.target_status AS targetStatus
+        FROM "target" T WHERE T.form_subm_id = #{formSubmissionId}
+        <choose>
+            <when test="queryType == 'REVIEW'">
+                OR T.form_subm_id = (SELECT FS.form_subm_id FROM form_subm
+                    FS WHERE FS.form_subm_status = 'FINAL' ORDER BY FS.rev_dt DESC LIMIT 1 )
+            </when>
+            <otherwise>
+                OR t.rev_form_subm_id  =  #{formSubmissionId}
+            </otherwise>
+        </choose>
+
     </select>
 
     <update id="updateTargets">

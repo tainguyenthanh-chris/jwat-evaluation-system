@@ -132,7 +132,7 @@
                 </if>
             </when>
             <otherwise>
-                FS.form_subm_id = #{formSubmissonId}
+                FS.form_subm_id = #{formSubmissionId}
             </otherwise>
         </choose>
 

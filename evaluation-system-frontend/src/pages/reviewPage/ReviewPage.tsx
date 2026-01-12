@@ -14,6 +14,7 @@ import {
 } from "../../hooks/useEvaluation";
 import type { BossReview } from "../../types/bossReview";
 import ConfirmDialog from "../../components/dialog/ConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 export type SubmitEvaluationPayload = {
   formSubmissionId: string;
@@ -36,6 +37,7 @@ const ReviewPage = () => {
     employeeNo: "258157",
     mode: "REVIEW",
   };
+  const navigate = useNavigate();
 
   const { data } = useEvaluation(query);
   // useEffect(() => {
@@ -67,7 +69,7 @@ const ReviewPage = () => {
   const currentTargetList = data?.currentTargetList;
 
   const user = {
-    revRoleList: "SELF",
+    revRoleList: "LEADER",
   };
 
   const sectionRefs = useRef<Record<string, SectionRef | null>>({});
@@ -75,9 +77,7 @@ const ReviewPage = () => {
   const submissionValueMapOfficial = data?.submissionValueMap;
   const submitMutation = useSubmitEvaluation();
 
-  const handleSubmit = () => {
-    console.log("handleSubmit");
-
+  const handleSubmit = async () => {
     const data = Object.values(sectionRefs.current)
       .map((ref) => ref?.getData())
       .filter(Boolean);
@@ -85,39 +85,22 @@ const ReviewPage = () => {
     const errorSection = data.find((d) => d.error);
     if (errorSection) {
       // toast.warning(errorSection.message ?? "Invalid input");
-      alert(errorSection.message ?? "Invalid input");
+      alert(errorSection.message ?? "Please fill all fields");
       return;
     }
 
-    // const submissionValueList: SubmissionValue[] = Object.values(
-    //   sectionRefs.current
-    // ).flatMap((ref) =>
-    //   Object.values(ref?.getData().submissionValueMapLocal ?? {})
-    // );
     const submissionValueList: SubmissionValue[] = data.flatMap((d) =>
       Object.values(d.submissionValueMapLocal ?? {})
     );
-
-    // const newTargetList: Partial<Target>[] = Object.values(
-    //   sectionRefs.current
-    // ).flatMap((ref) => ref?.getData().newTargetListLocal ?? []);
 
     const newTargetList: Partial<Target>[] = data.flatMap(
       (d) => d.newTargetListLocal ?? []
     );
 
-    // const currentTargetList: Partial<Target>[] = Object.values(
-    //   sectionRefs.current
-    // ).flatMap((ref) => ref?.getData().currentTargetListLocal ?? []);
     const currentTargetList: Partial<Target>[] = data.flatMap(
       (d) => d.currentTargetListLocal ?? []
     );
 
-    // const summarySubmissionList: Partial<SummarySubmission>[] = Object.values(
-    //   sectionRefs.current
-    // )
-    //   .map((ref) => ref?.getData().summarySubmission)
-    //   .filter((s): s is SummarySubmission => !!s && s.summaryPoint !== null);
     const summarySubmissionList: Partial<SummarySubmission>[] = data
       .map((d) => d.summarySubmission)
       .filter((s): s is SummarySubmission => !!s && s.summaryPoint !== null);
@@ -129,8 +112,12 @@ const ReviewPage = () => {
       formSubmissionId: submissionInfo.formSubmissionId!,
       summarySubmissionList: summarySubmissionList,
     };
-    console.log("SUBMIT PAYLOAD:", payload);
-    submitMutation.mutate(payload);
+    try {
+      await submitMutation.mutateAsync(payload);
+      navigate("/history");
+    } catch (e) {
+      console.error(e);
+    }
   };
   return (
     <Box

@@ -7,6 +7,8 @@ import { Provider } from "./components/ui/provider";
 import { Toaster } from "./components/ui/toaster";
 import EvaluationProgressPage from "./pages/evaluationProgress/EvaluationProgressPage";
 import EmpTablePage from "./pages/emp/EmpTablePage";
+import HistoryPage from "./pages/historyPage/HistoryPage";
+import HistoryDetailPage from "./pages/historyPage/HistoryDetailPage";
 
 function App() {
   return (
@@ -22,6 +24,11 @@ function App() {
             element={<EvaluationProgressPage />}
           ></Route>
           <Route path="/employees-list" element={<EmpTablePage />}></Route>
+          <Route path="/history" element={<HistoryPage />}></Route>
+          <Route
+            path="/history/:formSubmissionId"
+            element={<HistoryDetailPage />}
+          />
         </Route>
       </Routes>
     </Provider>

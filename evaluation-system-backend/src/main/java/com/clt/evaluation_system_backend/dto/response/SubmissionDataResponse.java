@@ -27,9 +27,9 @@ public class SubmissionDataResponse {
     private List<Target> newTargetList = new ArrayList<>();
     private List<Target> currentTargetList = new ArrayList<>();
 
-    public void setTargetList(List<Target> targetList) {
+    public void setTargetList(List<Target> targetList,String formSubmissionId) {
         for(Target target : targetList) {
-            if("NEW".equalsIgnoreCase(target.getTargetStatus())) {
+            if(formSubmissionId.equalsIgnoreCase(target.getFormSubmissionId())) {
                 newTargetList.add(target);
             } else {
                 currentTargetList.add(target);

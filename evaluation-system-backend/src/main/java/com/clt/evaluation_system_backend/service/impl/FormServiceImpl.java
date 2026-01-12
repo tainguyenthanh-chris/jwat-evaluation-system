@@ -190,7 +190,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public SubmissionDataResponse getSubmissionDataByEmployeeNo(SubmissionDataRequest request) {
+    public SubmissionDataResponse getSubmissionData(SubmissionDataRequest request) {
         SubmissionDataResponse response = new SubmissionDataResponse();
         // get form subm
         List<FormSubmissionRow> formSubmissionRowList = formMapper.selectFormSubmission(request);
@@ -215,9 +215,10 @@ public class FormServiceImpl implements FormService {
         // get target
         TargetFilter targetFilter = new TargetFilter();
         targetFilter.setFormSubmissionId(formSubmissionId);
-        targetFilter.setQueryType("REVIEW");
+        if("REVIEW".equalsIgnoreCase(request.getMode()))
+            targetFilter.setQueryType("REVIEW");
         List<SubmissionDataResponse.Target> targetList = targetMapper.selectTarget(targetFilter);
-        response.setTargetList(targetList);
+        response.setTargetList(targetList,formSubmissionId);
         return response;
     }
 

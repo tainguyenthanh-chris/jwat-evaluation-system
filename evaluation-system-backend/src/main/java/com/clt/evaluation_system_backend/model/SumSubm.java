@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +16,14 @@ public class SumSubm {
     private String formSubmId;
     private String secTitle;
     private String sumPoint;
-    private String sumGrade;
     private String sumOrderNo;
+
+    private String creUsrId;
+    private LocalDateTime creDt;
+    private String updUsrId;
+    private LocalDateTime updDt;
+    private String delFlg;
+
+
+
 }
