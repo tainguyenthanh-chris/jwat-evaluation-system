@@ -355,6 +355,18 @@ CREATE TABLE sum_subm (
 
 );
 
+CREATE TABLE refresh_token (
+        refresh_token_id BIGSERIAL PRIMARY KEY,
+        token VARCHAR(1000) NOT NULL,
+        expiry_date TIMESTAMP(6) NOT NULL,
+        usr_id VARCHAR(30) NOT NULL,
+        cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+        cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+        upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+        upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+        del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+);
+
 
 
 

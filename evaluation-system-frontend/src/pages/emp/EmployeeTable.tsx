@@ -10,10 +10,10 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import { BossRevRoleEnum, type EmployeeBackend } from "../../types/emp";
 import type { Form } from "../../types/formTemplate";
+import { axiosInstant } from "../../lib/axios";
 
 type Props = {
   employees: EmployeeBackend[];
@@ -31,10 +31,6 @@ const ROLE_ORDER_MAP: Record<ReviewerRole, number> = {
   GM: 2,
   DIRECTOR: 3,
 };
-
-const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
-});
 
 export default function EmployeeTable({ employees, onRefresh }: Props) {
   const [forms, setForms] = useState<Form[]>([]);
@@ -56,7 +52,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await api.get("/form/all");
+      const res = await axiosInstant.get("/form/all");
       setForms(res.data.data);
     } catch {
       setError("Failed to load forms");
@@ -69,7 +65,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
     if (!selectedEmp || !selectedFormId) return;
 
     try {
-      await api.put("/form-subm/change-form", {
+      await axiosInstant.put("/form-subm/change-form", {
         empId: selectedEmp.empId,
         formId: selectedFormId,
       });
@@ -116,7 +112,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
     setSelectedReviewers(existing);
 
     try {
-      const res = await api.get("/emp");
+      const res = await axiosInstant.get("/emp");
       setAllEmployees(res.data.data);
     } catch {
       alert("Failed to load employees");
@@ -155,7 +151,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
     }));
 
     try {
-      await api.put("/bossRev/update-batch", {
+      await axiosInstant.put("/bossRev/update-batch", {
         empNo: selectedEmp.empNo,
         formSubmId: selectedEmp.formSubm?.formSubmId,
         bossRevs,

@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,13 +28,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.clt.evaluation_system_backend.util.SystemRoleEnum;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.NonFinal;
 
 @Configuration
-
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
         @Autowired
@@ -46,47 +48,54 @@ public class SecurityConfig {
         protected static final String[] PUBLIC_PATHS = {
                         "/api/v1/auth/login",
                         "/api/v1/auth/register",
+                        "/api/v1/auth/refreshtoken"
         };
-        protected static final String[] PUBLIC_GET_PATHS = {};
+        protected static final String[] ADMIN_PATHS = {};
+        protected static final String[] MANAGER_PATHS = {};
+        protected static final String[] MANUAL_USER_PATHS = {};
 
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+                httpSecurity
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .authorizeHttpRequests(
+                                                requests -> requests
+                                                                .requestMatchers(HttpMethod.POST, PUBLIC_PATHS)
+                                                                .permitAll()
+                                                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
+                                                                                "/swagger-ui.html")
+                                                                .permitAll()
+                                                                .requestMatchers(ADMIN_PATHS)
+                                                                .hasRole(SystemRoleEnum.ADMIN.name())
+                                                                .requestMatchers(MANAGER_PATHS)
+                                                                .hasRole(SystemRoleEnum.MANAGER.name())
+                                                                .requestMatchers(MANUAL_USER_PATHS)
+                                                                .hasRole(SystemRoleEnum.USER.name())
+                                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                                .anyRequest().authenticated())
+                                .oauth2ResourceServer(oauth2 -> oauth2
+                                                .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
+
+                                                .authenticationEntryPoint((req, resp, ex) -> resp
+                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                httpSecurity.csrf(AbstractHttpConfigurer::disable);
+                return httpSecurity.build();
+        }
         // @Bean
         // public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws
         // Exception {
         // httpSecurity
         // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        // .authorizeHttpRequests(
-        // requests -> requests
-        // .requestMatchers(HttpMethod.POST, PUBLIC_PATHS)
-        // .permitAll()
-        // .requestMatchers(HttpMethod.GET, PUBLIC_GET_PATHS)
-        // .permitAll()
-        // .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
-        // "/swagger-ui.html")
-        // .permitAll()
-        // .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        // .anyRequest().authenticated())
-        // .oauth2ResourceServer(oauth2 -> oauth2
-        // .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
-        //
-        // .authenticationEntryPoint((req, resp, ex) -> resp
-        // .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
-        //
+        // .authorizeHttpRequests(req -> req
+        // .anyRequest().permitAll())
         // .sessionManagement(session -> session
-        // .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        // .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // .csrf(AbstractHttpConfigurer::disable);
         // return httpSecurity.build();
         // }
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-                httpSecurity
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                                .authorizeHttpRequests(req -> req
-                                                .anyRequest().permitAll())
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .csrf(AbstractHttpConfigurer::disable);
-                return httpSecurity.build();
-        }
 
         @Bean
         public JwtDecoder jwtDecoder() {

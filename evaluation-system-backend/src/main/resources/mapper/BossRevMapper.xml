@@ -32,6 +32,11 @@
         <result property="bossName"          column="boss_emp_nm"/>
         <result property="bossEmail"         column="boss_emp_email"/>
     </resultMap>
+    
+    <select id="findBossRev"> SELECT boss_rev_id, form_subm_id, emp_no, boss_no, boss_rev_role,
+        boss_rev_ord_no, isFinal, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM boss_rev
+        WHERE boss_no = #{bossNo} AND del_flg = 'F' ORDER BY boss_rev_ord_no, upd_dt DESC LIMIT 1 </select>
+
 
     <select id="findByBossNo"
         parameterType="string"

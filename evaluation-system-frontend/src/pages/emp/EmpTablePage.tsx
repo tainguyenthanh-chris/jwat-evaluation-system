@@ -1,15 +1,11 @@
 import { Flex, Heading, IconButton } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import AppCard from "../../components/AppCard";
 import EmployeeTable from "./EmployeeTable";
 import type { EmployeeBackend } from "../../types/emp";
-
-const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
-});
+import { axiosInstant } from "../../lib/axios";
 
 const EmpTablePage = () => {
   const [employees, setEmployees] = useState<EmployeeBackend[]>([]);
@@ -20,7 +16,7 @@ const EmpTablePage = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await api.get("/emp/by-boss");
+      const res = await axiosInstant.get("/emp/by-boss");
       setEmployees(res.data.data);
     } catch (err) {
       setError("Failed to load employees");

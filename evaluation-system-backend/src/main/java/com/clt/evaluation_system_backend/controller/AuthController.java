@@ -1,5 +1,6 @@
 package com.clt.evaluation_system_backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clt.evaluation_system_backend.dto.request.LoginRequest;
 import com.clt.evaluation_system_backend.dto.request.RegisterRequest;
+import com.clt.evaluation_system_backend.dto.request.TokenRefreshRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.service.AuthService;
-
+import com.clt.evaluation_system_backend.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +21,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
@@ -34,5 +40,8 @@ public class AuthController {
         return ApiResponse.ok("Register success");
     }
 
-    // add logout function
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        return ApiResponse.ok(refreshTokenService.refreshToken(request.getRefreshToken()));
+    }
 }

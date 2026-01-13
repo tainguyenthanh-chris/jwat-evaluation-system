@@ -1,7 +1,5 @@
 package com.clt.evaluation_system_backend.config;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,10 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (usr == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
-
         return new org.springframework.security.core.userdetails.User(
                 usr.getUsrId(),
                 usr.getUsrPwd(),
-                Collections.emptyList());
+                usr.getAuthorities());
     }
 }

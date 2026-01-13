@@ -14,7 +14,10 @@ public interface BossRevMapper {
 
         BossRev findByBossNo(@Param("bossNo") String bossNo, @Param("formSubmId") String formSubmId);
 
-        void insertBatchBossRev(List<BossRevDto> bossRevs, @Param("formSubmId") String formSubmId, @Param("empNo") String empNo);
+        BossRev findBossRev(@Param("bossNo") String bossNo);
+
+        void insertBatchBossRev(List<BossRevDto> bossRevs, @Param("formSubmId") String formSubmId,
+                        @Param("empNo") String empNo);
 
         void deleteBatchBossRev(
                         @Param("bossNo") String bossNo,
