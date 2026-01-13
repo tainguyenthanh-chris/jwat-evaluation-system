@@ -2,6 +2,7 @@ package com.clt.evaluation_system_backend.service.impl;
 
 import java.util.List;
 
+import com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,4 +40,11 @@ public class EmpServiceImpl implements EmpService {
         List<Emp> empList = empMapper.findAll();
         return empList;
     }
+
+    @Override
+    public AdmEmployeeResponse getByNo(String employeeNo) {
+        return empMapper.selectByNo(employeeNo);
+    }
+
+
 }

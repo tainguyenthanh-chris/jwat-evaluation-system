@@ -32,7 +32,7 @@
         <result property="bossName"          column="boss_emp_nm"/>
         <result property="bossEmail"         column="boss_emp_email"/>
     </resultMap>
-    
+
     <select id="findBossRev"> SELECT boss_rev_id, form_subm_id, emp_no, boss_no, boss_rev_role,
         boss_rev_ord_no, isFinal, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM boss_rev
         WHERE boss_no = #{bossNo} AND del_flg = 'F' ORDER BY boss_rev_ord_no, upd_dt DESC LIMIT 1 </select>
@@ -101,4 +101,31 @@
           AND br.del_flg = 'F'
           AND br.form_subm_id IS NULL
     </select>
+
+
+    <select id="select" resultType="com.clt.evaluation_system_backend.dto.response.BossReviewResponse">
+        SELECT
+        BR.emp_no            AS employeeNo,
+        BR.boss_no           AS bossNo,
+        E.emp_nm             AS bossName,
+        E.emp_id             AS bossId,
+        BR.boss_rev_ord_no   AS bossReviewOrder,
+        BR.boss_rev_role     AS bossReviewRole,
+        BR.isFinal           AS isFinal
+        FROM boss_rev BR
+            LEFT JOIN emp E ON E.emp_no = BR.boss_no
+        WHERE BR.del_flg ='F'
+            <if test="employeeNo != null">
+                AND BR.emp_no = #{employeeNo}
+            </if>
+        ORDER BY BR.boss_rev_ord_no;
+    </select>
+
+    <delete id="deleteAllBossReviewByEmpNo">
+        DELETE
+        FROM boss_rev
+        WHERE emp_no = #{employeeNo}
+            AND form_subm_id = NULL
+    </delete>
+
 </mapper>

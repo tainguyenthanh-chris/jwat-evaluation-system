@@ -2,6 +2,8 @@ package com.clt.evaluation_system_backend.mapper;
 
 import com.clt.evaluation_system_backend.dto.request.BossRevDto;
 import com.clt.evaluation_system_backend.dto.response.boss.review.BossReviewAssigneeResponse;
+import com.clt.evaluation_system_backend.dto.request.BossRevRequest;
+import com.clt.evaluation_system_backend.dto.response.BossReviewResponse;
 import com.clt.evaluation_system_backend.model.BossRev;
 
 import java.util.List;
@@ -27,4 +29,6 @@ public interface BossRevMapper {
         List<BossReviewAssigneeResponse> selectByEmployeeNumber(@Param("employeeNumber") String employeeNumber);
 
         void insertBatch(List<BossRev> bossRevList);
+
+        List<BossReviewResponse> select(BossRevRequest request);
 }

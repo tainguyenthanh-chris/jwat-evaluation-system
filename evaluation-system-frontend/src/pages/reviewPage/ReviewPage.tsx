@@ -1,5 +1,15 @@
-import { Box, Flex, Heading, Button } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Text,
+  Select,
+  Portal,
+  createListCollection,
+  Combobox,
+} from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import type { Target } from "../../types/target";
 import PersonalInfo from "./components/PersonalInfo";
 import type { SubmissionInfo } from "../../types/submissionInfo";
@@ -15,6 +25,9 @@ import {
 import type { BossReview } from "../../types/bossReview";
 import ConfirmDialog from "../../components/dialog/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
+import CreatableSelect from "react-select/creatable";
+import SelectOrCreateInput from "../../components/SelectOrCreateInput";
 
 export type SubmitEvaluationPayload = {
   formSubmissionId: string;
@@ -22,6 +35,7 @@ export type SubmitEvaluationPayload = {
   newTargetList: Partial<Target>[];
   currentTargetList: Partial<Target>[];
   summarySubmissionList: Partial<SummarySubmission>[];
+  newLevel: string;
 };
 
 export type SummarySubmission = {
@@ -31,6 +45,15 @@ export type SummarySubmission = {
   summaryGrade: string;
   summaryOrderNo: number;
 };
+
+const levelOptions = [
+  { label: "Fresher", value: "FRESHER" },
+  { label: "Fresher 2", value: "FRESHER 2" },
+  { label: "Fresher 3", value: "FRESHER 3" },
+  { label: "Fresher 4", value: "FRESHER 4" },
+  { label: "Junior", value: "JUNIOR" },
+  { label: "Senior", value: "SENIOR" },
+];
 
 const ReviewPage = () => {
   const query: EvaluationQuery = {
@@ -76,7 +99,7 @@ const ReviewPage = () => {
 
   const submissionValueMapOfficial = data?.submissionValueMap;
   const submitMutation = useSubmitEvaluation();
-
+  const [newLevel, setNewLevel] = useState<string>("");
   const handleSubmit = async () => {
     const data = Object.values(sectionRefs.current)
       .map((ref) => ref?.getData())
@@ -111,6 +134,7 @@ const ReviewPage = () => {
       currentTargetList,
       formSubmissionId: submissionInfo.formSubmissionId!,
       summarySubmissionList: summarySubmissionList,
+      newLevel,
     };
     try {
       await submitMutation.mutateAsync(payload);
@@ -119,6 +143,7 @@ const ReviewPage = () => {
       console.error(e);
     }
   };
+
   return (
     <Box
       maxW="1200px"
@@ -148,6 +173,38 @@ const ReviewPage = () => {
           submissionValueMap={submissionValueMapOfficial}
         />
       ))}
+      {user.revRoleList.includes("LEADER") && (
+        <Flex align={"center"} justify={"center"}>
+          <Box>
+            {" "}
+            <Text fontWeight={"sm"}>Current level</Text>
+            <Box
+              bg="blue.50"
+              px={4}
+              py={2}
+              fontWeight="semibold"
+              color="blue.700"
+              overflow={"visible"}
+            >
+              {" "}
+              <Text>{submissionInfo.level}</Text>
+            </Box>
+          </Box>
+          <Box mx={"20px"}>
+            <FaArrowRight />
+          </Box>
+          <Box>
+            <SelectOrCreateInput
+              options={levelOptions}
+              placeholder="Select or type level"
+              onSubmit={(val) => {
+                setNewLevel(val);
+              }}
+            />
+          </Box>
+        </Flex>
+      )}
+
       <Flex>
         <ConfirmDialog
           triggerButtonTitle="Submit"

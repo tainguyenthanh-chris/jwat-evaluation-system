@@ -145,7 +145,6 @@
         br2.form_subm_id = fs.form_subm_id AND br2.boss_no = #{bossNo} AND br2.del_flg = 'F' ) ORDER
         BY e.emp_no, br.boss_rev_ord_no; </select>
 
-
     <select id="findAll" resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email,
         comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id,
         cre_dt, upd_usr_id, upd_dt, del_flg FROM emp WHERE del_flg = 'F' ORDER BY emp_no ;</select>
@@ -180,4 +179,46 @@
           AND DATE_TRUNC('month', e.next_rev_dt) = DATE_TRUNC('month', CURRENT_DATE + INTERVAL '1 month')
         ORDER BY e.emp_no
     </select>
+
+    <select id="selectForAdm" resultType="com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse">
+        SELECT
+            E.emp_id    AS employeeId,
+            E.emp_no    AS employeeNo,
+            E.emp_nm    AS employeeName,
+            E.emp_email AS employeeEmail,
+            E.dept_cd || '-' || E.pos_cd || '-' || E.lvl_cd AS employeeInfo,
+            STRING_AGG(
+                    BR.boss_no || '-' || B.emp_nm,
+                    ', '
+                        ORDER BY BR.boss_rev_ord_no ASC
+            ) AS reviewByListRaw
+
+        FROM emp E
+                 LEFT JOIN boss_rev BR
+                           ON BR.emp_no = E.emp_no
+                 LEFT JOIN emp B
+                           ON B.emp_no = BR.boss_no
+        WHERE E.del_flg = 'F'
+        GROUP BY
+            E.emp_id,
+            E.emp_no,
+            E.emp_nm,
+            E.emp_email,
+            E.dept_cd,
+            E.pos_cd,
+            E.lvl_cd
+        ORDER BY E.emp_no;
+    </select>
+
+    <select id="selectByNo" resultType="com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse">
+        SELECT
+            E.emp_no    AS employeeNo,
+            E.emp_nm    AS employeeName
+        FROM emp E
+        WHERE E.del_flg = 'F'
+        <if test="employeeNo != null">
+            AND E.emp_no  = #{employeeNo}
+        </if>
+    </select>
+
 </mapper>

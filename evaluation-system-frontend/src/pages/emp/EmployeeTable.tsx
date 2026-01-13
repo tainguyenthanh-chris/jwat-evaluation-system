@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { BossRevRoleEnum, type EmployeeBackend } from "../../types/emp";
 import type { Form } from "../../types/formTemplate";
 import { axiosInstant } from "../../lib/axios";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   employees: EmployeeBackend[];
@@ -86,9 +87,16 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
     setSelectedFormId(emp.formSubm?.form?.formId ?? null);
     setOpen(true);
   };
+  const navigate = useNavigate();
 
   const onRowClick = (emp: EmployeeBackend) => {
-    console.log("View evaluation history:", emp.empNo);
+    const employeeNoList = sortedEmployees.map((emp) => emp.empNo);
+    navigate(`/history/employee/${emp.empNo}`, {
+      state: {
+        employeeName: emp.empNm,
+        employeeNoList: employeeNoList,
+      },
+    });
   };
 
   const sortedEmployees = [...employees].sort((a, b) => {
@@ -185,6 +193,7 @@ export default function EmployeeTable({ employees, onRefresh }: Props) {
         <Table.Body>
           {sortedEmployees.map((emp) => (
             <Table.Row
+              // onClick
               key={emp.empId}
               cursor="pointer"
               bg={

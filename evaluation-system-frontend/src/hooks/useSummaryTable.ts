@@ -2,12 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchEvaluationData, postEvaluation } from "../api/evaluationApi";
 import { getSummaryTable, type SummaryTableQuery } from "../api/summaryTableApi";
 
-export interface EvaluationQuery {
-  employeeNo?: string;
-  formSubmissionId?: string;
-  mode?: "REVIEW" | "HISTORY";
-
-}
 
 export const useSummaryTable = (query: SummaryTableQuery) => {
   return useQuery({
