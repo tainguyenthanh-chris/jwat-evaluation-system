@@ -24,6 +24,19 @@
         <result property="delFlg" column="del_flg" />
     </resultMap>
 
+    <resultMap id="EmpWithFormResultMap" type="com.clt.evaluation_system_backend.dto.response.employee.EmployeeWithFormResponse">
+        <result property="employeeId" column="emp_Id"/>
+        <result property="employeeNumber" column="emp_no"/>
+        <result property="employeeName"   column="emp_nm"/>
+        <result property="employeeEmail"   column="emp_email"/>
+        <result property="departmentCode" column="dept_cd"/>
+        <result property="positionCode" column="pos_cd"/>
+        <result property="levelCode" column="lvl_cd"/>
+        <result property="nextReviewDate" column="next_rev_dt"/>
+        <result property="salaryLevel" column="salary_lvl"/>
+        <result property="formId"         column="form_id"/>
+    </resultMap>
+
     <select id="findByEmail"
         parameterType="string"
         resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd,
@@ -136,4 +149,35 @@
     <select id="findAll" resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email,
         comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id,
         cre_dt, upd_usr_id, upd_dt, del_flg FROM emp WHERE del_flg = 'F' ORDER BY emp_no ;</select>
+
+    <select id="selectEmployeesForNextReviewWithForm" resultMap="EmpWithFormResultMap">
+        SELECT
+            e.emp_id,
+            e.emp_no,
+            e.emp_nm,
+            e.emp_email,
+            e.dept_cd,
+            e.pos_cd,
+            e.lvl_cd,
+            e.next_rev_dt,
+            e.salary_lvl,
+            f.form_id
+        FROM emp e
+        LEFT JOIN form f
+            ON f.form_id = (
+                SELECT f2.form_id
+                FROM form f2
+                WHERE f2.del_flg = 'F'
+                    AND f2.form_status != 'OLD'
+                    AND f2.dept_cd = e.dept_cd
+                    AND f2.pos_cd  = e.pos_cd
+                    AND f2.lvl_cd  = e.lvl_cd
+                    LIMIT 1
+            )
+        WHERE e.del_flg = 'F'
+          AND e.emp_status_cd = 'ACTIVE'
+          AND e.next_rev_dt IS NOT NULL
+          AND DATE_TRUNC('month', e.next_rev_dt) = DATE_TRUNC('month', CURRENT_DATE + INTERVAL '1 month')
+        ORDER BY e.emp_no
+    </select>
 </mapper>

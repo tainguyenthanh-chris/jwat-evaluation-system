@@ -226,5 +226,4 @@ public class FormServiceImpl implements FormService {
     public List<Form> getAllForms() {
         return formMapper.selectAllForms();
     }
-
 }

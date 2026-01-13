@@ -21,6 +21,17 @@
         <result property="delFlg" column="del_flg" />
     </resultMap>
 
+    <resultMap id="BossRevWithEmpResultMap" type="com.clt.evaluation_system_backend.dto.response.boss.review.BossReviewAssigneeResponse">
+        <id property="bossRevId" column="boss_rev_id"/>
+        <result property="formSubmitId"        column="form_subm_id"/>
+        <result property="employeeNumber"   column="emp_no"/>
+        <result property="bossNumber"       column="boss_no"/>
+        <result property="bossReviewRole"   column="boss_rev_role"/>
+        <result property="bossReviewOrder"  column="boss_rev_ord_no"/>
+        <result property="isFinal"           column="isFinal"/>
+        <result property="bossName"          column="boss_emp_nm"/>
+        <result property="bossEmail"         column="boss_emp_email"/>
+    </resultMap>
 
     <select id="findByBossNo"
         parameterType="string"
@@ -38,4 +49,51 @@
 
     <delete id="deleteBatchBossRev"> DELETE FROM boss_rev WHERE form_subm_id = #{formSubmId} AND
         emp_no = #{empNo} </delete>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO boss_rev (
+            form_subm_id,
+            emp_no,
+            boss_no,
+            boss_rev_role,
+            boss_rev_ord_no,
+            isFinal,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.formSubmId},
+                    #{item.empNo},
+                    #{item.bossNo},
+                    #{item.bossRevRole},
+                    #{item.bossRevOrdNo},
+                    #{item.isFinal},
+                    'SYSTEM',
+                    CURRENT_TIMESTAMP,
+                    'F'
+                )
+            </foreach>
+    </insert>
+
+    <select id="selectByEmployeeNumber" parameterType="string" resultMap="BossRevWithEmpResultMap">
+        SELECT
+            br.boss_rev_id,
+            br.form_subm_id,
+            br.emp_no,
+            br.boss_no,
+            br.boss_rev_role,
+            br.boss_rev_ord_no,
+            br.isFinal,
+            e.emp_nm   AS boss_emp_nm,
+            e.emp_email AS boss_emp_email
+        FROM boss_rev br
+        JOIN emp e ON e.emp_no = br.boss_no
+             AND e.del_flg = 'F'
+        WHERE br.emp_no = #{employeeNumber}
+          AND br.del_flg = 'F'
+          AND br.form_subm_id IS NULL
+    </select>
 </mapper>

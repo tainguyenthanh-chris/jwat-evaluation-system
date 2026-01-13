@@ -2,6 +2,7 @@ package com.clt.evaluation_system_backend.mapper;
 
 import java.util.List;
 
+import com.clt.evaluation_system_backend.dto.response.employee.EmployeeWithFormResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,4 +16,6 @@ public interface EmpMapper {
     List<Emp> findEmpByBossNo(@Param("bossNo") String bossNo);
 
     List<Emp> findAll();
+
+    List<EmployeeWithFormResponse> selectEmployeesForNextReviewWithForm();
 }
