@@ -9,7 +9,7 @@ import { useAdminReviewingEmployee } from "../../hooks/useAdminReviewingEmployee
 export interface EmployeeProgress {
   employeeName: string;
   employeeNo: string;
-  formSubmissionStatus: "REMIND" | "BOSS_REVIEWED" | "EMPLOYEED_REVIEWED";
+  formSubmissionStatus: "REMIND" | "BOSS_REVIEWED" | "EMPLOYEE_REVIEWED";
   reviewOn?: string;
   reviewDueDate?: string;
 }

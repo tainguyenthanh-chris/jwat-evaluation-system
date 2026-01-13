@@ -7,6 +7,11 @@ import java.util.Map;
 
 public interface EmailService {
     boolean sendTemplateEmail(String toEmail, String templateId, Map<String, Object> data);
+
+    void sendReviewReminderToEmployee(String employeeEmail, String employeeName, String employeeNumber,
+            String employeeDueDate);
+
     void sendBulkReviewReminderToEmployees(List<FormSubmitWithEmployeeResponse> employees);
+
     void sendBulkReviewReminderToBoss(Map<String, Map<String, Object>> data);
 }

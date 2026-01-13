@@ -39,6 +39,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${sendgrid.template.review-reminder-boss}")
     private String reviewReminderBossTemplate;
 
+    @Value("${sendgrid.template.review-reminder-employee}")
+    private String reviewReminderEmployeeTemplate;
+
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
@@ -80,6 +83,35 @@ public class EmailServiceImpl implements EmailService {
         } catch (IOException ex) {
             log.error("error sending email to: {}", toEmail, ex);
             return false;
+        }
+    }
+
+    @Override
+    public void sendReviewReminderToEmployee(String employeeEmail, String employeeName, String employeeNumber, String employeeDueDate) {
+        try {
+            Map<String, Object> emailData = new HashMap<>();
+            emailData.put("employeeName", employeeName);
+            emailData.put("employeeEmail", employeeEmail);
+            emailData.put("employeeNumber", employeeNumber);
+            emailData.put("dueDate", employeeDueDate);
+            emailData.put("link", frontendUrl + "/review");
+            emailData.put("year", String.valueOf(LocalDate.now().getYear()));
+
+            boolean sent = sendTemplateEmail(
+                    "manhha2392000@gmail.com",
+                    reviewReminderEmployeeTemplate,
+                    emailData
+            );
+
+            if (sent) {
+                log.info("review reminder sent to: {} ({})", employeeName, employeeEmail);
+            } else {
+                log.error("failed to send review reminder to: {} ({})", employeeName, employeeEmail);
+            }
+
+        } catch (Exception e) {
+            log.error("error sending review reminder to: {}", employeeName, e);
+            throw new RuntimeException("failed to send email reminder", e);
         }
     }
 

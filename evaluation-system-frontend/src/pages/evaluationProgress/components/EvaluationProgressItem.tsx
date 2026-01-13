@@ -17,7 +17,7 @@ const EvaluationProgressItem = ({
 
   const getCardStyle = () => {
     switch (formSubmissionStatus) {
-      case "EMPLOYEED_REVIEWED":
+      case "EMPLOYEE_REVIEWED":
         return {
           borderColor: "#4CAF50",
         };
@@ -34,7 +34,7 @@ const EvaluationProgressItem = ({
   };
 
   const renderButton = () => {
-    if (formSubmissionStatus === "EMPLOYEED_REVIEWED") {
+    if (formSubmissionStatus === "EMPLOYEE_REVIEWED") {
       return (
         <Button
           colorPalette={"green"}

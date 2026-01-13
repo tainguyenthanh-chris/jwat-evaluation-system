@@ -35,6 +35,15 @@ public class ReviewReminderServiceImpl implements ReviewReminderService {
     private final EmailService emailService;
 
     @Override
+    public void sendReviewReminderToEmployee(RemindEmployeeReviewRequest request) {
+        emailService.sendReviewReminderToEmployee(
+                request.getEmployeeEmail(),
+                request.getEmployeeName(),
+                request.getEmployeeNumber(),
+                request.getDueDate());
+    }
+
+    @Override
     @Transactional
     public void sendReviewReminderToBoss() {
         List<EmployeeWithFormResponse> employees = empMapper.selectEmployeesForNextReviewWithForm();
@@ -102,7 +111,7 @@ public class ReviewReminderServiceImpl implements ReviewReminderService {
     }
 
     @Transactional
-    public void saveReviewData(List<FormSubm> formSubmitInsertList, List<BossRev> bossReviewInsertList){
+    public void saveReviewData(List<FormSubm> formSubmitInsertList, List<BossRev> bossReviewInsertList) {
         if (!formSubmitInsertList.isEmpty()) {
             formSubmMapper.insertListFormSubmit(formSubmitInsertList);
         }
@@ -112,16 +121,12 @@ public class ReviewReminderServiceImpl implements ReviewReminderService {
         }
     }
 
-
     @Override
     @Transactional
     public void sendReviewReminderToEmployees() {
-        List<FormSubmitWithEmployeeResponse> pendingSubmitForms = formSubmMapper.selectFormSubmitWithEmployeeByStatus("PENDING");
+        List<FormSubmitWithEmployeeResponse> pendingSubmitForms = formSubmMapper
+                .selectFormSubmitWithEmployeeByStatus("PENDING");
         emailService.sendBulkReviewReminderToEmployees(pendingSubmitForms);
     }
 
-    @Override
-    public void sendReviewReminderToEmployee(RemindEmployeeReviewRequest request) {
-
-    }
 }
