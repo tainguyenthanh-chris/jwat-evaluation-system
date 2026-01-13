@@ -85,4 +85,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         }
 
     }
+
+    @Override
+    public void deleteByToken(String refreshToken) {
+        refreshTokenMapper.deleteByToken(refreshToken);
+    }
 }

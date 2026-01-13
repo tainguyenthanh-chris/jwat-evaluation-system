@@ -53,4 +53,6 @@
     <delete id="delete"
         parameterType="string"> DELETE FROM refresh_token WHERE refresh_token_id = #{refreshTokenId} </delete>
 
+    <delete id="deleteByToken" parameterType="string"> DELETE FROM refresh_token WHERE token =
+        #{refreshToken} </delete>
 </mapper>

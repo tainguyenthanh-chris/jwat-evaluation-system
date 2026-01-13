@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clt.evaluation_system_backend.dto.request.LoginRequest;
+import com.clt.evaluation_system_backend.dto.request.LogoutRequestDto;
 import com.clt.evaluation_system_backend.dto.request.RegisterRequest;
 import com.clt.evaluation_system_backend.dto.request.TokenRefreshRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
@@ -44,4 +45,11 @@ public class AuthController {
     public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
         return ApiResponse.ok(refreshTokenService.refreshToken(request.getRefreshToken()));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutRequestDto request) {
+        authService.logout(request.getToken(), request.getRefreshToken());
+        return ApiResponse.success("Logout successful");
+    }
+
 }

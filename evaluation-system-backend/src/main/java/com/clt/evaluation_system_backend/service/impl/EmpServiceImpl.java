@@ -7,15 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.clt.evaluation_system_backend.mapper.EmpMapper;
-import com.clt.evaluation_system_backend.mapper.UsrMapper;
 import com.clt.evaluation_system_backend.model.Emp;
 import com.clt.evaluation_system_backend.service.EmpService;
 
 @Service
 public class EmpServiceImpl implements EmpService {
-
-    @Autowired
-    private UsrMapper usrMapper;
 
     @Autowired
     private EmpMapper empMapper;

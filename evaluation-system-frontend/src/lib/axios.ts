@@ -32,7 +32,7 @@ export const axiosInstant = axios.create({
 axiosInstant.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().accessToken;
-    console.log("ACCESS TOKEN:", token);
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
 

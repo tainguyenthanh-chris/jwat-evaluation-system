@@ -367,6 +367,16 @@ CREATE TABLE refresh_token (
         del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
+CREATE TABLE logged_out_token (
+    token_id VARCHAR(50) PRIMARY KEY,
+    expiry_date TIMESTAMP(6) NOT NULL,
+    cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+    cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+    upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+);
+
 
 
 

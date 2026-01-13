@@ -2,6 +2,7 @@ package com.clt.evaluation_system_backend.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,9 @@ import com.clt.evaluation_system_backend.dto.request.RegisterRequest;
 import com.clt.evaluation_system_backend.dto.response.LoginResponse;
 import com.clt.evaluation_system_backend.mapper.BossRevMapper;
 import com.clt.evaluation_system_backend.mapper.EmpMapper;
+import com.clt.evaluation_system_backend.mapper.LoggedOutTokenMapper;
 import com.clt.evaluation_system_backend.model.Emp;
+import com.clt.evaluation_system_backend.model.LoggedOutToken;
 import com.clt.evaluation_system_backend.model.RefreshToken;
 import com.clt.evaluation_system_backend.model.SysRole;
 import com.clt.evaluation_system_backend.model.Usr;
@@ -33,6 +36,7 @@ import com.clt.evaluation_system_backend.util.CommonMethods;
 import com.clt.evaluation_system_backend.util.Constant;
 import com.clt.evaluation_system_backend.util.SystemRoleEnum;
 import com.clt.evaluation_system_backend.util.UsrSysRoleStatusEnum;
+import com.nimbusds.jwt.SignedJWT;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenServiceImpl refreshTokenService;
     private final BossRevMapper bossRevMapper;
     private final EmpMapper empMapper;
+    private final LoggedOutTokenMapper loggedOutTokenMapper;
 
     @Override
     public void register(RegisterRequest request) {
@@ -123,6 +128,30 @@ public class AuthServiceImpl implements AuthService {
         loginResponse.setPermissions(permissions);
 
         return loginResponse;
+    }
+
+    @Override
+    public void logout(String token, String refreshToken) {
+        try {
+            SignedJWT signedJWT = jwtService.verifyToken(token);
+            String jit = signedJWT.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+            LoggedOutToken loggedOutToken = LoggedOutToken.builder()
+                    .tokenId(jit)
+                    .expiryDate(expiryTime)
+                    .creUsrId(CommonMethods.getCurrentUsrId())
+                    .updUsrId(CommonMethods.getCurrentUsrId())
+                    .delFlg("F")
+                    .build();
+
+            loggedOutTokenMapper.insert(loggedOutToken);
+            refreshTokenService.deleteByToken(refreshToken);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid token during logout", e);
+        }
+
     }
 
 }

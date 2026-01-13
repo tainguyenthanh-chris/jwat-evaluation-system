@@ -10,6 +10,7 @@ import com.clt.evaluation_system_backend.model.RefreshToken;
 public interface RefreshTokenService {
     Optional<RefreshToken> findByToken(String token);
 
+    @Transactional
     RefreshToken createRefreshToken(String userId);
 
     RefreshToken verifyExpiration(RefreshToken token);
@@ -18,4 +19,7 @@ public interface RefreshTokenService {
     int deleteByUserId(String userId);
 
     TokenRefreshResponse refreshToken(String requestRefreshToken);
+
+    @Transactional
+    void deleteByToken(String refreshToken);
 }

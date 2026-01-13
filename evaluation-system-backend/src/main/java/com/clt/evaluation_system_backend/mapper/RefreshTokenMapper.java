@@ -15,5 +15,7 @@ public interface RefreshTokenMapper {
 
     int deleteByUser(Usr user);
 
+    void deleteByToken(String refreshToken);
+
     void delete(String refreshTokenId);
 }
