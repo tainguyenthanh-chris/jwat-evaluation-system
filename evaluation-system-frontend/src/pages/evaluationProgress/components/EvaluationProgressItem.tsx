@@ -64,14 +64,14 @@ const EvaluationProgressItem = ({
   const renderDateInfo = () => {
     if (reviewOn) {
       return (
-        <Text fontSize="sm" fontStyle="italic">
+        <Text as="span" fontSize="sm" fontStyle="italic">
           Reviewed on: {reviewOn}
         </Text>
       );
     }
     if (reviewDueDate) {
       return (
-        <Text fontSize="sm" fontStyle="italic">
+        <Text as="span" fontSize="sm" fontStyle="italic">
           Due date: {reviewDueDate}
         </Text>
       );

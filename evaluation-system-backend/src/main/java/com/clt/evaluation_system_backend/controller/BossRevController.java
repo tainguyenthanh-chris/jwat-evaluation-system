@@ -34,4 +34,10 @@ public class BossRevController {
         List<BossReviewResponse> res = bossRevService.get(request);
         return ApiResponse.ok(res);
     }
+
+//    @PutMapping("")
+//    public ResponseEntity<?> update(@RequestBody List<BossRevRequest> request) {
+//        int re = bossRevService.create(request);
+//        return ApiResponse.success(re + " were inserted to database");
+//    }
 }

@@ -17,7 +17,7 @@ import {
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import type { IconType } from "react-icons";
-import { protectedMenuList } from "../auth/ProtectedRoute";
+import { useAuthStore } from "../store/authStore";
 
 interface SidebarChild {
   name: string;
@@ -90,9 +90,14 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       menuKey: "admin",
     },
   ];
+  const protectedMenuList = useAuthStore((state) => state.permissions);
 
   const allowedSidebarItems = sidebarItems.filter(
-    (item) => !item.menuKey || protectedMenuList.includes(item.menuKey)
+    (item) =>
+      !item.menuKey ||
+      protectedMenuList.some(
+        (p) => p.toLowerCase() === item.menuKey?.toLowerCase()
+      )
   );
 
   const toggleGroup = (name: string): void => {

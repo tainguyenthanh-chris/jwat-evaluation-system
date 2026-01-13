@@ -10,4 +10,7 @@ public class BossRevRequest {
     private String bossRevId;
     private String bossNo;
     private String employeeNo;
+    private String bossReviewRole;
+    private String bossReviewOrder;
+    private String formSubmissionId;
 }

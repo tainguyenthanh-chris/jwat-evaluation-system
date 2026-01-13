@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import type { AdminEmployeeQuery } from "../../api/adminEmployeeApi";
 import { useAdminEmployee } from "../../hooks/useAdminEmployee";
@@ -26,19 +26,27 @@ const actionList = createListCollection({
 });
 
 const AdminEmployeePage = () => {
-  const adminEmployeeQuery: AdminEmployeeQuery = {
-    // employeeNo: employeeInfo.employeeNo,
+  // const adminEmployeeQuery: AdminEmployeeQuery = {
+  //   // employeeNo: employeeInfo.employeeNo,
+  // };
+  const buildAdminEmployeeQuery = (value: string): AdminEmployeeQuery => {
+    if (!value) return {};
+    const v = value.trim();
+    if (!v) return {};
+    if (/^\d+$/.test(v)) {
+      return { employeeNo: v };
+    }
+    return { employeeName: v };
   };
+  const [searchInput, setSearchInput] = useState<string>("");
+  const adminEmployeeQuery = useMemo(
+    () => buildAdminEmployeeQuery(searchInput),
+    [searchInput]
+  );
   const { data } = useAdminEmployee(adminEmployeeQuery);
 
-  const [searchInput, setSearchInput] = useState<string>("");
   const filteredData = data;
-  //   const filteredData = useMemo(() => {
-  //     if (!data) return [];
-  //     if (!searchInput) return data;
 
-  //     return data.filter((item) => item.reviewDate.includes(searchInput));
-  //   }, [data, searchInput]);
   type DialogType = "CHANGE_REVIEWER" | "CHANGE_FORM" | "CONFIRM_DELETE" | null;
   const [activeDialog, setActiveDialog] = useState<DialogType>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
@@ -140,7 +148,7 @@ const AdminEmployeePage = () => {
                 <Select.Root
                   collection={actionList}
                   size="sm"
-                  width="320px"
+                  width="200px"
                   onValueChange={(e) => {
                     const action = e.value[0];
                     if (!action) return;

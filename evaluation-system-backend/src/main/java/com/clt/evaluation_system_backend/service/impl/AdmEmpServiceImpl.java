@@ -4,6 +4,7 @@ import com.clt.evaluation_system_backend.dto.request.CriteriaRequest;
 import com.clt.evaluation_system_backend.dto.request.EmployeeRequest;
 import com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse;
 import com.clt.evaluation_system_backend.dto.response.CriteriaResponse;
+import com.clt.evaluation_system_backend.dto.response.ReviewingEmployeeResponse;
 import com.clt.evaluation_system_backend.exception.AnyException;
 import com.clt.evaluation_system_backend.mapper.CriteriaCueMapper;
 import com.clt.evaluation_system_backend.mapper.CriteriaMapper;
@@ -30,8 +31,8 @@ public class AdmEmpServiceImpl implements AdmEmpService {
     private final SeqService seqService;
 
     @Override
-    public List<AdmEmployeeResponse> getForAdm() {
-        List<AdmEmployeeResponse> responseList = empMapper.selectForAdm();
+    public List<AdmEmployeeResponse> getForAdm(EmployeeRequest request) {
+        List<AdmEmployeeResponse> responseList = empMapper.selectForAdm(request);
         for(AdmEmployeeResponse response : responseList){
             response.setReviewBy();
         }
@@ -41,5 +42,14 @@ public class AdmEmpServiceImpl implements AdmEmpService {
     @Override
     public AdmEmployeeResponse getByNo(String employeeNo) {
         return empMapper.selectByNo(employeeNo);
+    }
+
+    @Override
+    public List<ReviewingEmployeeResponse> getReviewEmployee(EmployeeRequest request) {
+        List<ReviewingEmployeeResponse> responseList = empMapper.selectReviewingEmployee(request);
+        for(ReviewingEmployeeResponse response : responseList){
+            response.setFormSubmissionStatus();
+        }
+        return responseList;
     }
 }

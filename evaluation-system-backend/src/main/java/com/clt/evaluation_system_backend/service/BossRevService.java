@@ -13,4 +13,6 @@ public interface BossRevService {
     void updateBatchBossRev(BossRevUpdateRequestDto request);
 
     List<BossReviewResponse> get(BossRevRequest request);
+
+
 }

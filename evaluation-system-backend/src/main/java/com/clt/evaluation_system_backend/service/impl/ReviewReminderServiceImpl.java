@@ -1,5 +1,6 @@
 package com.clt.evaluation_system_backend.service.impl;
 
+import com.clt.evaluation_system_backend.dto.email.RemindEmployeeReviewRequest;
 import com.clt.evaluation_system_backend.dto.response.boss.review.BossReviewAssigneeResponse;
 import com.clt.evaluation_system_backend.dto.response.employee.EmployeeWithFormResponse;
 import com.clt.evaluation_system_backend.dto.response.form.submit.FormSubmitWithEmployeeResponse;
@@ -117,5 +118,10 @@ public class ReviewReminderServiceImpl implements ReviewReminderService {
     public void sendReviewReminderToEmployees() {
         List<FormSubmitWithEmployeeResponse> pendingSubmitForms = formSubmMapper.selectFormSubmitWithEmployeeByStatus("PENDING");
         emailService.sendBulkReviewReminderToEmployees(pendingSubmitForms);
+    }
+
+    @Override
+    public void sendReviewReminderToEmployee(RemindEmployeeReviewRequest request) {
+
     }
 }

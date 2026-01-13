@@ -1,14 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Button,
-  Text,
-  Select,
-  Portal,
-  createListCollection,
-  Combobox,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import type { Target } from "../../types/target";
 import PersonalInfo from "./components/PersonalInfo";
@@ -26,7 +16,6 @@ import type { BossReview } from "../../types/bossReview";
 import ConfirmDialog from "../../components/dialog/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
-import CreatableSelect from "react-select/creatable";
 import SelectOrCreateInput from "../../components/SelectOrCreateInput";
 
 export type SubmitEvaluationPayload = {

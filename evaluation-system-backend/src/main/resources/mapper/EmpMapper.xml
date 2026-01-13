@@ -195,10 +195,20 @@
 
         FROM emp E
                  LEFT JOIN boss_rev BR
-                           ON BR.emp_no = E.emp_no
+                           ON BR.emp_no = E.emp_no AND BR.form_subm_id IS NULL
                  LEFT JOIN emp B
                            ON B.emp_no = BR.boss_no
         WHERE E.del_flg = 'F'
+            <choose>
+                <when test="employeeNo != null and employeeNo != ''">
+                    AND E.emp_no = #{employeeNo}
+                </when>
+                <when test="employeeName != null and employeeName != ''">
+                    AND LOWER(E.emp_nm) LIKE CONCAT('%', LOWER(#{employeeName}), '%')
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
         GROUP BY
             E.emp_id,
             E.emp_no,
@@ -220,5 +230,41 @@
             AND E.emp_no  = #{employeeNo}
         </if>
     </select>
+
+    <select id="selectReviewingEmployee" resultType="com.clt.evaluation_system_backend.dto.response.ReviewingEmployeeResponse">
+        SELECT
+            E.emp_no AS employeeNo,
+            E.emp_nm AS employeeName,
+            FS.form_subm_status AS formSubmissionStatusDatabase,
+            FS.upd_dt AS reviewOn,
+            FS.rev_dt AS reviewDate,
+
+            STRING_AGG(
+                    BR2.boss_rev_role,
+                    ', '
+                        ORDER BY BR2.boss_rev_ord_no
+            ) AS reviewRoleRaw,
+            BR_CUR.boss_rev_role AS currentBossRole
+        FROM form_subm FS
+                 JOIN emp E
+                      ON E.emp_no = FS.emp_no
+                 JOIN boss_rev BR2
+                      ON BR2.form_subm_id = FS.form_subm_id
+                 JOIN boss_rev BR_CUR
+                      ON BR_CUR.form_subm_id = FS.form_subm_id
+                          AND BR_CUR.boss_no = #{bossNo}
+        WHERE FS.form_subm_status != 'FINAL'
+        GROUP BY
+            E.emp_no,
+            E.emp_nm,
+            FS.form_subm_status,
+            FS.upd_dt,
+            BR_CUR.boss_rev_role,
+            FS.rev_dt
+
+        ORDER BY E.emp_no;
+
+    </select>
+
 
 </mapper>

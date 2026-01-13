@@ -3,10 +3,12 @@ import AppCard from "../../components/AppCard";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import EvaluationProgressItem from "./components/EvaluationProgressItem";
+import type { AdminReviewingEmployeeQuery } from "../../api/adminEvaluationProgress";
+import { useAdminReviewingEmployee } from "../../hooks/useAdminReviewingEmployee";
 
 export interface EmployeeProgress {
   employeeName: string;
-  employeeNumber: string;
+  employeeNo: string;
   formSubmissionStatus: "REMIND" | "BOSS_REVIEWED" | "EMPLOYEED_REVIEWED";
   reviewOn?: string;
   reviewDueDate?: string;
@@ -15,51 +17,17 @@ export interface EmployeeProgress {
 const EvaluationProgressPage = () => {
   const navigate = useNavigate();
 
-  const mockData: EmployeeProgress[] = [
-    {
-      employeeName: "Tô Minh Nhật",
-      employeeNumber: "001",
-      formSubmissionStatus: "EMPLOYEED_REVIEWED",
-      reviewOn: "14/12/2025",
-    },
-    {
-      employeeName: "Hoàng Mạnh Hà",
-      employeeNumber: "002",
-      formSubmissionStatus: "REMIND",
-      reviewDueDate: "16/12/2025",
-    },
-    {
-      employeeName: "Nguyễn Thành Tài",
-      employeeNumber: "003",
-      formSubmissionStatus: "EMPLOYEED_REVIEWED",
-      reviewOn: "12/12/2025",
-    },
-    {
-      employeeName: "Bảo Thiên",
-      employeeNumber: "004",
-      formSubmissionStatus: "REMIND",
-      reviewDueDate: "16/12/2025",
-    },
-    {
-      employeeName: "Duy",
-      employeeNumber: "005",
-      formSubmissionStatus: "REMIND",
-      reviewDueDate: "16/12/2025",
-    },
-    {
-      employeeName: "Phú Gia",
-      employeeNumber: "006",
-      formSubmissionStatus: "BOSS_REVIEWED",
-      reviewOn: "15/12/2025",
-    },
-  ];
+  const adminReviewingEmployeeQuery: AdminReviewingEmployeeQuery = {
+    bossNo: "258400",
+  };
+  const { data } = useAdminReviewingEmployee(adminReviewingEmployeeQuery);
 
-  const handleReviewClick = (employeeNumber: string) => {
-    navigate(`/review/employee/${employeeNumber}`);
+  const handleReviewClick = (employeeNo: string) => {
+    navigate(`/review/employee/${employeeNo}`);
   };
 
-  const handleRemindClick = (employeeNumber: string) => {
-    console.log("Sending reminder to employee:", employeeNumber);
+  const handleRemindClick = (employeeNo: string) => {
+    console.log("Sending reminder to employee:", employeeNo);
   };
 
   return (
@@ -73,7 +41,7 @@ const EvaluationProgressPage = () => {
         </Flex>
       </Flex>
 
-      {mockData.length === 0 ? (
+      {data?.length === 0 ? (
         <Flex justifyContent="center" alignItems="center" minHeight="160px">
           <Text color={"fg.muted"}>Data not found</Text>
         </Flex>
@@ -87,12 +55,12 @@ const EvaluationProgressPage = () => {
           }}
           gap="24px"
         >
-          {mockData.map((employee) => (
+          {data?.map((employee) => (
             <EvaluationProgressItem
-              key={employee.employeeNumber}
+              key={employee.employeeNo}
               employeeProgress={employee}
-              onReviewClick={() => handleReviewClick(employee.employeeNumber)}
-              onRemindClick={() => handleRemindClick(employee.employeeNumber)}
+              onReviewClick={() => handleReviewClick(employee.employeeNo)}
+              onRemindClick={() => handleRemindClick(employee.employeeNo)}
             />
           ))}
         </Grid>

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 // import { useAuthStore } from "@/store/authStore";
 
 const protectedMenuListAll = [
@@ -31,10 +32,10 @@ type Props = {
 export const protectedMenuList = protectedMenuListAll;
 
 const ProtectedRoute = ({ menuKey, children }: Props) => {
-  //   const userMenus = useAuthStore((s) => s.menus);
   const userMenus = protectedMenuList;
-
-  if (!userMenus?.includes(menuKey)) {
+  // const userMenus = useAuthStore((state) => state.permissions);
+  console.log("userMenus: " + JSON.stringify(userMenus, null, 2));
+  if (!userMenus?.some((m) => m.toLowerCase() === menuKey.toLowerCase())) {
     return <Navigate to="/403" replace />;
   }
 

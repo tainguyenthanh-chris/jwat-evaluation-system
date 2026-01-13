@@ -5,6 +5,7 @@ import type { Employee } from "../types/employee";
 export interface AdminEmployeeQuery {
   employeeNo?: string;
   formSubmissionId?: string;
+  employeeName?: string;
 }
 
 export const getEmployee = async (

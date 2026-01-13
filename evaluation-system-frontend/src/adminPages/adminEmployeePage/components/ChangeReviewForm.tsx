@@ -18,8 +18,10 @@ import type { BossReviewQuery } from "../../../api/bossReviewApi";
 import { useBossReview } from "../../../hooks/useBossReview";
 import { useAdminEmployeeNameByEmployeeNo } from "../../../hooks/useAdminEmployee";
 import SelectOrCreateInput from "../../../components/SelectOrCreateInput";
+import type { EmployeeBackend } from "../../../types/emp";
+import { axiosInstant } from "../../../lib/axios";
+import { toaster } from "../../../components/ui/toaster";
 
-/** ===== UI TYPE (bossId ổn định cho React key) ===== */
 type BossReviewUI = Partial<BossReview> & {
   bossId: string;
 };
@@ -42,17 +44,14 @@ const roleOptions = [
 const ChangeReviewerForm: React.FC<Props> = ({ employee }) => {
   if (!employee) return null;
 
-  /** ===== QUERY ===== */
   const bossReviewQuery: BossReviewQuery = {
     employeeNo: employee.employeeNo,
   };
   const { data } = useBossReview(bossReviewQuery);
 
-  /** ===== LOCAL STATE ===== */
   const [bossList, setBossList] = useState<BossReviewUI[]>([]);
   const [selectedBossId, setSelectedBossId] = useState<string | null>(null);
 
-  /** ===== SYNC DATA (gắn bossId ổn định) ===== */
   useEffect(() => {
     if (data) {
       setBossList(
@@ -64,7 +63,6 @@ const ChangeReviewerForm: React.FC<Props> = ({ employee }) => {
     }
   }, [data]);
 
-  /** ===== ORDER HELPERS ===== */
   const normalizeOrder = (list: BossReviewUI[]): BossReviewUI[] =>
     [...list]
       .sort((a, b) => (a.bossReviewOrder ?? 0) - (b.bossReviewOrder ?? 0))
@@ -83,7 +81,6 @@ const ChangeReviewerForm: React.FC<Props> = ({ employee }) => {
     );
   };
 
-  /** ===== UPDATE HELPERS ===== */
   const updateBoss = (bossId: string, patch: Partial<BossReviewUI>) => {
     setBossList((prev) =>
       prev.map((b) => (b.bossId === bossId ? { ...b, ...patch } : b))
@@ -124,7 +121,6 @@ const ChangeReviewerForm: React.FC<Props> = ({ employee }) => {
     );
   };
 
-  /** ===== SEARCH BOSS NAME ===== */
   const [searchBossNo, setSearchBossNo] = useState("");
   const { data: bossInfo } = useAdminEmployeeNameByEmployeeNo({
     employeeNo: searchBossNo,
@@ -141,9 +137,40 @@ const ChangeReviewerForm: React.FC<Props> = ({ employee }) => {
   const handleSave = () => {
     console.log("SAVE DATA:", bossList);
     // TODO call mutation API
+    submitReviewerChange();
+  };
+  const selectedEmp: Partial<EmployeeBackend> = {
+    empNo: employee.employeeNo,
+    formSubm: null,
   };
 
-  /** ===== RENDER ===== */
+  const submitReviewerChange = async () => {
+    if (!selectedEmp) return;
+
+    const bossRevs = bossList.map((b) => ({
+      bossRevRole: b.bossReviewRole,
+      orderNo: b.bossReviewOrder,
+      bossEmpNo: b.bossNo,
+    }));
+
+    try {
+      await axiosInstant.put("/bossRev/update-batch", {
+        empNo: selectedEmp.empNo,
+        formSubmId: selectedEmp.formSubm?.formSubmId,
+        bossRevs,
+      });
+
+      // await onRefresh();
+      // setReviewerOpen(false);
+      toaster.create({
+        description: "Update reviewer successfully",
+        type: "success",
+      });
+    } catch {
+      alert("Failed to update reviewers");
+    }
+  };
+
   return (
     <Box>
       <Heading size="md" mb={4}>

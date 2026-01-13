@@ -52,8 +52,21 @@
     </insert>
 
 
-    <delete id="deleteBatchBossRev"> DELETE FROM boss_rev WHERE form_subm_id = #{formSubmId} AND
-        emp_no = #{empNo} </delete>
+    <delete id="deleteBatchBossRev">
+        DELETE
+            FROM boss_rev
+            WHERE emp_no = #{empNo}
+            <choose>
+                <when test="formSubmId != null">
+                    AND form_subm_id = #{formSubmId}
+                </when>
+                <otherwise>
+                    AND form_subm_id IS NULL
+                </otherwise>
+            </choose>
+
+
+    </delete>
 
     <insert id="insertBatch" parameterType="java.util.List">
         INSERT INTO boss_rev (
@@ -115,6 +128,8 @@
         FROM boss_rev BR
             LEFT JOIN emp E ON E.emp_no = BR.boss_no
         WHERE BR.del_flg ='F'
+            AND BR.form_subm_id IS NULL
+
             <if test="employeeNo != null">
                 AND BR.emp_no = #{employeeNo}
             </if>
