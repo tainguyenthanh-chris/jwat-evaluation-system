@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.RefreshTokenMapper">
+
+    <!-- ===================== -->
+    <!-- Result Map -->
+    <!-- ===================== -->
+    <resultMap id="RefreshTokenResultMap"
+        type="com.clt.evaluation_system_backend.model.RefreshToken">
+        <id property="refreshTokenId" column="refresh_token_id" />
+        <result property="token" column="token" />
+        <result property="expiryDate" column="expiry_date" />
+        <result property="userId" column="usr_id" />
+
+        <result property="createBy" column="cre_usr_id" />
+        <result property="createDate" column="cre_dt" />
+        <result property="updateBy" column="upd_usr_id" />
+        <result property="updateDate" column="upd_dt" />
+        <result property="deleteFlag" column="del_flg" />
+    </resultMap>
+
+    <!-- ===================== -->
+    <!-- findByToken -->
+    <!-- ===================== -->
+    <select id="findByToken"
+        parameterType="string"
+        resultMap="RefreshTokenResultMap"> SELECT refresh_token_id, token, expiry_date, usr_id,
+        cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM refresh_token WHERE token = #{token}
+        AND del_flg = 'F' </select>
+
+    <!-- ===================== -->
+    <!-- insert -->
+    <!-- ===================== -->
+    <insert id="insert"
+        parameterType="com.clt.evaluation_system_backend.model.RefreshToken"
+        useGeneratedKeys="true"
+        keyProperty="refreshTokenId"
+        keyColumn="refresh_token_id"> INSERT INTO refresh_token ( token, expiry_date, usr_id,
+        cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES ( #{token}, #{expiryDate},
+        #{userId}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate}, #{deleteFlag} ) </insert>
+
+    <!-- ===================== -->
+    <!-- deleteByUser -->
+    <!-- ===================== -->
+    <delete id="deleteByUser"
+        parameterType="com.clt.evaluation_system_backend.model.Usr"> DELETE FROM refresh_token WHERE
+        usr_id = #{userId} </delete>
+
+    <!-- ===================== -->
+    <!-- delete by refreshTokenId -->
+    <!-- ===================== -->
+    <delete id="delete"
+        parameterType="string"> DELETE FROM refresh_token WHERE refresh_token_id = #{refreshTokenId} </delete>
+
+    <delete id="deleteByToken" parameterType="string"> DELETE FROM refresh_token WHERE token =
+        #{refreshToken} </delete>
+</mapper>

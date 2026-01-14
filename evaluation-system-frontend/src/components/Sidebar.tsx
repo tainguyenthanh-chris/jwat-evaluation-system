@@ -17,11 +17,13 @@ import {
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import type { IconType } from "react-icons";
+import { useAuthStore } from "../store/authStore";
 
 interface SidebarChild {
   name: string;
   href: string;
   Icon?: IconType;
+  menuKey: string;
 }
 
 interface SidebarItemData {
@@ -29,6 +31,7 @@ interface SidebarItemData {
   Icon?: IconType;
   href?: string;
   children?: SidebarChild[];
+  menuKey?: string;
 }
 
 interface SidebarProps {
@@ -48,24 +51,54 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       name: "Home",
       Icon: FaHome,
       href: "/",
+      menuKey: "home",
     },
     {
       name: "Review",
       Icon: FaCheckDouble,
       href: "/review",
+      menuKey: "review",
     },
-    { name: "Form Builder", Icon: FaWpforms, href: "/form-builder" },
+    {
+      name: "Form Builder",
+      Icon: FaWpforms,
+      href: "/form-builder",
+      menuKey: "form-builder",
+    },
     {
       name: "Evaluation Progress",
       Icon: FaRegChartBar,
       href: "/evaluation-progress",
+      menuKey: "evaluation-progress",
     },
     {
-      name: "Employees",
+      name: "My Employee List",
       Icon: FaUsers,
-      href: "/employees-list",
+      href: "/my-employee-list",
+      menuKey: "my-employee-list",
+    },
+    {
+      name: "History",
+      Icon: FaUsers,
+      href: "/history",
+      menuKey: "history",
+    },
+    {
+      name: "Employee",
+      Icon: FaUsers,
+      href: "/admin/employee",
+      menuKey: "admin",
     },
   ];
+  const protectedMenuList = useAuthStore((state) => state.permissions);
+
+  const allowedSidebarItems = sidebarItems.filter(
+    (item) =>
+      !item.menuKey ||
+      protectedMenuList.some(
+        (p) => p.toLowerCase() === item.menuKey?.toLowerCase()
+      )
+  );
 
   const toggleGroup = (name: string): void => {
     setOpenGroups((prev) => ({ ...prev, [name]: !prev[name] }));
@@ -124,7 +157,7 @@ const Sidebar = ({ isSidebarOpen }: SidebarProps) => {
       overflowY="auto"
     >
       <Flex flexDirection="column" gap="8px">
-        {sidebarItems.map(renderItem)}
+        {allowedSidebarItems.map(renderItem)}
       </Flex>
     </Box>
   );

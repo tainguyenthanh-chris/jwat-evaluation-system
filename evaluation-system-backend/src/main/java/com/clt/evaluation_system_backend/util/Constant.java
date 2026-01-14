@@ -42,4 +42,9 @@ public class Constant {
     public static final String LEADER_ROLE = "leader";
     public static final String MEMBER_ROLE = "member";
 
+    public static final String[] ADMIN_PERMISSION = {"form-builder",
+            "admin", "admin/employee" };
+    public static final String[] MANAGER_PERMISSION = { "history", "review", "evaluation-progress", "my-employee-list" };
+    public static final String[] BOSS_PERMISSION = { "history", "review", "evaluation-progress", "my-employee-list" };
+    public static final String[] MANUAL_USER_PERMISSION = { "history", "review" };
 }

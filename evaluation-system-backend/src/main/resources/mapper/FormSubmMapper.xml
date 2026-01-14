@@ -3,6 +3,18 @@
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.FormSubmMapper">
 
+    <resultMap id="FormSubmitWithEmployeeResultMap" type="com.clt.evaluation_system_backend.dto.response.form.submit.FormSubmitWithEmployeeResponse">
+        <id property="formSubmitId" column="form_subm_id"/>
+        <result property="formId" column="form_id"/>
+        <result property="employeeId" column="emp_id"/>
+        <result property="employeeName" column="emp_nm"/>
+        <result property="employeeNumber" column="emp_no"/>
+        <result property="employeeEmail" column="emp_email"/>
+        <result property="reviewDate" column="rev_dt"/>
+        <result property="nextReviewDate" column="next_rev_dt"/>
+        <result property="formSubmitStatus" column="form_subm_status"/>
+    </resultMap>
+
     <!-- ===================== -->
     <!-- Target ResultMap -->
     <!-- ===================== -->
@@ -78,4 +90,77 @@
 
     <update id="updateFormId" parameterType="String">UPDATE form_subm SET form_id = #{formId} WHERE
         emp_id = #{empId} AND form_subm_status = 'PENDING' AND del_flg = 'F' </update>
+
+    <insert id="insertListFormSubmit" parameterType="java.util.List">
+        INSERT INTO form_subm (
+            form_subm_id,
+            form_id,
+            emp_id,
+            emp_nm,
+            emp_no,
+            emp_curr_dept_cd,
+            emp_curr_pos_cd,
+            emp_curr_lvl_cd,
+            rev_dt,
+            next_rev_dt,
+            form_subm_status,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.formSubmId},
+                    #{item.formId},
+                    #{item.empId},
+                    #{item.empNm},
+                    #{item.empNo},
+                    #{item.empCurrDeptCd},
+                    #{item.empCurrPosCd},
+                    #{item.empCurrLvlCd},
+                    #{item.revDt},
+                    #{item.nextRevDt},
+                    'PENDING',
+                    'SYSTEM',
+                    CURRENT_TIMESTAMP,
+                    'F'
+                )
+            </foreach>
+    </insert>
+
+    <select id="selectFormSubmitWithEmployeeByStatus" parameterType="string" resultMap="FormSubmitWithEmployeeResultMap">
+        SELECT
+            fs.form_subm_id,
+            fs.form_id,
+            fs.emp_id,
+            e.emp_nm,
+            e.emp_no,
+            e.emp_email,
+            fs.rev_dt,
+            fs.next_rev_dt,
+            fs.form_subm_status
+        FROM form_subm fs
+        JOIN emp e
+            ON e.emp_id = fs.emp_id
+            AND e.del_flg = 'F'
+        WHERE fs.form_subm_status = #{formSubmitStatus}
+          AND fs.del_flg = 'F'
+    </select>
+
+
+    <select id="selectProgressingFormSubmission" resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse">
+        SELECT
+            FS.form_subm_id AS formSubmissionId,
+            FS.form_subm_status AS submissionStatus
+        FROM form_subm FS
+                 JOIN emp E ON E.emp_no = FS.emp_no
+                 LEFT JOIN usr U ON u.usr_email = E.emp_email
+        WHERE
+            FS.form_subm_status != 'FINAL'
+          AND FS.del_flg = 'F'
+--           AND EXTRACT(YEAR FROM FS.rev_dt) = EXTRACT(YEAR FROM CURRENT_DATE)
+--           AND EXTRACT(MONTH FROM FS.rev_dt) = EXTRACT(MONTH FROM CURRENT_DATE)
+          AND U.usr_id = #{userId};
+    </select>
 </mapper>

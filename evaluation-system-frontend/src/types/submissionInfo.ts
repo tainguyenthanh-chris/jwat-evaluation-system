@@ -10,4 +10,5 @@ export interface SubmissionInfo {
   department: string;
   reviewers: Partial<BossReview>[];
   nextReviewDate: string;
+  submissionStatus: string
 }

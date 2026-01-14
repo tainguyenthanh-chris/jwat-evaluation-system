@@ -8,7 +8,7 @@ export const fetchEvaluationData = async (
   query: EvaluationQuery
 ): Promise<EvaluationData> => {
   const { data } = await axiosInstant.get<ApiResponse<EvaluationData>>(
-    "/form/submission/employeeNo",
+    "/form/submission",
     { params: query }
   );
   return data.data;
@@ -21,4 +21,14 @@ export const postEvaluation = async (
     "/form-subm",
     payload
   );
+};
+
+export const fetchProgressingEvaluation = async (
+  query: EvaluationQuery
+): Promise<EvaluationData> => {
+  const { data } = await axiosInstant.get<ApiResponse<EvaluationData>>(
+    "/emp/progressing-evaluation",
+    { params: query }
+  );
+  return data.data;
 };

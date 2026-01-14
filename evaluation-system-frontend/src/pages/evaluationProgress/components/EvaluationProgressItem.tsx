@@ -1,55 +1,94 @@
-import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import type { SubmissionInfo } from "../../../types/submissionInfo";
-import type { EvaluationProgressItem } from "../EvaluationProgressPage";
+import { Button, Card, Text } from "@chakra-ui/react";
+import type { EmployeeProgress } from "../EvaluationProgressPage";
 
-type Props = {
-  evaluationProgressItem: Partial<EvaluationProgressItem>;
-};
+interface EvaluationProgressItemProps {
+  employeeProgress: EmployeeProgress;
+  onReviewClick: () => void;
+  onRemindClick: () => void;
+}
 
-const EvaluationProgressItem: React.FC<Props> = ({
-  evaluationProgressItem,
-}) => {
-  if (!evaluationProgressItem) return;
-  const getBgColorByStatus = (value: string) => {
-    if (!value) return "gray.400";
-    switch (value) {
-      case "ALREADY":
-        return "#98ebb9";
-      case "CAN_REVIEW":
-        return "blue.600";
+const EvaluationProgressItem = ({
+  employeeProgress,
+  onReviewClick,
+  onRemindClick,
+}: EvaluationProgressItemProps) => {
+  const { employeeName, formSubmissionStatus, reviewOn, reviewDueDate } =
+    employeeProgress;
+
+  const getCardStyle = () => {
+    switch (formSubmissionStatus) {
+      case "EMPLOYEE_REVIEWED":
+        return {
+          borderColor: "#4CAF50",
+        };
+      case "BOSS_REVIEWED":
+        return {
+          borderColor: "#2196F3",
+        };
+      case "REMIND":
       default:
-        return "gray.400";
+        return {
+          borderColor: "#FF9800",
+        };
     }
   };
-  const getColorByStatus = (value: string) => {
-    if (!value) return "gray.400";
-    switch (value) {
-      case "ALREADY":
-        return "#98ebb9";
-      case "CAN_REVIEW":
-        return "blue.600";
-      default:
-        return "gray.400";
+
+  const renderButton = () => {
+    if (formSubmissionStatus === "EMPLOYEE_REVIEWED") {
+      return (
+        <Button
+          colorPalette={"green"}
+          size={"sm"}
+          onClick={onReviewClick}
+          width="full"
+        >
+          Review now
+        </Button>
+      );
+    } else if (formSubmissionStatus === "BOSS_REVIEWED") {
+      return <Text color={"fg.muted"}>You reviewd</Text>;
+    } else {
+      return (
+        <Button
+          colorPalette={"orange"}
+          size={"sm"}
+          onClick={onRemindClick}
+          width="full"
+        >
+          Remind
+        </Button>
+      );
     }
   };
+
+  const renderDateInfo = () => {
+    if (formSubmissionStatus === "REMIND") {
+      return (
+        <Text as="span" fontSize="sm" fontStyle="italic">
+          Due date: {reviewDueDate}
+        </Text>
+      );
+    }
+
+    return (
+      <Text as="span" fontSize="sm" fontStyle="italic">
+        Reviewed on: {reviewOn}
+      </Text>
+    );
+  };
+
   return (
-    <Box
-      border="1px solid"
-      borderColor="gray.300"
-      borderRadius="md"
-      overflow="hidden"
-      // bg={getBgColorByStatus(evaluationProgressItem?.status)}
-    >
-      <Text fontWeight="semibold" color="blue.700">
-        {evaluationProgressItem.employeeName}
-      </Text>
-      <Text fontWeight="semibold" color="blue.700">
-        {evaluationProgressItem.reviewDate}
-      </Text>
-      {/* <Text fontWeight="semibold" color="blue.700">
-        {evaluationProgressItem.}
-      </Text> */}
-    </Box>
+    <Card.Root {...getCardStyle()}>
+      <Card.Body gap="2">
+        <Card.Title mt="2" fontSize="lg" fontWeight="bold">
+          {employeeName}
+        </Card.Title>
+        <Card.Description>{renderDateInfo()}</Card.Description>
+      </Card.Body>
+      <Card.Footer justifyContent="center" pt="0">
+        {renderButton()}
+      </Card.Footer>
+    </Card.Root>
   );
 };
 

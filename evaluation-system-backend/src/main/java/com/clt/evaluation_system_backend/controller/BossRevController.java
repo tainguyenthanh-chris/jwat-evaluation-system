@@ -1,15 +1,18 @@
 package com.clt.evaluation_system_backend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.clt.evaluation_system_backend.dto.request.BossRevRequest;
+import com.clt.evaluation_system_backend.dto.request.CriteriaRequest;
+import com.clt.evaluation_system_backend.dto.response.BossReviewResponse;
+import com.clt.evaluation_system_backend.dto.response.CriteriaResponse;
+import org.springframework.web.bind.annotation.*;
 
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,4 +28,16 @@ public class BossRevController {
         bossRevService.updateBatchBossRev(request);
         return ApiResponse.success("Updated boss reviewers for form submit success!");
     }
+
+    @GetMapping("")
+    public ResponseEntity<?> get(BossRevRequest request) {
+        List<BossReviewResponse> res = bossRevService.get(request);
+        return ApiResponse.ok(res);
+    }
+
+//    @PutMapping("")
+//    public ResponseEntity<?> update(@RequestBody List<BossRevRequest> request) {
+//        int re = bossRevService.create(request);
+//        return ApiResponse.success(re + " were inserted to database");
+//    }
 }

@@ -1,7 +1,6 @@
 package com.clt.evaluation_system_backend.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.clt.evaluation_system_backend.annotation.SeqTable;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @SeqTable("emp")
 public class Emp {
-
     private String empId;
     private String empNm;
     private String empNo;
@@ -26,6 +24,9 @@ public class Emp {
     private Double salaryLvl;
     private String teamId;
     private String empStatusCd;
+
+    private LocalDateTime last_rev_dt;
+    private LocalDateTime next_rev_dt;
 
     private String creUsrId;
     private LocalDateTime creDt;

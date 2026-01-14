@@ -1,0 +1,76 @@
+-- ALTER TABLE emp
+--     ADD COLUMN last_rev_dt DATE NULL,
+--     ADD COLUMN next_rev_dt DATE NULL;
+--
+-- INSERT INTO emp (
+--     emp_id,
+--     emp_nm,
+--     emp_no,
+--     emp_email,
+--     dept_cd,
+--     pos_cd,
+--     lvl_cd,
+--     emp_status_cd,
+--     last_rev_dt,
+--     next_rev_dt
+-- ) VALUES
+-- -- ================= EMPLOYEE =================
+-- ('EMP001', 'Nguyen Van A', 'E001', 'e001@company.com', 'IT', 'DEV', 'L1', 'ACTIVE',
+--  '2024-01-10', '2026-01-15'),
+--
+-- ('EMP002', 'Nguyen Van B', 'E002', 'e002@company.com', 'IT', 'DEV', 'L2', 'ACTIVE',
+--  '2024-02-01', '2026-01-20'),
+--
+-- ('EMP003', 'Tran Thi C', 'E003', 'e003@company.com', 'HR', 'HR_EXEC', 'L1', 'ACTIVE',
+--  '2024-03-01', '2026-01-10'),
+--
+-- ('EMP004', 'Le Van D', 'E004', 'e004@company.com', 'HR', 'HR_EXEC', 'L2', 'ACTIVE',
+--  '2024-04-01', '2025-12-01'), -- ❌ KHÔNG trigger (tháng khác)
+--
+-- ('EMP005', 'Pham Thi E', 'E005', 'e005@company.com', 'FIN', 'ACC', 'L1', 'ACTIVE',
+--  '2024-01-01', '2026-01-05'),
+--
+-- -- ================= BOSSES =================
+-- ('EMP006', 'Boss IT Lead', 'B001', 'b001@company.com', 'IT', 'LEAD', 'L3', 'ACTIVE',
+--  '2024-01-01', NULL),
+--
+-- ('EMP007', 'Boss IT Manager', 'B002', 'b002@company.com', 'IT', 'MANAGER', 'L4', 'ACTIVE',
+--  '2024-01-01', NULL),
+--
+-- ('EMP008', 'Boss HR Lead', 'B003', 'b003@company.com', 'HR', 'LEAD', 'L3', 'ACTIVE',
+--  '2024-01-01', NULL),
+--
+-- ('EMP009', 'Boss HR Director', 'B004', 'b004@company.com', 'HR', 'DIRECTOR', 'L5', 'ACTIVE',
+--  '2024-01-01', NULL),
+--
+-- ('EMP010', 'Boss Finance', 'B005', 'b005@company.com', 'FIN', 'MANAGER', 'L4', 'ACTIVE',
+--  '2024-01-01', NULL);
+--
+--
+-- INSERT INTO boss_rev (
+--     form_subm_id,
+--     emp_no,
+--     boss_no,
+--     boss_rev_role,
+--     boss_rev_ord_no,
+--     isFinal
+-- ) VALUES
+-- -- ===== E001 =====
+-- (NULL, 'E001', 'B001', 'DIRECT_MANAGER', 1, 'F'),
+-- (NULL, 'E001', 'B002', 'DEPARTMENT_MANAGER', 2, 'T'),
+--
+-- -- ===== E002 =====
+-- (NULL, 'E002', 'B001', 'DIRECT_MANAGER', 1, 'F'),
+-- (NULL, 'E002', 'B002', 'DEPARTMENT_MANAGER', 2, 'T'),
+--
+-- -- ===== E003 =====
+-- (NULL, 'E003', 'B003', 'DIRECT_MANAGER', 1, 'F'),
+-- (NULL, 'E003', 'B004', 'HR_DIRECTOR', 2, 'T'),
+--
+-- -- ===== E004 (won’t be picked – next_rev_dt khác tháng) =====
+-- (NULL, 'E004', 'B003', 'DIRECT_MANAGER', 1, 'T'),
+--
+-- -- ===== E005 =====
+-- (NULL, 'E005', 'B005', 'FINANCE_MANAGER', 1, 'T');
+--
+--

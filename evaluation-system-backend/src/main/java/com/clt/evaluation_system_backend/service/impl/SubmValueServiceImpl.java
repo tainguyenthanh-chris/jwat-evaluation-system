@@ -14,16 +14,10 @@ import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
 import com.clt.evaluation_system_backend.dto.request.NewTargetDto;
 import com.clt.evaluation_system_backend.dto.request.SubmissionValueDto;
 import com.clt.evaluation_system_backend.dto.response.FormSubmResponse;
-import com.clt.evaluation_system_backend.mapper.BossRevMapper;
-import com.clt.evaluation_system_backend.mapper.EmpMapper;
 import com.clt.evaluation_system_backend.mapper.FormSubmMapper;
 import com.clt.evaluation_system_backend.mapper.SubmValueMapper;
 import com.clt.evaluation_system_backend.mapper.TargetMapper;
-import com.clt.evaluation_system_backend.mapper.UsrMapper;
-import com.clt.evaluation_system_backend.model.BossRev;
-import com.clt.evaluation_system_backend.model.Emp;
 import com.clt.evaluation_system_backend.model.Target;
-import com.clt.evaluation_system_backend.model.Usr;
 import com.clt.evaluation_system_backend.service.SubmValueService;
 import com.clt.evaluation_system_backend.util.CommonMethods;
 import com.clt.evaluation_system_backend.util.TargetStatusEnum;
@@ -39,15 +33,6 @@ public class SubmValueServiceImpl implements SubmValueService {
 
     @Autowired
     private TargetMapper targetMapper;
-
-    @Autowired
-    private EmpMapper empMapper;
-
-    @Autowired
-    private UsrMapper usrMapper;
-
-    @Autowired
-    private BossRevMapper bossRevMapper;
 
     @Transactional
     @Override

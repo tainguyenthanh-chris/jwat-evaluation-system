@@ -2,6 +2,8 @@ package com.clt.evaluation_system_backend.service.impl;
 
 import java.util.List;
 
+import com.clt.evaluation_system_backend.dto.request.BossRevRequest;
+import com.clt.evaluation_system_backend.dto.response.BossReviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,11 @@ public class BossRevServiceImpl implements BossRevService {
         }
 
         bossRevMapper.insertBatchBossRev(request.getBossRevs(), request.getFormSubmId(), request.getEmpNo());
+    }
+
+    @Override
+    public List<BossReviewResponse> get(BossRevRequest request) {
+        return bossRevMapper.select(request);
     }
 
 }

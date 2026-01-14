@@ -2,18 +2,15 @@ package com.clt.evaluation_system_backend.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.clt.evaluation_system_backend.mapper.LoggedOutTokenMapper;
 import com.clt.evaluation_system_backend.model.SysRole;
 import com.clt.evaluation_system_backend.model.Usr;
-import com.clt.evaluation_system_backend.service.UsrService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -27,11 +24,9 @@ import com.nimbusds.jwt.SignedJWT;
 
 @Service
 public class JwtService {
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UsrService usrService;
+    private LoggedOutTokenMapper loggedOutTokenMapper;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -52,6 +47,7 @@ public class JwtService {
                 .subject(usr.getUsrId())
                 .claim("email", usr.getUsrEmail())
                 .claim("roles", roles)
+                .jwtID(UUID.randomUUID().toString())
                 .issuer(jwtIssuer)
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -66,31 +62,35 @@ public class JwtService {
         } catch (JOSEException e) {
             throw new RuntimeException("Error signing JWT", e);
         }
+
     }
 
-    public boolean isTokenValid(String token) {
+    public boolean introspectToken(String token) {
+        boolean isValid = true;
+        try {
+            this.verifyToken(token);
+        } catch (Exception e) {
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    public SignedJWT verifyToken(String token) {
         try {
             JWSVerifier verifier = new MACVerifier(secretKey.getBytes(StandardCharsets.UTF_8));
             SignedJWT signedJWT = SignedJWT.parse(token);
+            boolean verified = signedJWT.verify(verifier);
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-            var verified = signedJWT.verify(verifier);
-            return verified && expirationTime.after(new Date());
+            if (!verified && expirationTime.after(new Date())) {
+                throw new RuntimeException("Invalid token signature");
+            }
+            if (loggedOutTokenMapper.findByTokenId(signedJWT.getJWTClaimsSet().getJWTID()) != null) {
+                throw new RuntimeException("Token has been logged out");
+            }
+            return signedJWT;
         } catch (Exception e) {
-            return false;
+            throw new RuntimeException("Error verifying token", e);
         }
 
     }
-
-    public String loginHandle(String email, String rawPassword) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, rawPassword);
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        if (authentication == null) {
-            throw new RuntimeException("Authentication failed for user: " + email);
-        }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        Usr usr = usrService.findByEmail(email);
-
-        return generateToken(usr);
-    }
-
 }

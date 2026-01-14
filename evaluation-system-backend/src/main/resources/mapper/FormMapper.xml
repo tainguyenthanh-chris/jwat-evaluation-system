@@ -132,7 +132,7 @@
                 </if>
             </when>
             <otherwise>
-                FS.form_subm_id = #{formSubmissonId}
+                FS.form_subm_id = #{formSubmissionId}
             </otherwise>
         </choose>
 
@@ -175,4 +175,31 @@
     <select id="selectAllForms" resultMap="FormResultMap"> SELECT form_id, form_title, form_ver,
         dept_cd, pos_cd, lvl_cd, form_status, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM
         form WHERE del_flg = 'F' ORDER BY cre_dt DESC </select>
+
+    <insert id="insertForm" parameterType="com.clt.evaluation_system_backend.model.Form">
+        INSERT INTO form (
+            form_id,
+            form_title,
+            form_ver,
+            dept_cd,
+            pos_cd,
+            lvl_cd,
+            form_status,
+            cre_usr_id,
+            cre_dt,
+            del_flg
+        )
+        VALUES (
+            #{formId},
+            #{formTitle},
+            1,
+            #{deptCd},
+            #{posCd},
+            #{lvlCd},
+            'NEW',
+            #{creUsrId},
+            CURRENT_TIMESTAMP,
+            'F'
+        )
+    </insert>
 </mapper>

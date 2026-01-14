@@ -26,10 +26,11 @@ public class SubmissionDataResponse {
     private List<BossReview> reviewBy;
     private List<Target> newTargetList = new ArrayList<>();
     private List<Target> currentTargetList = new ArrayList<>();
+    private String revRoleList;
 
-    public void setTargetList(List<Target> targetList) {
+    public void setTargetList(List<Target> targetList,String formSubmissionId) {
         for(Target target : targetList) {
-            if("NEW".equalsIgnoreCase(target.getTargetStatus())) {
+            if(formSubmissionId.equalsIgnoreCase(target.getFormSubmissionId())) {
                 newTargetList.add(target);
             } else {
                 currentTargetList.add(target);

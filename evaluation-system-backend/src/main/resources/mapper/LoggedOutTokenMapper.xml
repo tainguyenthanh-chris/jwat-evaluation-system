@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.LoggedOutTokenMapper">
+
+    <!-- ResultMap -->
+    <resultMap id="LoggedOutTokenResultMap"
+        type="com.clt.evaluation_system_backend.model.LoggedOutToken">
+        <id property="tokenId" column="token_id" />
+        <result property="expiryDate" column="expiry_date" />
+        <result property="creUsrId" column="cre_usr_id" />
+        <result property="creDt" column="cre_dt" />
+        <result property="updUsrId" column="upd_usr_id" />
+        <result property="updDt" column="upd_dt" />
+        <result property="delFlg" column="del_flg" />
+    </resultMap>
+
+    <!-- Insert -->
+    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.LoggedOutToken">
+        INSERT INTO logged_out_token ( token_id, expiry_date, cre_usr_id, upd_usr_id, del_flg )
+        VALUES ( #{tokenId}, #{expiryDate}, #{creUsrId}, #{updUsrId}, #{delFlg} ) </insert>
+
+    <!-- Find by token id (not deleted) -->
+    <select id="findByTokenId"
+        parameterType="string"
+        resultMap="LoggedOutTokenResultMap"> SELECT token_id, expiry_date, cre_usr_id, cre_dt,
+        upd_usr_id, upd_dt, del_flg FROM logged_out_token WHERE token_id = #{tokenId} AND del_flg =
+        'F' </select>
+
+</mapper>

@@ -2,13 +2,13 @@ package com.clt.evaluation_system_backend.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FormTmplResponse extends BaseResponse {
     private String id;
@@ -22,7 +22,7 @@ public class FormTmplResponse extends BaseResponse {
 
     public void addSectionData(SecResponse section) {
         System.out.println("Add section data: " + section.getSectionId());
-        if(!sectionData.containsKey(section.getSectionId())) {
+        if (!sectionData.containsKey(section.getSectionId())) {
             sectionData.put(section.getSectionId(), section);
         }
     }

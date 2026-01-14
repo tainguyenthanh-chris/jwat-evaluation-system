@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.clt.evaluation_system_backend.mapper.SumSubmMapper">
+    <select id="select" resultType="com.clt.evaluation_system_backend.dto.response.SummaryTableResponse">
+        SELECT
+            FS.rev_dt AS reviewDate,
+            FS.form_subm_id AS formSubmissionId,
+            FS.form_subm_status AS formSubmissionStatus,
+            STRING_AGG(
+            SS.sec_title || ':' || SS.sum_point,
+            ', '
+            ORDER BY SS.sum_order_no
+            ) AS summaryDataRaw
+        FROM form_subm FS
+        LEFT JOIN sum_subm SS ON SS.form_subm_id = FS.form_subm_id
+        WHERE SS.del_flg = 'F'
+            AND FS.del_flg = 'F'
+        <if test="employeeNo != null">
+            AND FS.emp_no = #{employeeNo}
+        </if>
+        GROUP BY FS.rev_dt, FS.form_subm_id
+        ORDER BY FS.rev_dt DESC
+    </select>
+
+
+
+</mapper>

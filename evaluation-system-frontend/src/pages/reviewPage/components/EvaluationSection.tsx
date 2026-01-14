@@ -26,7 +26,22 @@ type Props = {
   submissionValueMap?: SubmissionValueMap;
   newTargetList?: Partial<Target>[];
   currentTargetList?: Partial<Target>[];
+  mode?: "REVIEW" | "HISTORY";
   // summarySubmissionList?: Partial<SummarySubmission>[];
+};
+
+export const calcGrade = (
+  point: number | string | null
+): "S" | "A" | "B" | "C" | "GRADE" => {
+  const value =
+    typeof point === "number" ? point : point !== null ? Number(point) : NaN;
+
+  if (!Number.isFinite(value)) return "GRADE";
+
+  if (value >= 9) return "S";
+  if (value >= 7.5) return "A";
+  if (value >= 4) return "B";
+  return "C";
 };
 
 const EvaluationSection = forwardRef<SectionRef, Props>(
@@ -38,6 +53,7 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
       newTargetList,
       currentTargetList,
       // summarySubmissionList,
+      mode,
     },
     ref
   ) => {
@@ -94,6 +110,7 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
     const config = section.config;
 
     const checkRole = (allowedRole: string) => {
+      if (mode === "HISTORY") return true;
       if (!role) return false;
       return role.includes(allowedRole);
     };
@@ -185,16 +202,6 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
       );
     })();
 
-    const calcGrade = (
-      point: number | null
-    ): "A" | "B" | "C" | "D" | "GRADE" => {
-      if (point === null) return "GRADE";
-      if (point >= 9) return "A";
-      if (point >= 8) return "B";
-      if (point >= 6.5) return "C";
-      return "D";
-    };
-
     const hasEmptyPointInput = (): boolean => {
       if (config?.configType !== "POINT") return false;
       if (!section.criteriaList?.length) return false;
@@ -247,12 +254,6 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                 {" "}
                 <Flex align="center" flex={1}>
                   <Text>{section.sectionTitle}</Text>
-                  {/* <Box w="1px" h="14px" bg="gray.400" mx="20px" /> */}
-                  {/* <Text mx={"20px"} bg="blue.50">
-                  GRADE
-                </Text>
-                <Box w="1px" h="14px" bg="gray.400" mx="20px" />
-                <Text mx={"20px"}>AVG</Text> */}
                 </Flex>
                 <Box w="1px" h="14px" bg="gray.400" mx="20px" />
                 {config?.configRoleList?.map((role, index) => (
@@ -311,6 +312,19 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                       const value = valueItem.formSubmissionValue ?? "";
                       const submissionValueId =
                         valueItem.submissionValueId ?? null;
+                      if (mode === "HISTORY") {
+                        return (
+                          <Text
+                            key={key}
+                            w="90px"
+                            mx="5px"
+                            textAlign="center"
+                            fontWeight="medium"
+                          >
+                            {value !== "" ? value : "__"}
+                          </Text>
+                        );
+                      }
                       return (
                         <NumberInput.Root
                           key={key}
@@ -341,16 +355,26 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                         </NumberInput.Root>
                       );
                     })}
-
-                    <Input
-                      w="90px"
-                      size="sm"
-                      textAlign="center"
-                      fontWeight="bold"
-                      readOnly={true}
-                      placeholder="Final"
-                      value={finalValue}
-                    />
+                    {mode === "HISTORY" ? (
+                      <Text
+                        w="90px"
+                        mx="5px"
+                        textAlign="center"
+                        fontWeight="medium"
+                      >
+                        {finalValue !== "" ? finalValue : "__"}
+                      </Text>
+                    ) : (
+                      <Input
+                        w="90px"
+                        size="sm"
+                        textAlign="center"
+                        fontWeight="bold"
+                        readOnly={true}
+                        placeholder="Final"
+                        value={finalValue}
+                      />
+                    )}
                   </Flex>
                 );
               })}
@@ -378,6 +402,7 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                         key={item.targetId}
                         item={item}
                         onChangeStatus={handleUpdateTargetStatus}
+                        mode={mode}
                       />
                     ))}
                   </Box>
@@ -395,29 +420,32 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                         key={index}
                         item={item}
                         onDelete={handleDeleteNewTarget}
+                        mode={mode}
                       />
                     ))}
-                    <Flex justify="center" align="center" ml={"20px"}>
-                      <Input
-                        ref={newTargetInputRef}
-                        flex={1}
-                        size="sm"
-                        placeholder="Enter new target"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleAddNewTarget();
-                          }
-                        }}
-                      />
-                      <Button
-                        bg="yellow.400"
-                        ml={"20px"}
-                        onClick={handleAddNewTarget}
-                      >
-                        Add new Target
-                      </Button>
-                    </Flex>
+                    {mode !== "HISTORY" && (
+                      <Flex justify="center" align="center" ml={"20px"}>
+                        <Input
+                          ref={newTargetInputRef}
+                          flex={1}
+                          size="sm"
+                          placeholder="Enter new target"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddNewTarget();
+                            }
+                          }}
+                        />
+                        <Button
+                          bg="yellow.400"
+                          ml={"20px"}
+                          onClick={handleAddNewTarget}
+                        >
+                          Add new Target
+                        </Button>
+                      </Flex>
+                    )}
                   </Box>
                 </Flex>
               ))}
@@ -441,6 +469,22 @@ const EvaluationSection = forwardRef<SectionRef, Props>(
                   {};
                 const value = valueItem.formSubmissionValue ?? "";
                 const submissionValueId = valueItem.submissionValueId ?? null;
+                if (mode === "HISTORY") {
+                  return (
+                    <Text
+                      key={key}
+                      w="90px"
+                      mx="5px"
+                      textAlign="center"
+                      fontWeight="medium"
+                      whiteSpace="normal"
+                      wordBreak="break-word"
+                      mb={"40px"}
+                    >
+                      {value !== "" ? value : "__"}
+                    </Text>
+                  );
+                }
                 return (
                   <Textarea
                     key={role}

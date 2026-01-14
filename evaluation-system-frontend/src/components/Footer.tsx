@@ -10,7 +10,7 @@ const Footer = () => {
       backgroundColor="bg.panel"
       shadow="sm"
     >
-      <ContainerFluid>THIS IS FOOTER</ContainerFluid>
+      <ContainerFluid>Cyberlogitec</ContainerFluid>
     </Box>
   );
 };

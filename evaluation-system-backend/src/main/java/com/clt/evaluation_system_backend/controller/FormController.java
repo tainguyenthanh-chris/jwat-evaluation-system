@@ -3,7 +3,6 @@ package com.clt.evaluation_system_backend.controller;
 import com.clt.evaluation_system_backend.dto.request.FormRequest;
 import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
 import com.clt.evaluation_system_backend.dto.request.form.CreateFormTemplateRequest;
-import com.clt.evaluation_system_backend.dto.request.section.CreateSecRequest;
 import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.response.ApiResponse;
 import com.clt.evaluation_system_backend.dto.response.FormTmplResponse;
@@ -63,10 +62,10 @@ public class FormController {
         return ApiResponse.success(rows + " are inserted successfully");
     }
 
-    @GetMapping("/submission/employeeNo")
-    public ResponseEntity<?> getSubmissionDataByEmployee(SubmissionDataRequest request) {
-        System.out.println("/submission/employeeNo");
-        SubmissionDataResponse response = formService.getSubmissionDataByEmployeeNo(request);
+    @GetMapping("/submission")
+    public ResponseEntity<?> getSubmissionData(SubmissionDataRequest request) {
+        System.out.println("/submission: " + request.toString());
+        SubmissionDataResponse response = formService.getSubmissionData(request);
         return ApiResponse.ok(response);
     }
 

@@ -24,6 +24,19 @@
         <result property="delFlg" column="del_flg" />
     </resultMap>
 
+    <resultMap id="EmpWithFormResultMap" type="com.clt.evaluation_system_backend.dto.response.employee.EmployeeWithFormResponse">
+        <result property="employeeId" column="emp_Id"/>
+        <result property="employeeNumber" column="emp_no"/>
+        <result property="employeeName"   column="emp_nm"/>
+        <result property="employeeEmail"   column="emp_email"/>
+        <result property="departmentCode" column="dept_cd"/>
+        <result property="positionCode" column="pos_cd"/>
+        <result property="levelCode" column="lvl_cd"/>
+        <result property="nextReviewDate" column="next_rev_dt"/>
+        <result property="salaryLevel" column="salary_lvl"/>
+        <result property="formId"         column="form_id"/>
+    </resultMap>
+
     <select id="findByEmail"
         parameterType="string"
         resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd,
@@ -132,8 +145,136 @@
         br2.form_subm_id = fs.form_subm_id AND br2.boss_no = #{bossNo} AND br2.del_flg = 'F' ) ORDER
         BY e.emp_no, br.boss_rev_ord_no; </select>
 
-
     <select id="findAll" resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email,
         comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id,
         cre_dt, upd_usr_id, upd_dt, del_flg FROM emp WHERE del_flg = 'F' ORDER BY emp_no ;</select>
+
+    <select id="selectEmployeesForNextReviewWithForm" resultMap="EmpWithFormResultMap">
+        SELECT
+            e.emp_id,
+            e.emp_no,
+            e.emp_nm,
+            e.emp_email,
+            e.dept_cd,
+            e.pos_cd,
+            e.lvl_cd,
+            e.next_rev_dt,
+            e.salary_lvl,
+            f.form_id
+        FROM emp e
+        LEFT JOIN form f
+            ON f.form_id = (
+                SELECT f2.form_id
+                FROM form f2
+                WHERE f2.del_flg = 'F'
+                    AND f2.form_status != 'OLD'
+                    AND f2.dept_cd = e.dept_cd
+                    AND f2.pos_cd  = e.pos_cd
+                    AND f2.lvl_cd  = e.lvl_cd
+                    LIMIT 1
+            )
+        WHERE e.del_flg = 'F'
+          AND e.emp_status_cd = 'ACTIVE'
+          AND e.next_rev_dt IS NOT NULL
+          AND DATE_TRUNC('month', e.next_rev_dt) = DATE_TRUNC('month', CURRENT_DATE + INTERVAL '1 month')
+        ORDER BY e.emp_no
+    </select>
+
+    <select id="selectForAdm" resultType="com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse">
+        SELECT
+            E.emp_id    AS employeeId,
+            E.emp_no    AS employeeNo,
+            E.emp_nm    AS employeeName,
+            E.emp_email AS employeeEmail,
+            E.dept_cd || '-' || E.pos_cd || '-' || E.lvl_cd AS employeeInfo,
+            STRING_AGG(
+                    BR.boss_no || '-' || B.emp_nm,
+                    ', '
+                        ORDER BY BR.boss_rev_ord_no ASC
+            ) AS reviewByListRaw
+
+        FROM emp E
+                 LEFT JOIN boss_rev BR
+                           ON BR.emp_no = E.emp_no AND BR.form_subm_id IS NULL
+                 LEFT JOIN emp B
+                           ON B.emp_no = BR.boss_no
+        WHERE E.del_flg = 'F'
+            <choose>
+                <when test="employeeNo != null and employeeNo != ''">
+                    AND E.emp_no = #{employeeNo}
+                </when>
+                <when test="employeeName != null and employeeName != ''">
+                    AND LOWER(E.emp_nm) LIKE CONCAT('%', LOWER(#{employeeName}), '%')
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+        GROUP BY
+            E.emp_id,
+            E.emp_no,
+            E.emp_nm,
+            E.emp_email,
+            E.dept_cd,
+            E.pos_cd,
+            E.lvl_cd
+        ORDER BY E.emp_no;
+    </select>
+
+    <select id="selectByNo" resultType="com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse">
+        SELECT
+            E.emp_no    AS employeeNo,
+            E.emp_nm    AS employeeName
+        FROM emp E
+        WHERE E.del_flg = 'F'
+        <if test="employeeNo != null">
+            AND E.emp_no  = #{employeeNo}
+        </if>
+    </select>
+
+    <select id="selectReviewingEmployee" resultType="com.clt.evaluation_system_backend.dto.response.ReviewingEmployeeResponse">
+        SELECT
+            E.emp_no AS employeeNo,
+            E.emp_nm AS employeeName,
+            FS.form_subm_status AS formSubmissionStatusDatabase,
+            FS.upd_dt AS reviewOn,
+            FS.rev_dt AS reviewDate,
+
+            STRING_AGG(
+                    BR2.boss_rev_role,
+                    ', '
+                        ORDER BY BR2.boss_rev_ord_no
+            ) AS reviewRoleRaw,
+            BR_CUR.boss_rev_role AS currentBossRole
+        FROM form_subm FS
+                 JOIN emp E
+                      ON E.emp_no = FS.emp_no
+                 JOIN boss_rev BR2
+                      ON BR2.form_subm_id = FS.form_subm_id
+                 JOIN boss_rev BR_CUR
+                      ON BR_CUR.form_subm_id = FS.form_subm_id
+                          AND BR_CUR.boss_no = #{bossNo}
+        WHERE FS.form_subm_status != 'FINAL'
+        GROUP BY
+            E.emp_no,
+            E.emp_nm,
+            FS.form_subm_status,
+            FS.upd_dt,
+            BR_CUR.boss_rev_role,
+            FS.rev_dt
+
+        ORDER BY E.emp_no;
+
+    </select>
+
+    <select id="selectEmployeeNoByUserId" resultType="String">
+        SELECT
+            E.emp_no AS employeeNo
+            FROM emp E
+            LEFT JOIN usr U ON U.usr_email = E.emp_email
+            WHERE U.usr_id  = #{userId}
+
+
+    </select>
+
+
 </mapper>
