@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS sec_cue;
-
-CREATE TABLE sec_cue (
-     sec_cue_id BIGSERIAL PRIMARY KEY,
-     sec_id VARCHAR(30) NOT NULL,
-     cue_cd VARCHAR(30) NOT NULL,
-     del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
-);
+-- DROP TABLE IF EXISTS sec_cue;
+--
+-- CREATE TABLE sec_cue (
+--      sec_cue_id BIGSERIAL PRIMARY KEY,
+--      sec_id VARCHAR(30) NOT NULL,
+--      cue_cd VARCHAR(30) NOT NULL,
+--      del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+-- );

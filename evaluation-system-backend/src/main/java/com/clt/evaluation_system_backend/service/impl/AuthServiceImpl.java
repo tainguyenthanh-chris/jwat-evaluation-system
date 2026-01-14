@@ -112,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
         if (roles.contains("ROLE_ADMIN")) {
             permissions = Arrays.asList(Constant.ADMIN_PERMISSION);
         } else if (roles.contains("ROLE_MANAGER")) {
-            permissions = Arrays.asList(Constant.MANAGER_PERMISSION);
+            permissions = Arrays.asList(Constant.BOSS_PERMISSION);
         } else {
             permissions = Arrays.asList(Constant.MANUAL_USER_PERMISSION);
         }

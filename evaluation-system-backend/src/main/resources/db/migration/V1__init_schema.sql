@@ -93,21 +93,21 @@ CREATE TABLE dept (
 
 -- team definition
 -- DROP TABLE team;
-CREATE TABLE team (
-                      team_id VARCHAR(30) PRIMARY KEY ,
-                      team_nm VARCHAR(100),
-                      team_cd VARCHAR(10) NOT NULL,
-                      leader_id VARCHAR(30),
-                      manager_id VARCHAR(30),
-                      dept_id VARCHAR(30),
-                      parent_id VARCHAR(30) NULL,
-
-                      cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
-                      cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                      upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
-                      upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-                      del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
-);
+-- CREATE TABLE team (
+--                       team_id VARCHAR(30) PRIMARY KEY ,
+--                       team_nm VARCHAR(100),
+--                       team_cd VARCHAR(10) NOT NULL,
+--                       leader_id VARCHAR(30),
+--                       manager_id VARCHAR(30),
+--                       dept_id VARCHAR(30),
+--                       parent_id VARCHAR(30) NULL,
+--
+--                       cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
+--                       cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+--                       upd_usr_id VARCHAR(30)  NOT NULL DEFAULT 'default',
+--                       upd_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+--                       del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
+-- );
 
 -- emp definition
 -- DROP TABLE emp;
@@ -122,6 +122,8 @@ CREATE TABLE emp (
                     lvl_cd VARCHAR(10),
                     salary_lvl float8 DEFAULT 0,
                     team_id VARCHAR(30),
+                    last_rev_dt DATE,
+                    next_rev_dt DATE,
                     emp_status_cd VARCHAR(10) NOT NULL DEFAULT 'ACTIVE',
                     cre_usr_id VARCHAR(30) NOT NULL DEFAULT 'default',
                     cre_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -260,12 +262,11 @@ CREATE TABLE subm_value (
 
 );
 
-
-
 CREATE TABLE sec_cue (
-                         id BIGSERIAL PRIMARY KEY,
+                         sec_cue_id BIGSERIAL PRIMARY KEY,
                          sec_id VARCHAR(30) NOT NULL,
-                         object_cd_list JSONB DEFAULT '[]'::jsonb
+                         cue_cd VARCHAR(30) NOT NULL,
+                         del_flg VARCHAR(1) NOT NULL DEFAULT 'F'
 );
 
 CREATE TABLE criteria_cue (
