@@ -63,33 +63,90 @@
     <!-- ===================== -->
 
     <select id="findLatestByEmpIdWithTargets"
-        parameterType="string"
-        resultMap="FormSubmWithTargetMap"> SELECT fs.form_subm_id, fs.form_id, fs.emp_id, fs.emp_nm,
-        fs.emp_no, fs.emp_curr_dept_cd, fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt AS
-        fs_rev_dt, fs.next_rev_dt, fs.form_subm_status, fs.upd_dt AS fs_upd_dt, t.target_id AS
-        t_target_id, t.form_subm_id AS t_form_subm_id, t.form_detail_id AS t_form_detail_id,
-        t.target_ord_no AS t_target_ord_no, t.target_cnt AS t_target_cnt, t.target_status AS
-        t_target_status, t.rev_usr_id AS t_rev_usr_id, t.rev_dt AS t_rev_dt, t.cre_dt AS t_cre_dt,
-        t.upd_dt AS t_upd_dt FROM form_subm fs LEFT JOIN target t ON fs.form_subm_id =
-        t.form_subm_id AND t.del_flg = 'F' WHERE fs.form_subm_id = ( SELECT form_subm_id FROM
-        form_subm WHERE emp_id = #{empId} AND del_flg = 'F' ORDER BY upd_dt DESC LIMIT 1 ) ORDER BY
-        t.target_ord_no </select>
+            parameterType="string"
+            resultMap="FormSubmWithTargetMap">
+        SELECT fs.form_subm_id,
+               fs.form_id,
+               fs.emp_id,
+               fs.emp_nm,
+               fs.emp_no,
+               fs.emp_curr_dept_cd,
+               fs.emp_curr_pos_cd,
+               fs.emp_curr_lvl_cd,
+               fs.rev_dt        AS
+                                   fs_rev_dt,
+               fs.next_rev_dt,
+               fs.form_subm_status,
+               fs.upd_dt        AS fs_upd_dt,
+               t.target_id      AS
+                                   t_target_id,
+               t.form_subm_id   AS t_form_subm_id,
+               t.form_detail_id AS t_form_detail_id,
+               t.target_ord_no  AS t_target_ord_no,
+               t.target_cnt     AS t_target_cnt,
+               t.target_status  AS
+                                   t_target_status,
+               t.rev_usr_id     AS t_rev_usr_id,
+               t.rev_dt         AS t_rev_dt,
+               t.cre_dt         AS t_cre_dt,
+               t.upd_dt         AS t_upd_dt
+        FROM form_subm fs
+                 LEFT JOIN target t ON fs.form_subm_id =
+                                       t.form_subm_id AND t.del_flg = 'F'
+        WHERE fs.form_subm_id = (SELECT form_subm_id
+                                 FROM form_subm
+                                 WHERE emp_id = #{empId}
+                                   AND del_flg = 'F'
+                                 ORDER BY upd_dt DESC LIMIT 1 )
+        ORDER BY
+            t.target_ord_no
+    </select>
 
 
     <select id="findByIdWithTargets"
-        parameterType="string"
-        resultMap="FormSubmWithTargetMap"> SELECT fs.form_subm_id, fs.form_id, fs.emp_id, fs.emp_nm,
-        fs.emp_no, fs.emp_curr_dept_cd, fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt AS
-        fs_rev_dt, fs.next_rev_dt, fs.form_subm_status, fs.upd_dt AS fs_upd_dt, t.target_id AS
-        t_target_id, t.form_subm_id AS t_form_subm_id, t.form_detail_id AS t_form_detail_id,
-        t.target_ord_no AS t_target_ord_no, t.target_cnt AS t_target_cnt, t.target_status AS
-        t_target_status, t.rev_usr_id AS t_rev_usr_id, t.rev_dt AS t_rev_dt, t.cre_dt AS t_cre_dt,
-        t.upd_dt AS t_upd_dt FROM form_subm fs LEFT JOIN target t ON fs.form_subm_id =
-        t.form_subm_id AND t.del_flg = 'F' WHERE fs.form_subm_id = #{formSubmId} AND fs.del_flg =
-        'F' ORDER BY t.target_ord_no </select>
+            parameterType="string"
+            resultMap="FormSubmWithTargetMap">
+        SELECT fs.form_subm_id,
+               fs.form_id,
+               fs.emp_id,
+               fs.emp_nm,
+               fs.emp_no,
+               fs.emp_curr_dept_cd,
+               fs.emp_curr_pos_cd,
+               fs.emp_curr_lvl_cd,
+               fs.rev_dt        AS
+                                   fs_rev_dt,
+               fs.next_rev_dt,
+               fs.form_subm_status,
+               fs.upd_dt        AS fs_upd_dt,
+               t.target_id      AS
+                                   t_target_id,
+               t.form_subm_id   AS t_form_subm_id,
+               t.form_detail_id AS t_form_detail_id,
+               t.target_ord_no  AS t_target_ord_no,
+               t.target_cnt     AS t_target_cnt,
+               t.target_status  AS
+                                   t_target_status,
+               t.rev_usr_id     AS t_rev_usr_id,
+               t.rev_dt         AS t_rev_dt,
+               t.cre_dt         AS t_cre_dt,
+               t.upd_dt         AS t_upd_dt
+        FROM form_subm fs
+                 LEFT JOIN target t ON fs.form_subm_id =
+                                       t.form_subm_id AND t.del_flg = 'F'
+        WHERE fs.form_subm_id = #{formSubmId}
+          AND fs.del_flg =
+              'F'
+        ORDER BY t.target_ord_no
+    </select>
 
-    <update id="updateFormId" parameterType="String">UPDATE form_subm SET form_id = #{formId} WHERE
-        emp_id = #{empId} AND form_subm_status = 'PENDING' AND del_flg = 'F' </update>
+    <update id="updateFormId" parameterType="String">
+        UPDATE form_subm
+        SET form_id = #{formId}
+        WHERE emp_id = #{empId}
+          AND form_subm_status = 'PENDING'
+          AND del_flg = 'F'
+    </update>
 
     <insert id="insertListFormSubmit" parameterType="java.util.List">
         INSERT INTO form_subm (
@@ -129,21 +186,21 @@
             </foreach>
     </insert>
 
-    <select id="selectFormSubmitWithEmployeeByStatus" parameterType="string" resultMap="FormSubmitWithEmployeeResultMap">
-        SELECT
-            fs.form_subm_id,
-            fs.form_id,
-            fs.emp_id,
-            e.emp_nm,
-            e.emp_no,
-            e.emp_email,
-            fs.rev_dt,
-            fs.next_rev_dt,
-            fs.form_subm_status
+    <select id="selectFormSubmitWithEmployeeByStatus" parameterType="string"
+            resultMap="FormSubmitWithEmployeeResultMap">
+        SELECT fs.form_subm_id,
+               fs.form_id,
+               fs.emp_id,
+               e.emp_nm,
+               e.emp_no,
+               e.emp_email,
+               fs.rev_dt,
+               fs.next_rev_dt,
+               fs.form_subm_status
         FROM form_subm fs
-        JOIN emp e
-            ON e.emp_id = fs.emp_id
-            AND e.del_flg = 'F'
+                 JOIN emp e
+                      ON e.emp_id = fs.emp_id
+                          AND e.del_flg = 'F'
         WHERE fs.form_subm_status = #{formSubmitStatus}
           AND fs.del_flg = 'F'
     </select>

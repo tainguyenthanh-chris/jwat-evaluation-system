@@ -17,14 +17,25 @@
 
     <!-- Insert -->
     <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.LoggedOutToken">
-        INSERT INTO logged_out_token ( token_id, expiry_date, cre_usr_id, upd_usr_id, del_flg )
-        VALUES ( #{tokenId}, #{expiryDate}, #{creUsrId}, #{updUsrId}, #{delFlg} ) </insert>
+        INSERT INTO logged_out_token (token_id, expiry_date, cre_usr_id, upd_usr_id, del_flg)
+        VALUES (#{tokenId}, #{expiryDate}, #{creUsrId}, #{updUsrId}, #{delFlg})
+    </insert>
 
     <!-- Find by token id (not deleted) -->
     <select id="findByTokenId"
-        parameterType="string"
-        resultMap="LoggedOutTokenResultMap"> SELECT token_id, expiry_date, cre_usr_id, cre_dt,
-        upd_usr_id, upd_dt, del_flg FROM logged_out_token WHERE token_id = #{tokenId} AND del_flg =
-        'F' </select>
+            parameterType="string"
+            resultMap="LoggedOutTokenResultMap">
+        SELECT token_id,
+               expiry_date,
+               cre_usr_id,
+               cre_dt,
+               upd_usr_id,
+               upd_dt,
+               del_flg
+        FROM logged_out_token
+        WHERE token_id = #{tokenId}
+          AND del_flg =
+              'F'
+    </select>
 
 </mapper>

@@ -27,7 +27,7 @@ const Forbidden = () => {
         You do not have permission to access this page.
       </Text>
 
-      <Button mt={6} colorScheme="blue" onClick={() => navigate("/")}>
+      <Button mt={6} colorScheme="blue" onClick={() => navigate("/history")}>
         Go to Home
       </Button>
     </Box>

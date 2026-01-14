@@ -140,6 +140,31 @@ INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, for
                                                                                                              ('form20250101001','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
                                                                                                              ('form20250101001','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
 
+INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd) VALUES
+    ('form20250101002','sec20250101001',NULL,1,'General Evaluation','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101001',2,'Cowork with leader','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101001',3,'Ability to adapt with the new environment and new changes.','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101001',4,'Knowledges & skills improvement in the past 6 months','POINT_SELF_LEADER'),
+    ('form20250101002','sec20250101002',NULL,5,'Customer Satisfaction','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101002',6,'Report job in detail with evidence','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101002',7,'Suggest solution/idea to customer/leader for enhancing system','POINT_SELF_LEADER'),
+    ('form20250101002',NULL,'sec20250101002',8,'Working with passion','POINT_SELF_LEADER'),
+    ('form20250101002','sec20250101003',NULL,9,'Objectives','COMMENT_SELF'),
+    ('form20250101002','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
+    ('form20250101002','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
+
+INSERT INTO form_detail (form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd) VALUES
+('form20250101003','sec20250101001',NULL,1,'General Evaluation','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101001',2,'Cowork with leader','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101001',3,'Ability to adapt with the new environment and new changes.','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101001',4,'Knowledges & skills improvement in the past 6 months','POINT_SELF_LEADER'),
+('form20250101003','sec20250101002',NULL,5,'Customer Satisfaction','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101002',6,'Report job in detail with evidence','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101002',7,'Suggest solution/idea to customer/leader for enhancing system','POINT_SELF_LEADER'),
+('form20250101003',NULL,'sec20250101002',8,'Working with passion','POINT_SELF_LEADER'),
+('form20250101003','sec20250101003',NULL,9,'Objectives','COMMENT_SELF'),
+('form20250101003','sec20250101004',NULL,10,'Achievements','COMMENT_LEADER'),
+('form20250101003','sec20250101005',NULL,11,'Conclusion & Recommendation of the 1st Line Manager','TARGET_LEADER');
 
 INSERT INTO target (form_subm_id,form_detail_id,target_ord_no,target_cnt,target_status,rev_form_subm_id) VALUES
                                                                                              ('form_subm20250101099','11',1,'Toeic 900','SUCCESS','form_subm20250101000'),

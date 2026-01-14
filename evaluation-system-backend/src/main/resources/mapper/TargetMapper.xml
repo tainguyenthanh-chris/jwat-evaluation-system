@@ -27,18 +27,27 @@
 
     <update id="updateTargets">
         <foreach collection="list"
-            item="t"
-            separator=";"> UPDATE target SET target_status = #{t.targetStatus}, upd_usr_id =
-        #{t.updUsrId}, upd_dt = #{t.updDt} WHERE target_id = #{t.targetId} AND del_flg = 'F' </foreach>
+                 item="t"
+                 separator=";">
+            UPDATE target SET target_status = #{t.targetStatus}, upd_usr_id =
+            #{t.updUsrId}, upd_dt = #{t.updDt} WHERE target_id = #{t.targetId} AND del_flg = 'F'
+        </foreach>
     </update>
 
-    <insert id="insertTargets"> INSERT INTO target ( form_subm_id, form_detail_id, target_ord_no,
-        target_cnt, target_status, rev_usr_id, rev_dt, cre_usr_id, upd_usr_id ) VALUES <foreach
-            collection="list" item="t" separator=","> ( #{t.formSubmId}, #{t.formDetailId},
-        #{t.targetOrdNo}, #{t.targetCnt}, #{t.targetStatus}, #{t.revUsrId}, #{t.revDt},
-        #{t.creUsrId}, #{t.updUsrId} ) </foreach>
+    <insert id="insertTargets">
+        INSERT INTO target ( form_subm_id, form_detail_id, target_ord_no,
+        target_cnt, target_status, rev_usr_id, rev_dt, cre_usr_id, upd_usr_id ) VALUES
+        <foreach
+                collection="list" item="t" separator=",">( #{t.formSubmId}, #{t.formDetailId},
+            #{t.targetOrdNo}, #{t.targetCnt}, #{t.targetStatus}, #{t.revUsrId}, #{t.revDt},
+            #{t.creUsrId}, #{t.updUsrId} )
+        </foreach>
     </insert>
 
-    <delete id="deleteTargets"> DELETE FROM target WHERE form_subm_id = #{formSubmId} </delete>
+    <delete id="deleteTargets">
+        DELETE
+        FROM target
+        WHERE form_subm_id = #{formSubmId}
+    </delete>
 
 </mapper>

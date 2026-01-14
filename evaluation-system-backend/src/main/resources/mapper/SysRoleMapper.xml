@@ -17,9 +17,23 @@
     </resultMap>
 
 
-    <select id="findByCode"
-        parameterType="string"
-        resultMap="SysRoleMap"> select sys_role_id, sys_role_cd, sys_role_desc, cre_usr_id, cre_dt,
-        upd_usr_id, upd_dt, del_flg from sys_role where sys_role_cd = #{roleCode} and del_flg = 'F' </select>
+    <select
+            id="findByCode"
+            parameterType="string"
+            resultMap="SysRoleMap"
+    >
+        SELECT
+        sys_role_id,
+        sys_role_cd,
+        sys_role_desc,
+        cre_usr_id,
+        cre_dt,
+        upd_usr_id,
+        upd_dt,
+        del_flg
+        FROM sys_role
+        WHERE sys_role_cd = #{roleCode}
+        AND del_flg = 'F'
+    </select>
 
 </mapper>
