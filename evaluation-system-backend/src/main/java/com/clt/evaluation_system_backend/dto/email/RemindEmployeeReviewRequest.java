@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class RemindEmployeeReviewRequest {
-    private String employeeName;
-    private String employeeNumber;
-    private String employeeEmail;
+    private String employeeNo;
     private String dueDate;
 }

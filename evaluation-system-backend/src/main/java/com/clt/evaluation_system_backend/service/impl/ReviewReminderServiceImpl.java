@@ -1,9 +1,12 @@
 package com.clt.evaluation_system_backend.service.impl;
 
 import com.clt.evaluation_system_backend.dto.email.RemindEmployeeReviewRequest;
+import com.clt.evaluation_system_backend.dto.request.EmployeeRequest;
+import com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse;
 import com.clt.evaluation_system_backend.dto.response.boss.review.BossReviewAssigneeResponse;
 import com.clt.evaluation_system_backend.dto.response.employee.EmployeeWithFormResponse;
 import com.clt.evaluation_system_backend.dto.response.form.submit.FormSubmitWithEmployeeResponse;
+import com.clt.evaluation_system_backend.exception.custom.NotFoundException;
 import com.clt.evaluation_system_backend.mapper.BossRevMapper;
 import com.clt.evaluation_system_backend.mapper.EmpMapper;
 import com.clt.evaluation_system_backend.mapper.FormSubmMapper;
@@ -15,6 +18,7 @@ import com.clt.evaluation_system_backend.service.SeqService;
 import com.clt.evaluation_system_backend.util.ReviewCycleUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +38,21 @@ public class ReviewReminderServiceImpl implements ReviewReminderService {
     private final BossRevMapper bossRevMapper;
     private final EmailService emailService;
 
+    @Async
     @Override
     public void sendReviewReminderToEmployee(RemindEmployeeReviewRequest request) {
+        EmployeeRequest employeeRequest = new EmployeeRequest();
+        employeeRequest.setEmployeeNo(request.getEmployeeNo());
+
+        List<AdmEmployeeResponse> employeeResponseList = empMapper.selectForAdm(employeeRequest);
+        if(employeeResponseList.isEmpty()){
+            throw new NotFoundException("Employee not found");
+        }
+
         emailService.sendReviewReminderToEmployee(
-                request.getEmployeeEmail(),
-                request.getEmployeeName(),
-                request.getEmployeeNumber(),
+                employeeResponseList.get(0).getEmployeeEmail(),
+                employeeResponseList.get(0).getEmployeeName(),
+                employeeResponseList.get(0).getEmployeeNo(),
                 request.getDueDate());
     }
 

@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import EvaluationProgressItem from "./components/EvaluationProgressItem";
 import type { AdminReviewingEmployeeQuery } from "../../api/adminEvaluationProgress";
 import { useAdminReviewingEmployee } from "../../hooks/useAdminReviewingEmployee";
+import { axiosInstant } from "../../lib/axios";
+import { useMutation } from "@tanstack/react-query";
+import { toaster } from "../../components/ui/toaster";
 
 export interface EmployeeProgress {
   employeeName: string;
@@ -12,6 +15,11 @@ export interface EmployeeProgress {
   formSubmissionStatus: "REMIND" | "BOSS_REVIEWED" | "EMPLOYEE_REVIEWED";
   reviewOn?: string;
   reviewDueDate?: string;
+}
+
+interface RemindEmployeeRequest {
+  employeeNo: string;
+  dueDate: string;
 }
 
 const EvaluationProgressPage = () => {
@@ -27,9 +35,35 @@ const EvaluationProgressPage = () => {
     navigate(`/review/employee/${employeeNo}`);
   };
 
-  const handleRemindClick = (employeeNo: string) => {
-    // console.log("Sending reminder to employee:", employeeNo);
-    // navigate(`/review/employee/${employeeNo}`);
+  const sendReminderMutation = useMutation({
+    mutationFn: async (payload: RemindEmployeeRequest) => {
+      const response = await axiosInstant.post(
+        "/review-reminder/employee",
+        payload
+      );
+      return response.data;
+    },
+    onSuccess: (variables) => {
+      toaster.create({
+        description: `Reminder sent to ${variables.employeeName} successfully`,
+        type: "success",
+      });
+    },
+  });
+
+  const handleRemindClick = (employeeProgress: EmployeeProgress) => {
+    if (!employeeProgress.reviewDueDate) {
+      toaster.create({
+        description: "Due date is required to send reminder",
+        type: "error",
+      });
+      return;
+    }
+
+    sendReminderMutation.mutate({
+      employeeNo: employeeProgress.employeeNo,
+      dueDate: employeeProgress.reviewDueDate,
+    });
   };
 
   return (
@@ -62,7 +96,7 @@ const EvaluationProgressPage = () => {
               key={employee.employeeNo}
               employeeProgress={employee}
               onReviewClick={() => handleReviewClick(employee.employeeNo)}
-              onRemindClick={() => handleRemindClick(employee.employeeNo)}
+              onRemindClick={() => handleRemindClick(employee)}
             />
           ))}
         </Grid>

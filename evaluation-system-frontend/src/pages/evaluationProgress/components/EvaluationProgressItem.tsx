@@ -62,21 +62,19 @@ const EvaluationProgressItem = ({
   };
 
   const renderDateInfo = () => {
-    if (reviewOn) {
-      return (
-        <Text as="span" fontSize="sm" fontStyle="italic">
-          Reviewed on: {reviewOn}
-        </Text>
-      );
-    }
-    if (reviewDueDate) {
+    if (formSubmissionStatus === "REMIND") {
       return (
         <Text as="span" fontSize="sm" fontStyle="italic">
           Due date: {reviewDueDate}
         </Text>
       );
     }
-    return null;
+
+    return (
+      <Text as="span" fontSize="sm" fontStyle="italic">
+        Reviewed on: {reviewOn}
+      </Text>
+    );
   };
 
   return (
