@@ -6,52 +6,117 @@
     <!-- ===================== -->
     <!-- Columns -->
     <!-- ===================== -->
-    <sql id="pos_columns"> pos_id AS positionId, pos_nm AS positionName, pos_cd AS positionCode,
-        pos_desc AS positionDescription, cre_usr_id AS createBy, cre_dt AS createDate, upd_usr_id AS
-        updateBy, upd_dt AS updateDate, del_flg AS deleteFlag </sql>
+    <sql id="pos_columns">
+        pos_id      AS positionId,
+        pos_nm      AS positionName,
+        pos_cd      AS positionCode,
+        pos_desc    AS positionDescription,
+        cre_usr_id  AS createBy,
+        cre_dt      AS createDate,
+        upd_usr_id  AS updateBy,
+        upd_dt      AS updateDate,
+        del_flg     AS deleteFlag
+    </sql>
 
     <!-- ===================== -->
     <!-- INSERT -->
     <!-- ===================== -->
-    <insert id="insert"
-        parameterType="com.clt.evaluation_system_backend.model.Pos"> INSERT INTO pos ( pos_id,
-        pos_nm, pos_cd, pos_desc, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg, dept_id ) VALUES
-        ( #{posId}, #{posNm}, #{posCd}, #{posDesc}, #{creUsrId}, CURRENT_TIMESTAMP, #{updUsrId},
-        CURRENT_TIMESTAMP, 'F', #{deptId} ) </insert>
+    <insert
+            id="insert"
+            parameterType="com.clt.evaluation_system_backend.model.Pos"
+    >
+        INSERT INTO pos (
+        pos_id,
+        pos_nm,
+        pos_cd,
+        pos_desc,
+        cre_usr_id,
+        cre_dt,
+        upd_usr_id,
+        upd_dt,
+        del_flg,
+        dept_id
+        )
+        VALUES (
+        #{posId},
+        #{posNm},
+        #{posCd},
+        #{posDesc},
+        #{creUsrId},
+        CURRENT_TIMESTAMP,
+        #{updUsrId},
+        CURRENT_TIMESTAMP,
+        'F',
+        #{deptId}
+        )
+    </insert>
 
     <!-- ===================== -->
     <!-- UPDATE -->
     <!-- ===================== -->
-    <update id="update"
-        parameterType="com.clt.evaluation_system_backend.model.Pos"> UPDATE pos SET pos_nm =
-        #{posNm}, pos_cd = #{posCd}, pos_desc = #{posDesc}, upd_usr_id = #{updUsrId}, upd_dt =
-        CURRENT_TIMESTAMP WHERE pos_id = #{posId} </update>
+    <update
+            id="update"
+            parameterType="com.clt.evaluation_system_backend.model.Pos"
+    >
+        UPDATE pos
+        SET
+        pos_nm     = #{posNm},
+        pos_cd     = #{posCd},
+        pos_desc   = #{posDesc},
+        upd_usr_id = #{updUsrId},
+        upd_dt     = CURRENT_TIMESTAMP
+        WHERE pos_id = #{posId}
+    </update>
 
     <!-- ===================== -->
     <!-- SOFT DELETE -->
     <!-- ===================== -->
-    <update id="deleteById" parameterType="String"> UPDATE pos SET del_flg = 'T', upd_usr_id =
-        'dev', upd_dt = CURRENT_TIMESTAMP WHERE pos_id = #{posId} </update>
+    <update
+            id="deleteById"
+            parameterType="String"
+    >
+        UPDATE pos
+        SET
+        del_flg    = 'T',
+        upd_usr_id = 'dev',
+        upd_dt     = CURRENT_TIMESTAMP
+        WHERE pos_id = #{posId}
+    </update>
 
     <!-- ===================== -->
     <!-- SELECT BY ID -->
     <!-- ===================== -->
-    <select id="findById"
-        parameterType="String"
-        resultType="com.clt.evaluation_system_backend.dto.response.PosResponse"> SELECT <include
-            refid="pos_columns" /> FROM pos WHERE pos_id = #{posId} AND del_flg = 'F' </select>
+    <select
+            id="findById"
+            parameterType="String"
+            resultType="com.clt.evaluation_system_backend.dto.response.PosResponse"
+    >
+        SELECT
+        <include refid="pos_columns" />
+        FROM pos
+        WHERE pos_id = #{posId}
+        AND del_flg = 'F'
+    </select>
 
     <!-- ===================== -->
     <!-- SELECT ALL -->
     <!-- ===================== -->
-    <select id="findAll"
-        parameterType="com.clt.evaluation_system_backend.dto.request.PosSearchRequest"
-        resultType="com.clt.evaluation_system_backend.dto.response.PosResponse"> SELECT <include
-            refid="pos_columns" /> FROM pos WHERE del_flg = 'F' <if
-            test="posNm != null and posNm != ''"> AND pos_nm ILIKE CONCAT('%', #{posNm}, '%') </if>
-
-    <if
-            test="posCd != null and posCd != ''"> AND pos_cd = #{posCd} </if> ORDER BY cre_dt DESC </select>
-
+    <select
+            id="findAll"
+            parameterType="com.clt.evaluation_system_backend.dto.request.PosSearchRequest"
+            resultType="com.clt.evaluation_system_backend.dto.response.PosResponse"
+    >
+        SELECT
+        <include refid="pos_columns" />
+        FROM pos
+        WHERE del_flg = 'F'
+        <if test="posNm != null and posNm != ''">
+            AND pos_nm ILIKE CONCAT('%', #{posNm}, '%')
+        </if>
+        <if test="posCd != null and posCd != ''">
+            AND pos_cd = #{posCd}
+        </if>
+        ORDER BY cre_dt DESC
+    </select>
 
 </mapper>

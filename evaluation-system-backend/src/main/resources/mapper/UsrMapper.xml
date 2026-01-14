@@ -21,33 +21,108 @@
         </collection>
     </resultMap>
 
+    <select
+            id="findById"
+            parameterType="String"
+            resultMap="UsrWithRolesMap"
+    >
+        SELECT
+        u.usr_id,
+        u.usr_pwd,
+        u.usr_email,
+        u.cre_usr_id,
+        u.cre_dt,
+        u.upd_usr_id,
+        u.upd_dt,
+        u.del_flg,
+        r.sys_role_id,
+        r.sys_role_cd,
+        r.sys_role_desc
+        FROM usr u
+        LEFT JOIN usr_sys_role ur
+        ON u.usr_id = ur.usr_id
+        AND ur.del_flg = 'F'
+        AND ur.usr_role_status_cd = 'ACTIVE'
+        LEFT JOIN sys_role r
+        ON ur.sys_role_id = r.sys_role_id
+        AND r.del_flg = 'F'
+        WHERE u.usr_id = #{usrId}
+        AND u.del_flg = 'F'
+    </select>
 
-    <select id="findById"
-        parameterType="String"
-        resultMap="UsrWithRolesMap"> SELECT u.usr_id, u.usr_pwd, u.usr_email, u.cre_usr_id,
-        u.cre_dt, u.upd_usr_id, u.upd_dt, u.del_flg, r.sys_role_id, r.sys_role_cd, r.sys_role_desc
-        FROM usr u LEFT JOIN usr_sys_role ur ON u.usr_id = ur.usr_id AND ur.del_flg = 'F' AND
-        ur.usr_role_status_cd = 'ACTIVE' LEFT JOIN sys_role r ON ur.sys_role_id = r.sys_role_id AND
-        r.del_flg = 'F' WHERE u.usr_id = #{usrId} AND u.del_flg = 'F'</select>
 
-    <select id="findByEmail"
-        parameterType="String"
-        resultMap="UsrWithRolesMap"> SELECT u.usr_id, u.usr_pwd, u.usr_email, u.cre_usr_id,
-        u.cre_dt, u.upd_usr_id, u.upd_dt, u.del_flg, r.sys_role_id, r.sys_role_cd, r.sys_role_desc
-        FROM usr u LEFT JOIN usr_sys_role ur ON u.usr_id = ur.usr_id AND ur.del_flg = 'F' AND
-        ur.usr_role_status_cd = 'ACTIVE' LEFT JOIN sys_role r ON ur.sys_role_id = r.sys_role_id AND
-        r.del_flg = 'F' WHERE u.usr_email = #{email} AND u.del_flg = 'F' </select>
+    <select
+            id="findByEmail"
+            parameterType="String"
+            resultMap="UsrWithRolesMap"
+    >
+        SELECT
+        u.usr_id,
+        u.usr_pwd,
+        u.usr_email,
+        u.cre_usr_id,
+        u.cre_dt,
+        u.upd_usr_id,
+        u.upd_dt,
+        u.del_flg,
+        r.sys_role_id,
+        r.sys_role_cd,
+        r.sys_role_desc
+        FROM usr u
+        LEFT JOIN usr_sys_role ur
+        ON u.usr_id = ur.usr_id
+        AND ur.del_flg = 'F'
+        AND ur.usr_role_status_cd = 'ACTIVE'
+        LEFT JOIN sys_role r
+        ON ur.sys_role_id = r.sys_role_id
+        AND r.del_flg = 'F'
+        WHERE u.usr_email = #{email}
+        AND u.del_flg = 'F'
+    </select>
 
 
-    <select id="existsById" resultType="boolean"> SELECT EXISTS ( SELECT 1 FROM usr WHERE usr_id =
-        #{usrId} ) </select>
+    <select id="existsById" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM usr
+        WHERE usr_id = #{usrId}
+        )
+    </select>
 
-    <select id="existsByEmail" resultType="boolean"> SELECT EXISTS ( SELECT 1 FROM usr WHERE
-        usr_email = #{email} ) </select>
 
-    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Usr"> INSERT INTO usr
-        ( usr_id, usr_pwd, usr_email, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
-        #{usrId}, #{usrPwd}, #{usrEmail}, #{creUsrId}, CURRENT_TIMESTAMP, #{updUsrId},
-        CURRENT_TIMESTAMP, 'F' ) </insert>
+    <select id="existsByEmail" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM usr
+        WHERE usr_email = #{email}
+        )
+    </select>
+
+
+    <insert
+            id="insert"
+            parameterType="com.clt.evaluation_system_backend.model.Usr"
+    >
+        INSERT INTO usr (
+        usr_id,
+        usr_pwd,
+        usr_email,
+        cre_usr_id,
+        cre_dt,
+        upd_usr_id,
+        upd_dt,
+        del_flg
+        )
+        VALUES (
+        #{usrId},
+        #{usrPwd},
+        #{usrEmail},
+        #{creUsrId},
+        CURRENT_TIMESTAMP,
+        #{updUsrId},
+        CURRENT_TIMESTAMP,
+        'F'
+        )
+    </insert>
 
 </mapper>

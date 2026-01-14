@@ -5,24 +5,21 @@
 
 <mapper namespace="com.clt.evaluation_system_backend.mapper.CriteriaMapper">
 
-<!--    insert criteria-->
+    <!--    insert criteria-->
     <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.Criteria">
-        INSERT INTO criteria (
-            criteria_id,
-            criteria_cnt,
-            sec_id
-        ) VALUES (
-                     #{criteriaId},
-                     #{criteriaCnt},
-                     #{secId}
-                 )
+        INSERT INTO criteria (criteria_id,
+                              criteria_cnt,
+                              sec_id)
+        VALUES (#{criteriaId},
+                #{criteriaCnt},
+                #{secId})
     </insert>
 
     <insert id="insertList" parameterType="java.util.List">
         INSERT INTO criteria (
-            criteria_id,
-            criteria_cnt,
-            sec_id
+        criteria_id,
+        criteria_cnt,
+        sec_id
         )
         VALUES
         <foreach collection="list" item="item" separator=",">
@@ -52,22 +49,21 @@
 
     <select id="select" resultType="com.clt.evaluation_system_backend.dto.response.CriteriaResponse">
         SELECT
-            C.criteria_id AS criteriaId,
-            C.criteria_cnt AS criteriaContent,
-            C.sec_id AS sectionId,
-            string_agg(CC.cue_cd, ',') AS cueList
+        C.criteria_id AS criteriaId,
+        C.criteria_cnt AS criteriaContent,
+        C.sec_id AS sectionId,
+        string_agg(CC.cue_cd, ',') AS cueList
         FROM criteria C
-                 LEFT JOIN criteria_cue CC ON CC.criteria_id = C.criteria_id
+        LEFT JOIN criteria_cue CC ON CC.criteria_id = C.criteria_id
         WHERE C.del_flg = 'F'
-            <if test="sectionId != null">
-                AND C.sec_id = #{sectionId}
-            </if>
-            <if test="criteriaId != null">
-                AND C.criteria_id = #{criteriaId}
-            </if>
+        <if test="sectionId != null">
+            AND C.sec_id = #{sectionId}
+        </if>
+        <if test="criteriaId != null">
+            AND C.criteria_id = #{criteriaId}
+        </if>
         GROUP BY C.criteria_id, C.criteria_cnt, C.sec_id
     </select>
-
 
 
 </mapper>

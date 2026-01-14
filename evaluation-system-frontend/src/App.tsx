@@ -21,9 +21,10 @@ function App() {
     <Provider>
       <Toaster />
       <Routes>
+        <Route path="/login" element={<SigninPage />} />
+
         <Route element={<Layout />}>
           {/* public */}
-          <Route path="/login" element={<SigninPage />} />
           <Route path="/" element={<HomePage />} />
           {/* protected */}
           <Route

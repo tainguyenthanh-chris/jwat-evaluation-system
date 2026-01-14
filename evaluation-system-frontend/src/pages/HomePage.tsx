@@ -1,7 +1,20 @@
-import { Box } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import { useEffect } from "react";
 
 const HomePage = () => {
-  return <Box>Home Page</Box>;
+  const navigate = useNavigate();
+
+  const menuList = useAuthStore((s) => s.permissions);
+
+  useEffect(() => {
+    if (!menuList || menuList.length === 0) return;
+
+    navigate(menuList[0], { replace: true });
+  }, [menuList, navigate]);
+
+  return null;
+  // return <Box>Home Page</Box>;
 };
 
 export default HomePage;

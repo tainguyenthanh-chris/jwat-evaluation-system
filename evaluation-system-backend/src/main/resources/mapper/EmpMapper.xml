@@ -127,27 +127,90 @@
          SELECT
     ========================== -->
     <select id="findEmpByBossNo"
-        parameterType="string"
-        resultMap="EmpResultMapListAllBossRev"> WITH ranked_form_subm AS ( SELECT fs.*, ROW_NUMBER()
-        OVER ( PARTITION BY fs.emp_no ORDER BY CASE WHEN fs.form_subm_status = 'PENDING' THEN 0 ELSE
-        1 END, fs.rev_dt DESC ) AS rn FROM form_subm fs WHERE fs.del_flg = 'F' ) SELECT e.emp_id,
-        e.emp_nm, e.emp_no, e.emp_email, e.comp_role_cd, e.dept_cd, e.pos_cd, e.lvl_cd,
-        e.salary_lvl, e.team_id, e.emp_status_cd, fs.form_subm_id, fs.form_id, fs.emp_id AS
-        fs_emp_id, fs.emp_nm AS fs_emp_nm, fs.emp_no AS fs_emp_no, fs.emp_curr_dept_cd,
-        fs.emp_curr_pos_cd, fs.emp_curr_lvl_cd, fs.rev_dt, fs.next_rev_dt, fs.form_subm_status,
-        f.form_title, f.form_ver, f.dept_cd AS f_dept_cd, f.pos_cd AS f_pos_cd, f.lvl_cd AS
-        f_lvl_cd, f.form_status, br.boss_rev_id, br.boss_no, br.boss_rev_role, br.boss_rev_ord_no,
-        br.isFinal, e2.emp_id AS boss_emp_id, e2.emp_nm AS boss_emp_nm, e2.emp_no AS boss_emp_no
-        FROM emp e JOIN ranked_form_subm fs ON e.emp_no = fs.emp_no AND fs.rn = 1 JOIN form f ON
-        fs.form_id = f.form_id AND f.del_flg = 'F' LEFT JOIN boss_rev br ON fs.form_subm_id =
-        br.form_subm_id AND br.del_flg = 'F' LEFT JOIN emp e2 ON e2.emp_no = br.boss_no AND
-        e2.del_flg = 'F' WHERE e.del_flg = 'F' AND EXISTS ( SELECT 1 FROM boss_rev br2 WHERE
-        br2.form_subm_id = fs.form_subm_id AND br2.boss_no = #{bossNo} AND br2.del_flg = 'F' ) ORDER
-        BY e.emp_no, br.boss_rev_ord_no; </select>
+            parameterType="string"
+            resultMap="EmpResultMapListAllBossRev">
+        WITH ranked_form_subm AS (SELECT fs.*,
+                                         ROW_NUMBER()
+                                             OVER ( PARTITION BY fs.emp_no ORDER BY CASE WHEN fs.form_subm_status = 'PENDING' THEN 0 ELSE
+        1 END, fs.rev_dt DESC ) AS rn
+                                  FROM form_subm fs
+                                  WHERE fs.del_flg = 'F')
+        SELECT e.emp_id,
+               e.emp_nm,
+               e.emp_no,
+               e.emp_email,
+               e.comp_role_cd,
+               e.dept_cd,
+               e.pos_cd,
+               e.lvl_cd,
+               e.salary_lvl,
+               e.team_id,
+               e.emp_status_cd,
+               fs.form_subm_id,
+               fs.form_id,
+               fs.emp_id AS
+                            fs_emp_id,
+               fs.emp_nm AS fs_emp_nm,
+               fs.emp_no AS fs_emp_no,
+               fs.emp_curr_dept_cd,
+               fs.emp_curr_pos_cd,
+               fs.emp_curr_lvl_cd,
+               fs.rev_dt,
+               fs.next_rev_dt,
+               fs.form_subm_status,
+               f.form_title,
+               f.form_ver,
+               f.dept_cd AS f_dept_cd,
+               f.pos_cd  AS f_pos_cd,
+               f.lvl_cd  AS
+                            f_lvl_cd,
+               f.form_status,
+               br.boss_rev_id,
+               br.boss_no,
+               br.boss_rev_role,
+               br.boss_rev_ord_no,
+               br.isFinal,
+               e2.emp_id AS boss_emp_id,
+               e2.emp_nm AS boss_emp_nm,
+               e2.emp_no AS boss_emp_no
+        FROM emp e
+                 JOIN ranked_form_subm fs ON e.emp_no = fs.emp_no AND fs.rn = 1
+                 JOIN form f ON
+            fs.form_id = f.form_id AND f.del_flg = 'F'
+                 LEFT JOIN boss_rev br ON fs.form_subm_id =
+                                          br.form_subm_id AND br.del_flg = 'F'
+                 LEFT JOIN emp e2 ON e2.emp_no = br.boss_no AND
+                                     e2.del_flg = 'F'
+        WHERE e.del_flg = 'F'
+          AND EXISTS (SELECT 1
+                      FROM boss_rev br2
+                      WHERE br2.form_subm_id = fs.form_subm_id
+                        AND br2.boss_no = #{bossNo}
+                        AND br2.del_flg = 'F')
+        ORDER BY e.emp_no, br.boss_rev_ord_no;
+    </select>
 
-    <select id="findAll" resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email,
-        comp_role_cd, dept_cd, pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id,
-        cre_dt, upd_usr_id, upd_dt, del_flg FROM emp WHERE del_flg = 'F' ORDER BY emp_no ;</select>
+    <select id="findAll" resultMap="EmpResultMap">
+        SELECT emp_id,
+               emp_nm,
+               emp_no,
+               emp_email,
+               comp_role_cd,
+               dept_cd,
+               pos_cd,
+               lvl_cd,
+               salary_lvl,
+               team_id,
+               emp_status_cd,
+               cre_usr_id,
+               cre_dt,
+               upd_usr_id,
+               upd_dt,
+               del_flg
+        FROM emp
+        WHERE del_flg = 'F'
+        ORDER BY emp_no;
+    </select>
 
     <select id="selectEmployeesForNextReviewWithForm" resultMap="EmpWithFormResultMap">
         SELECT

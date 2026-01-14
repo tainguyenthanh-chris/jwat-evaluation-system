@@ -81,57 +81,174 @@
     </resultMap>
 
 
-    <sql id="dept_columns"> dept_id AS departmentId, dept_nm AS departmentName, dept_cd AS
-        departmentCode, director_id AS directorId, cre_usr_id AS createBy, cre_dt AS createDate,
-        upd_usr_id AS updateBy, upd_dt AS updateDate, del_flg AS deleteFlag </sql>
+    <sql id="dept_columns">
+        dept_id AS departmentId,
+        dept_nm AS departmentName,
+        dept_cd AS departmentCode,
+        director_id AS directorId,
+        cre_usr_id AS createBy,
+        cre_dt AS createDate,
+        upd_usr_id AS updateBy,
+        upd_dt AS updateDate,
+        del_flg AS deleteFlag
+    </sql>
 
 
     <insert id="insert"
-        parameterType="com.clt.evaluation_system_backend.model.Dept"> INSERT INTO dept ( dept_id,
-        dept_nm, dept_cd, director_id, cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES (
-        #{deptId}, #{deptNm}, #{deptCd}, #{directorId}, #{creUsrId}, CURRENT_TIMESTAMP, #{updUsrId},
-        CURRENT_TIMESTAMP, 'F' ) </insert>
+        parameterType="com.clt.evaluation_system_backend.model.Dept">
+        INSERT INTO dept
+        (
+        dept_id,
+        dept_nm,
+        dept_cd,
+        director_id,
+        cre_usr_id,
+        cre_dt,
+        upd_usr_id,
+        upd_dt,
+        del_flg
+        ) VALUES (
+        #{deptId},
+        #{deptNm},
+        #{deptCd},
+        #{directorId},
+        #{creUsrId},
+        CURRENT_TIMESTAMP,
+        #{updUsrId},
+        CURRENT_TIMESTAMP,
+        'F'
+        )
+    </insert>
 
 
-    <update id="update"
-        parameterType="com.clt.evaluation_system_backend.model.Dept"> UPDATE dept SET dept_nm =
-        #{deptNm}, dept_cd = #{deptCd}, director_id = #{directorId}, upd_usr_id = #{updUsrId},
-        upd_dt = CURRENT_TIMESTAMP WHERE dept_id = #{deptId} AND del_flg = 'F' </update>
+    <update id="update" parameterType="com.clt.evaluation_system_backend.model.Dept">
+        UPDATE dept SET
+        dept_nm = #{deptNm},
+        dept_cd = #{deptCd},
+        director_id = #{directorId},
+        upd_usr_id = #{updUsrId},
+        upd_dt = CURRENT_TIMESTAMP
+        WHERE
+        dept_id = #{deptId}
+        AND del_flg = 'F'
+    </update>
 
 
-    <update id="deleteById"> UPDATE dept SET del_flg = 'T', upd_usr_id = #{updUsrId}, upd_dt =
-        CURRENT_TIMESTAMP WHERE dept_id = #{deptId} </update>
+    <update id="deleteById">
+        UPDATE dept SET
+        del_flg = 'T',
+        upd_usr_id = #{updUsrId},
+        upd_dt = CURRENT_TIMESTAMP
+        WHERE
+        dept_id = #{deptId}
+    </update>
 
 
-    <select id="findById"
-        parameterType="string"
-        resultMap="DeptTreeResultMap"> SELECT d.dept_id, d.dept_nm, d.dept_cd, d.director_id,
-        d.cre_usr_id, d.cre_dt, d.upd_usr_id, d.upd_dt, d.del_flg, p.pos_id, p.pos_nm, p.pos_cd,
-        p.pos_desc, p.dept_id AS p_dept_id, p.cre_usr_id AS p_cre_usr_id, p.cre_dt AS p_cre_dt,
-        p.upd_usr_id AS p_upd_usr_id, p.upd_dt AS p_upd_dt, p.del_flg AS p_del_flg, l.lvl_id,
-        l.lvl_nm, l.lvl_cd, l.lvl_desc, l.pos_id AS l_pos_id, l.cre_usr_id AS l_cre_usr_id, l.cre_dt
-        AS l_cre_dt, l.upd_usr_id AS l_upd_usr_id, l.upd_dt AS l_upd_dt, l.del_flg AS l_del_flg,
-        e.emp_id, e.emp_nm, e.emp_no, e.emp_email, e.dept_cd, e.pos_cd, e.lvl_cd, e.salary_lvl,
-        e.emp_status_cd, e.cre_usr_id AS e_cre_usr_id, e.cre_dt AS e_cre_dt, e.upd_usr_id AS
-        e_upd_usr_id, e.upd_dt AS e_upd_dt, e.del_flg AS e_del_flg, f.form_id, f.form_title,
-        f.form_ver, f.form_status, f.cre_usr_id AS f_cre_usr_id, f.cre_dt AS f_cre_dt, f.upd_usr_id
-        AS f_upd_usr_id, f.upd_dt AS f_upd_dt, f.del_flg AS f_del_flg FROM dept d LEFT JOIN pos p ON
-        p.dept_id = d.dept_id AND p.del_flg = 'F' LEFT JOIN lvl l ON l.pos_id = p.pos_id AND
-        l.del_flg = 'F' LEFT JOIN emp e ON e.pos_cd = p.pos_cd AND e.lvl_cd = l.lvl_cd AND e.dept_cd
-        = d.dept_cd AND e.del_flg = 'F' LEFT JOIN form f ON f.dept_cd = e.dept_cd AND f.pos_cd =
-        e.pos_cd AND f.lvl_cd = e.lvl_cd AND f.form_status = 'ACTIVE' AND f.del_flg = 'F' WHERE
-        d.dept_id = #{value} AND d.del_flg = 'F' </select>
+    <select
+            id="findById"
+            parameterType="string"
+            resultMap="DeptTreeResultMap"
+    >
+        SELECT
+        d.dept_id,
+        d.dept_nm,
+        d.dept_cd,
+        d.director_id,
+        d.cre_usr_id,
+        d.cre_dt,
+        d.upd_usr_id,
+        d.upd_dt,
+        d.del_flg,
+
+        p.pos_id,
+        p.pos_nm,
+        p.pos_cd,
+        p.pos_desc,
+        p.dept_id    AS p_dept_id,
+        p.cre_usr_id AS p_cre_usr_id,
+        p.cre_dt     AS p_cre_dt,
+        p.upd_usr_id AS p_upd_usr_id,
+        p.upd_dt     AS p_upd_dt,
+        p.del_flg    AS p_del_flg,
+
+        l.lvl_id,
+        l.lvl_nm,
+        l.lvl_cd,
+        l.lvl_desc,
+        l.pos_id     AS l_pos_id,
+        l.cre_usr_id AS l_cre_usr_id,
+        l.cre_dt     AS l_cre_dt,
+        l.upd_usr_id AS l_upd_usr_id,
+        l.upd_dt     AS l_upd_dt,
+        l.del_flg    AS l_del_flg,
+
+        e.emp_id,
+        e.emp_nm,
+        e.emp_no,
+        e.emp_email,
+        e.dept_cd,
+        e.pos_cd,
+        e.lvl_cd,
+        e.salary_lvl,
+        e.emp_status_cd,
+        e.cre_usr_id AS e_cre_usr_id,
+        e.cre_dt     AS e_cre_dt,
+        e.upd_usr_id AS e_upd_usr_id,
+        e.upd_dt     AS e_upd_dt,
+        e.del_flg    AS e_del_flg,
+
+        f.form_id,
+        f.form_title,
+        f.form_ver,
+        f.form_status,
+        f.cre_usr_id AS f_cre_usr_id,
+        f.cre_dt     AS f_cre_dt,
+        f.upd_usr_id AS f_upd_usr_id,
+        f.upd_dt     AS f_upd_dt,
+        f.del_flg    AS f_del_flg
+        FROM dept d
+        LEFT JOIN pos p
+        ON p.dept_id = d.dept_id
+        AND p.del_flg = 'F'
+        LEFT JOIN lvl l
+        ON l.pos_id = p.pos_id
+        AND l.del_flg = 'F'
+        LEFT JOIN emp e
+        ON e.pos_cd  = p.pos_cd
+        AND e.lvl_cd  = l.lvl_cd
+        AND e.dept_cd = d.dept_cd
+        AND e.del_flg = 'F'
+        LEFT JOIN form f
+        ON f.dept_cd     = e.dept_cd
+        AND f.pos_cd      = e.pos_cd
+        AND f.lvl_cd      = e.lvl_cd
+        AND f.form_status = 'ACTIVE'
+        AND f.del_flg     = 'F'
+        WHERE d.dept_id = #{value}
+        AND d.del_flg = 'F'
+    </select>
 
 
-    <select id="findAll"
-        parameterType="com.clt.evaluation_system_backend.dto.request.DeptSearchRequest"
-        resultType="com.clt.evaluation_system_backend.dto.response.DeptResponse"> SELECT <include
-            refid="dept_columns" /> FROM dept WHERE del_flg = 'F' <if
-            test="deptNm != null and deptNm != ''"> AND dept_nm ILIKE CONCAT('%', #{deptNm}, '%') </if>
-        <if
-            test="deptCd != null and deptCd != ''"> AND dept_cd = #{deptCd} </if>
-        <if
-            test="directorId != null and directorId != ''"> AND director_id = #{directorId} </if>
-        ORDER BY cre_dt DESC </select>
+    <select
+            id="findAll"
+            parameterType="com.clt.evaluation_system_backend.dto.request.DeptSearchRequest"
+            resultType="com.clt.evaluation_system_backend.dto.response.DeptResponse"
+    >
+        SELECT
+        <include refid="dept_columns" />
+        FROM dept
+        WHERE del_flg = 'F'
+        <if test="deptNm != null and deptNm != ''">
+            AND dept_nm ILIKE CONCAT('%', #{deptNm}, '%')
+        </if>
+        <if test="deptCd != null and deptCd != ''">
+            AND dept_cd = #{deptCd}
+        </if>
+        <if test="directorId != null and directorId != ''">
+            AND director_id = #{directorId}
+        </if>
+        ORDER BY cre_dt DESC
+    </select>
+
 
 </mapper>

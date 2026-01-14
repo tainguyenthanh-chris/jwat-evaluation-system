@@ -24,35 +24,60 @@
     <!-- findByToken -->
     <!-- ===================== -->
     <select id="findByToken"
-        parameterType="string"
-        resultMap="RefreshTokenResultMap"> SELECT refresh_token_id, token, expiry_date, usr_id,
-        cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg FROM refresh_token WHERE token = #{token}
-        AND del_flg = 'F' </select>
+            parameterType="string"
+            resultMap="RefreshTokenResultMap">
+        SELECT refresh_token_id,
+               token,
+               expiry_date,
+               usr_id,
+               cre_usr_id,
+               cre_dt,
+               upd_usr_id,
+               upd_dt,
+               del_flg
+        FROM refresh_token
+        WHERE token = #{token}
+          AND del_flg = 'F'
+    </select>
 
     <!-- ===================== -->
     <!-- insert -->
     <!-- ===================== -->
     <insert id="insert"
-        parameterType="com.clt.evaluation_system_backend.model.RefreshToken"
-        useGeneratedKeys="true"
-        keyProperty="refreshTokenId"
-        keyColumn="refresh_token_id"> INSERT INTO refresh_token ( token, expiry_date, usr_id,
-        cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg ) VALUES ( #{token}, #{expiryDate},
-        #{userId}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate}, #{deleteFlag} ) </insert>
+            parameterType="com.clt.evaluation_system_backend.model.RefreshToken"
+            useGeneratedKeys="true"
+            keyProperty="refreshTokenId"
+            keyColumn="refresh_token_id">
+        INSERT INTO refresh_token (token, expiry_date, usr_id,
+                                   cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg)
+        VALUES (#{token}, #{expiryDate},
+                #{userId}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate}, #{deleteFlag})
+    </insert>
 
     <!-- ===================== -->
     <!-- deleteByUser -->
     <!-- ===================== -->
     <delete id="deleteByUser"
-        parameterType="com.clt.evaluation_system_backend.model.Usr"> DELETE FROM refresh_token WHERE
-        usr_id = #{userId} </delete>
+            parameterType="com.clt.evaluation_system_backend.model.Usr">
+        DELETE
+        FROM refresh_token
+        WHERE usr_id = #{userId}
+    </delete>
 
     <!-- ===================== -->
     <!-- delete by refreshTokenId -->
     <!-- ===================== -->
     <delete id="delete"
-        parameterType="string"> DELETE FROM refresh_token WHERE refresh_token_id = #{refreshTokenId} </delete>
+            parameterType="string">
+        DELETE
+        FROM refresh_token
+        WHERE refresh_token_id = #{refreshTokenId}
+    </delete>
 
-    <delete id="deleteByToken" parameterType="string"> DELETE FROM refresh_token WHERE token =
-        #{refreshToken} </delete>
+    <delete id="deleteByToken" parameterType="string">
+        DELETE
+        FROM refresh_token
+        WHERE token =
+              #{refreshToken}
+    </delete>
 </mapper>
