@@ -9,9 +9,9 @@ export interface EvaluationQuery {
 }
 
 export const useEvaluation = (query: EvaluationQuery) => {
-  const enabled = Boolean(
-    query.formSubmissionId || query.employeeNo
-  );
+  // const enabled = Boolean(
+  //   query.formSubmissionId || query.employeeNo
+  // );
   const queryKey = [
     "evaluation-data",
     query.formSubmissionId ?? null,
@@ -21,7 +21,7 @@ export const useEvaluation = (query: EvaluationQuery) => {
   return useQuery({
     queryKey,
     queryFn: () => fetchEvaluationData(query),
-    enabled,
+    // enabled,
   });
 };
 

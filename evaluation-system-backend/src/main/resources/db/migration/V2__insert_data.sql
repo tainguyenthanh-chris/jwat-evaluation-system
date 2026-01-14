@@ -178,10 +178,13 @@ INSERT INTO rev_conf (rev_conf_id, rev_conf_cd,rev_conf_type, rev_conf_roles) VA
     ('rev_conf20250101006','TARGET_LEADER', 'TARGET', '["LEADER"]'::jsonb);
 
 -- form_subm data
-INSERT INTO form_subm (form_subm_id, form_id, emp_id, emp_nm, emp_no, emp_curr_dept_cd, emp_curr_pos_cd, emp_curr_lvl_cd, rev_dt, next_rev_dt,form_subm_status) VALUES
-    ('form_subm20250101099','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-01-01','2025-06-01','FINAL'),
-    ('form_subm20250101000','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-06-01','2026-01-01','FINAL'),
-    ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2026-01-01','2026-06-01','PENDING');
+INSERT INTO form_subm (form_subm_id,form_id,emp_id,emp_nm,emp_no,emp_curr_dept_cd,emp_curr_pos_cd,emp_curr_lvl_cd,rev_dt,next_rev_dt,form_subm_status,cre_usr_id,cre_dt,upd_usr_id,upd_dt,del_flg) VALUES
+                                                                                                                                                                                                              ('form_subm20250101099','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-01-01','2025-06-01','FINAL','default','2026-01-13 10:00:12.917961','default','2026-01-13 10:00:12.917961','F'),
+                                                                                                                                                                                                              ('form_subm20250101000','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2025-06-01','2026-01-01','FINAL','default','2026-01-13 10:00:12.917961','default','2026-01-13 10:00:12.917961','F'),
+                                                                                                                                                                                                              ('form_subm20250101001','form20250101001','emp20250101001','To Minh Nhat','258157','IT','DEV','FRESHER','2026-01-01','2026-06-01','PENDING','default','2026-01-13 10:00:12.917961','default','2026-01-13 10:00:12.917961','F'),
+                                                                                                                                                                                                              ('form_subm20250101002','form20250101001',NULL,NULL,'258158',NULL,NULL,NULL,NULL,NULL,'LEADER','default','2026-01-13 14:19:23.6095','default','2026-01-13 14:19:23.6095','F'),
+                                                                                                                                                                                                              ('form_subm20250101003','form20250101001',NULL,NULL,'258159',NULL,NULL,NULL,NULL,NULL,'PENDING','default','2026-01-13 14:19:36.873754','default','2026-01-13 14:19:36.873754','F');
+
 
 
 
@@ -334,9 +337,13 @@ FROM (
     WHERE del_flg = 'F'
 ) t;
 
-INSERT INTO boss_rev (form_subm_id, emp_no, boss_no, boss_rev_role, boss_rev_ord_no, isFinal) VALUES
-                                                                                                  ('form_subm20250101001','258157','258400','LEADER','1','F'),
-                                                                                                  ('form_subm20250101001','258157','258401','MANAGER','1','F');
+INSERT INTO boss_rev (form_subm_id,emp_no,boss_no,boss_rev_role,boss_rev_ord_no,isfinal,cre_usr_id,cre_dt,upd_usr_id,upd_dt,del_flg) VALUES
+                                                                                                                                         ('form_subm20250101001','258157','258400','LEADER',1,'F','default','2026-01-13 10:00:12.917961','default','2026-01-13 10:00:12.917961','F'),
+                                                                                                                                         ('form_subm20250101001','258157','258401','MANAGER',1,'F','default','2026-01-13 10:00:12.917961','default','2026-01-13 10:00:12.917961','F'),
+                                                                                                                                         ('form_subm20250101002','258158','258400','LEADER',1,NULL,'default','2026-01-13 14:20:51.940953','default','2026-01-13 14:20:51.940953','F'),
+                                                                                                                                         ('form_subm20250101002','258158','258157','MANAGER',2,NULL,'default','2026-01-13 14:20:51.947098','default','2026-01-13 14:20:51.947098','F'),
+                                                                                                                                         ('form_subm20250101003','258159','258400','LEADER',1,NULL,'default','2026-01-13 14:20:51.949576','default','2026-01-13 14:20:51.949576','F'),
+                                                                                                                                         ('form_subm20250101003','258159','258158','MANAGER',2,NULL,'default','2026-01-13 14:20:51.952129','default','2026-01-13 14:20:51.952129','F');
 
 INSERT INTO target (form_subm_id,form_detail_id,target_ord_no,target_cnt,target_status,rev_form_subm_id) VALUES
                                                                                              ('form_subm20250101099','11',1,'Toeic 900','SUCCESS','form_subm20250101000'),

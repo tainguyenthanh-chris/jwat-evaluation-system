@@ -26,6 +26,7 @@ public class SubmissionDataResponse {
     private List<BossReview> reviewBy;
     private List<Target> newTargetList = new ArrayList<>();
     private List<Target> currentTargetList = new ArrayList<>();
+    private String revRoleList;
 
     public void setTargetList(List<Target> targetList,String formSubmissionId) {
         for(Target target : targetList) {

@@ -27,4 +27,6 @@ public interface EmpMapper {
     AdmEmployeeResponse selectByNo(@Param("employeeNo") String employeeNo);
 
     List<ReviewingEmployeeResponse> selectReviewingEmployee(EmployeeRequest request);
+
+    String selectEmployeeNoByUserId(@Param("userId") String userId);
 }

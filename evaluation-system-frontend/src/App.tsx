@@ -30,10 +30,13 @@ function App() {
             path="/review"
             element={
               <ProtectedRoute menuKey="review">
-                <ReviewPage />
+                <Outlet />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<ReviewPage />} />
+            <Route path="employee/:employeeNo" element={<ReviewPage />} />
+          </Route>
           <Route
             path="/form-builder"
             element={

@@ -31,4 +31,5 @@ public interface BossRevMapper {
         void insertBatch(List<BossRev> bossRevList);
 
         List<BossReviewResponse> select(BossRevRequest request);
+
 }

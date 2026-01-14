@@ -14,9 +14,10 @@ import {
 } from "../../hooks/useEvaluation";
 import type { BossReview } from "../../types/bossReview";
 import ConfirmDialog from "../../components/dialog/ConfirmDialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import SelectOrCreateInput from "../../components/SelectOrCreateInput";
+import { useAuthStore } from "../../store/authStore";
 
 export type SubmitEvaluationPayload = {
   formSubmissionId: string;
@@ -45,13 +46,16 @@ const levelOptions = [
 ];
 
 const ReviewPage = () => {
+  const { employeeNo } = useParams<{
+    employeeNo: string;
+  }>();
   const query: EvaluationQuery = {
-    employeeNo: "258157",
+    employeeNo: employeeNo,
     mode: "REVIEW",
   };
   const navigate = useNavigate();
 
-  const { data } = useEvaluation(query);
+  const { data, isLoading, isError, error } = useEvaluation(query);
   // useEffect(() => {
   //   console.log(data);
   // }, [data]);
@@ -73,6 +77,7 @@ const ReviewPage = () => {
     reviewDate: data?.reviewDate,
     reviewers: reviewBossList,
     nextReviewDate: data?.nextReviewDate,
+    submissionStatus: data?.submissionStatus ?? "",
   };
 
   const formTemplate = data?.formTemplate;
@@ -81,7 +86,7 @@ const ReviewPage = () => {
   const currentTargetList = data?.currentTargetList;
 
   const user = {
-    revRoleList: "LEADER",
+    revRoleList: data?.revRoleList ?? "",
   };
 
   const sectionRefs = useRef<Record<string, SectionRef | null>>({});
@@ -131,6 +136,22 @@ const ReviewPage = () => {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  if (isError) {
+    const message =
+      (error as any)?.response?.data?.message || "Load evaluation failed";
+    return <Box>{message}</Box>;
+  }
+
+  const canSubmit = () => {
+    if (
+      user.revRoleList === "SELF" &&
+      submissionInfo.submissionStatus === "PENDING"
+    )
+      return true;
+    if (user.revRoleList === submissionInfo.submissionStatus) return true;
+    return false;
   };
 
   return (
@@ -193,16 +214,17 @@ const ReviewPage = () => {
           </Box>
         </Flex>
       )}
-
-      <Flex>
-        <ConfirmDialog
-          triggerButtonTitle="Submit"
-          title="Submit form"
-          secondaryTitle="After submit, you cannot update any more?"
-          onConfirm={handleSubmit}
-          triggerButtonProps={{ colorScheme: "red" }}
-        />
-      </Flex>
+      {canSubmit() && (
+        <Flex>
+          <ConfirmDialog
+            triggerButtonTitle="Submit"
+            title="Submit form"
+            secondaryTitle="After submit, you cannot update any more?"
+            onConfirm={handleSubmit}
+            triggerButtonProps={{ colorScheme: "red" }}
+          />
+        </Flex>
+      )}
     </Box>
   );
 };

@@ -21,13 +21,15 @@ const EvaluationProgressPage = () => {
     bossNo: "258400",
   };
   const { data } = useAdminReviewingEmployee(adminReviewingEmployeeQuery);
+  console.log("Data: " + JSON.stringify(data, null, 2));
 
   const handleReviewClick = (employeeNo: string) => {
     navigate(`/review/employee/${employeeNo}`);
   };
 
   const handleRemindClick = (employeeNo: string) => {
-    console.log("Sending reminder to employee:", employeeNo);
+    // console.log("Sending reminder to employee:", employeeNo);
+    // navigate(`/review/employee/${employeeNo}`);
   };
 
   return (

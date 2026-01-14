@@ -266,5 +266,15 @@
 
     </select>
 
+    <select id="selectEmployeeNoByUserId" resultType="String">
+        SELECT
+            E.emp_no AS employeeNo
+            FROM emp E
+            LEFT JOIN usr U ON U.usr_email = E.emp_email
+            WHERE U.usr_id  = #{userId}
+
+
+    </select>
+
 
 </mapper>

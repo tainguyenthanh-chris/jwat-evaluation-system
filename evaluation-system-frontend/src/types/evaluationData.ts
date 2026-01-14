@@ -28,5 +28,6 @@ export interface EvaluationData {
   reviewBy?: BossReview[];
   newTargetList?: Target[];
   currentTargetList?: Target[];
+  revRoleList?: string;
 }
 

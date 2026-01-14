@@ -1,21 +1,21 @@
 package com.clt.evaluation_system_backend.service.impl;
 
 import com.clt.evaluation_system_backend.dto.filter.TargetFilter;
+import com.clt.evaluation_system_backend.dto.request.BossRevRequest;
 import com.clt.evaluation_system_backend.dto.request.FormRequest;
 import com.clt.evaluation_system_backend.dto.request.FormSubmRequest;
 import com.clt.evaluation_system_backend.dto.request.form.CreateFormTemplateRequest;
 import com.clt.evaluation_system_backend.dto.response.*;
-import com.clt.evaluation_system_backend.mapper.CriteriaCueMapper;
-import com.clt.evaluation_system_backend.mapper.CriteriaMapper;
-import com.clt.evaluation_system_backend.mapper.FormMapper;
+import com.clt.evaluation_system_backend.exception.AnyException;
+import com.clt.evaluation_system_backend.mapper.*;
 import com.clt.evaluation_system_backend.model.*;
 import com.clt.evaluation_system_backend.dto.request.SubmissionDataRequest;
 import com.clt.evaluation_system_backend.dto.row.FormSubmissionRow;
 import com.clt.evaluation_system_backend.exception.FormException;
-import com.clt.evaluation_system_backend.mapper.TargetMapper;
 import com.clt.evaluation_system_backend.model.Form;
 import com.clt.evaluation_system_backend.service.FormService;
 import com.clt.evaluation_system_backend.service.SeqService;
+import com.clt.evaluation_system_backend.util.CommonMethods;
 import com.clt.evaluation_system_backend.util.JsonHelper;
 
 import lombok.AccessLevel;
@@ -24,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -35,6 +36,9 @@ public class FormServiceImpl implements FormService {
     private final SeqService seqService;
     private final CriteriaCueMapper criteriaCueMapper;
     private final CriteriaMapper criteriaMapper;
+    private final EmpMapper empMapper;
+    private final BossRevMapper bossRevMapper;
+
 
     @Override
     public FormTmplResponse findFormTmplResponse(FormRequest request) {
@@ -191,11 +195,62 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public SubmissionDataResponse getSubmissionData(SubmissionDataRequest request) {
+        String userId = CommonMethods.getCurrentUsrId();
+        String empNo = empMapper.selectEmployeeNoByUserId(userId);
+        if (empNo == null) {
+            throw new AnyException("Notfound employeeNo from id of user");
+        }
         SubmissionDataResponse response = new SubmissionDataResponse();
+
+        boolean isOwnerAccess = false;
+        if(request.getEmployeeNo()==null) {
+            request.setEmployeeNo(empNo);
+            isOwnerAccess = true;
+        }
+
         // get form subm
         List<FormSubmissionRow> formSubmissionRowList = formMapper.selectFormSubmission(request);
+        if(formSubmissionRowList.isEmpty()) {
+            throw new AnyException("Not in review session");
+        }
         response.setFormSubmission(formSubmissionRowList);
 
+        LocalDate reviewDate = response.getReviewDate();
+        LocalDate now = LocalDate.now();
+        boolean isDifferentMonthOrYear =
+                reviewDate != null &&
+                        (reviewDate.getYear() != now.getYear()
+                                || reviewDate.getMonthValue() != now.getMonthValue());
+        if(isDifferentMonthOrYear) {
+            throw new AnyException("Not in review session");
+        }
+
+        if(isOwnerAccess) {
+            if("PENDING".equals(response.getSubmissionStatus())) {
+                response.setRevRoleList("SELF");
+            } else {
+                response.setRevRoleList("NOTHING");
+            }
+        } else {
+            BossRevRequest r = new BossRevRequest();
+            r.setEmployeeNo(response.getEmployeeNo());
+            r.setFormSubmissionId(response.getFormSubmissionId());
+            List<BossReviewResponse> bossList = bossRevMapper.select(r);
+            BossReviewResponse boss = bossList.stream()
+                    .filter(b -> empNo.equals(b.getBossNo()))
+                    .findFirst()
+                    .orElse(null);
+            if(boss==null) {
+                throw new AnyException("You do not have permission to access this page");
+            } else {
+                String bossRole = boss.getBossReviewRole();
+                if(bossRole.equals(response.getSubmissionStatus())) {
+                    response.setRevRoleList(bossRole);
+                } else {
+                    response.setRevRoleList("NOTHING");
+                }
+            }
+        }
         // get form template
         String formId = response.getFormId();
         FormRequest formRequest = new FormRequest();
