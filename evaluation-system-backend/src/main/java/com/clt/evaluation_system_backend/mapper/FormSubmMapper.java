@@ -1,6 +1,7 @@
 package com.clt.evaluation_system_backend.mapper;
 
 import com.clt.evaluation_system_backend.dto.response.FormSubmResponse;
+import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
 import com.clt.evaluation_system_backend.dto.response.form.submit.FormSubmitWithEmployeeResponse;
 import com.clt.evaluation_system_backend.model.FormSubm;
 import org.apache.ibatis.annotations.Param;
@@ -17,4 +18,6 @@ public interface FormSubmMapper {
     void insertListFormSubmit(List<FormSubm> formSubmitList);
 
     List<FormSubmitWithEmployeeResponse> selectFormSubmitWithEmployeeByStatus(@Param("formSubmitStatus") String formSubmitStatus);
+
+    SubmissionDataResponse selectProgressingFormSubmission(@Param("userId") String userId);
 }

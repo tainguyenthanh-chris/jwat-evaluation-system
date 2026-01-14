@@ -3,6 +3,9 @@ package com.clt.evaluation_system_backend.service.impl;
 import java.util.List;
 
 import com.clt.evaluation_system_backend.dto.response.AdmEmployeeResponse;
+import com.clt.evaluation_system_backend.mapper.UsrMapper;
+import com.clt.evaluation_system_backend.model.Usr;
+import com.clt.evaluation_system_backend.util.CommonMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +18,21 @@ public class EmpServiceImpl implements EmpService {
 
     @Autowired
     private EmpMapper empMapper;
+    @Autowired
+    UsrMapper usrMapper;
 
     @Override
     public List<Emp> getEmpListByCurrentBoss() {
-        // String usrId = CommonMethods.getCurrentUsrId();
-        // Usr currentUsr = usrMapper.findById(usrId);
-        // if (currentUsr == null) {
-        // throw new RuntimeException("User not found: " + usrId);
-        // }
-        // Emp executor = empMapper.findByEmail(currentUsr.getUsrEmail());
-        // if (executor == null) {
-        // throw new RuntimeException("Employee not found for user: " + usrId);
-        // }
-        List<Emp> empList = empMapper.findEmpByBossNo("41001");
+         String usrId = CommonMethods.getCurrentUsrId();
+         Usr currentUsr = usrMapper.findById(usrId);
+         if (currentUsr == null) {
+         throw new RuntimeException("User not found: " + usrId);
+         }
+         Emp executor = empMapper.findByEmail(currentUsr.getUsrEmail());
+         if (executor == null) {
+         throw new RuntimeException("Employee not found for user: " + usrId);
+         }
+        List<Emp> empList = empMapper.findEmpByBossNo(executor.getEmpNo());
         return empList;
     }
 

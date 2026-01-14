@@ -118,6 +118,7 @@ public class FormServiceImpl implements FormService {
         form.setCreUsrId("SYSTEM");
 
         formMapper.insertForm(form);
+//        formMapper.insertFormDetails(form);
 
         List<FormDetail> allDetails = new ArrayList<>();
         List<Criteria> criteriaList = new ArrayList<>();

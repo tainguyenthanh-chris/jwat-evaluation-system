@@ -131,6 +131,15 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }: HeaderProps) => {
           </Flex>
         </ContainerFluid>
       </Box>
+      {/* <Box
+        position={"absolute"}
+        right={"0"}
+        width={"400px"}
+        height={"400px"}
+        bg={"blue.600"}
+        
+
+      ></Box> */}
     </Flex>
   );
 };

@@ -5,7 +5,7 @@ import type { SubmissionValueMap } from "./submissionValueMap";
 import type { Target } from "./target";
 
 export interface EvaluationData {
-    formSubmissionId?: string;
+  formSubmissionId?: string;
   formId?: string;
 
   employeeName?: string;

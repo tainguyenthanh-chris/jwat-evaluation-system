@@ -32,12 +32,12 @@ type Props = {
 export const protectedMenuList = protectedMenuListAll;
 
 const ProtectedRoute = ({ menuKey, children }: Props) => {
-  const userMenus = protectedMenuList;
-  // const userMenus = useAuthStore((state) => state.permissions);
+  // const userMenus = protectedMenuList;
+  const userMenus = useAuthStore((state) => state.permissions);
   // console.log("userMenus: " + JSON.stringify(userMenus, null, 2));
-  // if (!userMenus?.some((m) => m.toLowerCase() === menuKey.toLowerCase())) {
-  //   return <Navigate to="/403" replace />;
-  // }
+  if (!userMenus?.some((m) => m.toLowerCase() === menuKey.toLowerCase())) {
+    return <Navigate to="/403" replace />;
+  }
 
   return <>{children}</>;
 };

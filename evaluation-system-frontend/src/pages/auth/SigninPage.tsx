@@ -1,11 +1,14 @@
 import { Button, Card, Field, Input, Stack, Box } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { axiosInstant } from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import type { AxiosError } from "axios";
 
 export default function SigninPage() {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");

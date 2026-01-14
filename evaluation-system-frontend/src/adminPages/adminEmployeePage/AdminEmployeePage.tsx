@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import type { AdminEmployeeQuery } from "../../api/adminEmployeeApi";
 import { useAdminEmployee } from "../../hooks/useAdminEmployee";
@@ -26,6 +26,9 @@ const actionList = createListCollection({
 });
 
 const AdminEmployeePage = () => {
+  useEffect(() => {
+    document.title = "Employee Management";
+  }, []);
   // const adminEmployeeQuery: AdminEmployeeQuery = {
   //   // employeeNo: employeeInfo.employeeNo,
   // };

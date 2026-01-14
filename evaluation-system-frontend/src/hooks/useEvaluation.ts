@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchEvaluationData, postEvaluation } from "../api/evaluationApi";
+import { fetchEvaluationData, fetchProgressingEvaluation, postEvaluation } from "../api/evaluationApi";
 
 export interface EvaluationQuery {
   employeeNo?: string;
@@ -36,4 +36,16 @@ export const useSubmitEvaluation = () => {
     },
   });
   
+};
+
+export const useProgressingEvaluation = (query: EvaluationQuery) => {
+  const queryKey = [
+    "progressing-evaluation-data"
+  ];
+
+  return useQuery({
+    queryKey,
+    queryFn: () => fetchProgressingEvaluation(query),
+    // enabled,
+  });
 };

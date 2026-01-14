@@ -8,6 +8,7 @@
         SELECT
             FS.rev_dt AS reviewDate,
             FS.form_subm_id AS formSubmissionId,
+            FS.form_subm_status AS formSubmissionStatus,
             STRING_AGG(
             SS.sec_title || ':' || SS.sum_point,
             ', '

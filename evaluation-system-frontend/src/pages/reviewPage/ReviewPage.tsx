@@ -26,6 +26,7 @@ export type SubmitEvaluationPayload = {
   currentTargetList: Partial<Target>[];
   summarySubmissionList: Partial<SummarySubmission>[];
   newLevel: string;
+  employeeNo: string;
 };
 
 export type SummarySubmission = {
@@ -46,6 +47,9 @@ const levelOptions = [
 ];
 
 const ReviewPage = () => {
+  useEffect(() => {
+    document.title = "Review";
+  }, []);
   const { employeeNo } = useParams<{
     employeeNo: string;
   }>();
@@ -129,7 +133,9 @@ const ReviewPage = () => {
       formSubmissionId: submissionInfo.formSubmissionId!,
       summarySubmissionList: summarySubmissionList,
       newLevel,
+      employeeNo: submissionInfo.employeeNo ?? "",
     };
+    // console.log("payload: " + JSON.stringify(payload, null, 2));
     try {
       await submitMutation.mutateAsync(payload);
       navigate("/history");

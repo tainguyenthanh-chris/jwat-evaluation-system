@@ -1,5 +1,6 @@
 package com.clt.evaluation_system_backend.service.impl;
 
+import com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,11 @@ public class FormSubmServiceImpl implements FormSubmService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to update form ID for employee ID: " + request.getEmpId(), e);
         }
+    }
+
+    @Override
+    public SubmissionDataResponse checkProgressingEvaluation(String userId) {
+        return formSubmMapper.selectProgressingFormSubmission(userId);
     }
 
 }

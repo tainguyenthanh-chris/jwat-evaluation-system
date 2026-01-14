@@ -13,6 +13,7 @@ public class SummaryTableResponse {
     private String reviewDate;
     private String formSubmissionId;
     private List<SummaryItem> summaryData = new ArrayList<>();
+    private String formSubmissionStatus;
 
     @JsonIgnore
     private String summaryDataRaw;

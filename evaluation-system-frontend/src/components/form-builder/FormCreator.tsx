@@ -9,7 +9,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstant, type ApiResponse } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
-import type { SelectionContextRef } from "../../pages/form/FormBuilderPage";
+import type { SelectionContextRef } from "../../adminPages/adminEmployeePage/form/FormBuilderPage";
 import type { Criteria } from "../../types/criteria";
 
 export type AddFormTemplate = {

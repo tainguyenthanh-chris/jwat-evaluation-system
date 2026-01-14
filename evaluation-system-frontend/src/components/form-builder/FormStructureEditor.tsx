@@ -22,8 +22,9 @@ import { axiosInstant } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
 import { queryClient } from "../../lib/queryClient";
 import { useReviewConfigs } from "../../context/ReviewConfigContext";
-import type { SelectionContextRef } from "../../pages/form/FormBuilderPage";
+import type { SelectionContextRef } from "../../adminPages/adminEmployeePage/form/FormBuilderPage";
 import type { Criteria } from "../../types/criteria";
+import SelectOrCreateInput from "../SelectOrCreateInput";
 
 type AddSectionForm = {
   sectionTitle: string;
@@ -191,6 +192,13 @@ export const FormStructureEditor = forwardRef<
                             // },
                           })}
                         />
+                        {/* <SelectOrCreateInput
+                          // options={levelOptions}
+                          placeholder="Select or type level"
+                          onSubmit={(val) => {
+                            // setNewLevel(val);
+                          }}
+                        /> */}
                         {/* {filteredSuggestions.length > 0 && (
                           <Box
                             mt={1}

@@ -7,7 +7,15 @@ type Props = {
   formSubmissionId: string;
   reviewDate: string;
   summaryData: SummaryItem[];
+  formSubmissionStatus: string;
 };
+
+export function getStatus(formSubmissionStatus?: string): string {
+  if (!formSubmissionStatus) return "Next reviewer: No information";
+  if (formSubmissionStatus === "PENDING") return "Next reviewer: Employee";
+  if (formSubmissionStatus === "FINAL") return "Final";
+  return "Next reviewer: " + formSubmissionStatus;
+}
 
 const getComment = (grade?: string) => {
   console.log(grade);
@@ -43,6 +51,7 @@ const SummaryTable: React.FC<Props> = ({
   formSubmissionId,
   reviewDate,
   summaryData,
+  formSubmissionStatus,
 }) => {
   const avgFinal = calcAvgFinal(summaryData);
   // const finalLeaderGrade: string | null = null;
@@ -65,10 +74,22 @@ const SummaryTable: React.FC<Props> = ({
         {/* ================= HEADER ================= */}
         <Table.Header>
           {/* TITLE */}
-          <Table.Row bg="blue.900">
+          <Table.Row
+            bg={formSubmissionStatus !== "FINAL" ? "green.200" : "white"}
+          >
             <Table.Cell colSpan={summaryData.length + 2} textAlign="center">
-              <Text color="white" fontWeight="bold" fontSize="lg">
-                SUMMARY {reviewDate}
+              <Text color="blue.900" fontWeight="bold" fontSize="lg">
+                SUMMARY {reviewDate}{" "}
+                <Text
+                  as="span"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  color="blue.900"
+                  ml={2}
+                  fontStyle={"italic"}
+                >
+                  ({getStatus(formSubmissionStatus)})
+                </Text>
               </Text>
             </Table.Cell>
           </Table.Row>

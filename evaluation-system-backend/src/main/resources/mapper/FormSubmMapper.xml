@@ -147,4 +147,20 @@
         WHERE fs.form_subm_status = #{formSubmitStatus}
           AND fs.del_flg = 'F'
     </select>
+
+
+    <select id="selectProgressingFormSubmission" resultType="com.clt.evaluation_system_backend.dto.response.SubmissionDataResponse">
+        SELECT
+            FS.form_subm_id AS formSubmissionId,
+            FS.form_subm_status AS submissionStatus
+        FROM form_subm FS
+                 JOIN emp E ON E.emp_no = FS.emp_no
+                 LEFT JOIN usr U ON u.usr_email = E.emp_email
+        WHERE
+            FS.form_subm_status != 'FINAL'
+          AND FS.del_flg = 'F'
+--           AND EXTRACT(YEAR FROM FS.rev_dt) = EXTRACT(YEAR FROM CURRENT_DATE)
+--           AND EXTRACT(MONTH FROM FS.rev_dt) = EXTRACT(MONTH FROM CURRENT_DATE)
+          AND U.usr_id = #{userId};
+    </select>
 </mapper>

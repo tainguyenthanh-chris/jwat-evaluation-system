@@ -8,6 +8,7 @@ import { useAdminReviewingEmployee } from "../../hooks/useAdminReviewingEmployee
 import { axiosInstant } from "../../lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { toaster } from "../../components/ui/toaster";
+import { useEffect } from "react";
 
 export interface EmployeeProgress {
   employeeName: string;
@@ -24,12 +25,15 @@ interface RemindEmployeeRequest {
 
 const EvaluationProgressPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Evaluation Progress";
+  }, []);
 
   const adminReviewingEmployeeQuery: AdminReviewingEmployeeQuery = {
     bossNo: "258400",
   };
   const { data } = useAdminReviewingEmployee(adminReviewingEmployeeQuery);
-  console.log("Data: " + JSON.stringify(data, null, 2));
+  // console.log("Data: " + JSON.stringify(data, null, 2));
 
   const handleReviewClick = (employeeNo: string) => {
     navigate(`/review/employee/${employeeNo}`);

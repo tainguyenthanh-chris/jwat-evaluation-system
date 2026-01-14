@@ -128,8 +128,14 @@
         FROM boss_rev BR
             LEFT JOIN emp E ON E.emp_no = BR.boss_no
         WHERE BR.del_flg ='F'
-            AND BR.form_subm_id IS NULL
-
+            <choose>
+                <when test="formSubmissionId != null">
+                    AND BR.form_subm_id = #{formSubmissionId}
+                </when>
+                <otherwise>
+                    AND BR.form_subm_id IS NULL
+                </otherwise>
+            </choose>
             <if test="employeeNo != null">
                 AND BR.emp_no = #{employeeNo}
             </if>

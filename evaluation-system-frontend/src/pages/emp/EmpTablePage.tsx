@@ -12,6 +12,10 @@ const EmpTablePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    document.title = "My Employee List";
+  }, []);
+
   const getEmployeesByBoss = async () => {
     setIsLoading(true);
     setError(null);

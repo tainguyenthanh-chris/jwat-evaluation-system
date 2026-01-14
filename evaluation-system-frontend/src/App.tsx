@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ReviewPage from "./pages/reviewPage/ReviewPage";
-import FormBuilderPage from "./pages/form/FormBuilderPage";
+import FormBuilderPage from "./adminPages/adminEmployeePage/form/FormBuilderPage";
 import EvaluationProgressPage from "./pages/evaluationProgress/EvaluationProgressPage";
 import EmpTablePage from "./pages/emp/EmpTablePage";
 import HistoryPage from "./pages/historyPage/HistoryPage";

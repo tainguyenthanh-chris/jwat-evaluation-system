@@ -3,11 +3,14 @@ import SummaryTable from "./components/SummaryTable";
 import type { SummaryTableQuery } from "../../api/summaryTableApi";
 import { useSummaryTable } from "../../hooks/useSummaryTable";
 import { LuSearch } from "react-icons/lu";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import type { EvaluationQuery } from "../../hooks/useEvaluation";
 
 const HistoryPage = () => {
+  useEffect(() => {
+    document.title = "History";
+  }, []);
   const { employeeNo } = useParams<{
     employeeNo: string;
   }>();
@@ -17,18 +20,19 @@ const HistoryPage = () => {
   const employeeNoList = (location.state?.employeeNoList as string[]) ?? [];
 
   if (employeeNo && !employeeNoList.includes(employeeNo)) {
-    console.log("403:" + employeeNo);
-    console.log(employeeNoList);
+    // console.log("403:" + employeeNo);
+    // console.log(employeeNoList);
     return <Navigate to="/403" replace />;
   }
 
   const employeeInfo = {
-    employeeNo: employeeNo ? employeeNo : "258157",
+    employeeNo: employeeNo ? employeeNo : "",
   };
   const summaryTableQuery: SummaryTableQuery = {
     employeeNo: employeeInfo.employeeNo,
   };
   const { data } = useSummaryTable(summaryTableQuery);
+
   // console.log("data:" + JSON.stringify(data, null, 2));
   const [searchInput, setSearchInput] = useState<string>("");
   const filteredData = useMemo(() => {
@@ -68,6 +72,7 @@ const HistoryPage = () => {
               reviewDate={item.reviewDate}
               summaryData={item.summaryData}
               formSubmissionId={item.formSubmissionId}
+              formSubmissionStatus={item.formSubmissionStatus}
             />
           ))
         ) : (

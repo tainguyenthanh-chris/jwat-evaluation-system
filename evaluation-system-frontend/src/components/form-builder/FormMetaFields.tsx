@@ -4,61 +4,177 @@ import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { Field, Flex, Input, NativeSelect } from "@chakra-ui/react";
 
 const departments = [
-  { departmentId: "dep1", departmentName: "HR", departmentCode: "HR" },
-  { departmentId: "dep2", departmentName: "IT", departmentCode: "IT" },
-  { departmentId: "dep3", departmentName: "Finance", departmentCode: "FIN" },
   {
-    departmentId: "dep4",
-    departmentName: "Marketing",
-    departmentCode: "MKT",
+    departmentId: "dept20250101001",
+    departmentName: "IT",
+    departmentCode: "IT",
   },
+
+  {
+    departmentId: "dept20250101002",
+    departmentName: "HR",
+    departmentCode: "HR",
+  },
+  // { departmentId: "dep3", departmentName: "Finance", departmentCode: "FIN" },
+  // {
+  //   departmentId: "dep4",
+  //   departmentName: "Marketing",
+  //   departmentCode: "MKT",
+  // },
 ] as const;
 
 const positions = [
   {
-    positionId: "pos1",
-    positionName: "HR Executive",
-    positionCode: "HR_EX",
-    departmentId: "dep1",
-  },
-  {
-    positionId: "pos2",
-    positionName: "HR Manager",
-    positionCode: "HR_MGR",
-    departmentId: "dep1",
-  },
-  {
-    positionId: "pos3",
-    positionName: "Software Engineer",
+    positionId: "pos20250101001",
+    positionName: "Developer",
     positionCode: "DEV",
-    departmentId: "dep2",
+    departmentId: "dept20250101001",
+  },
+  {
+    positionId: "pos20250101002",
+    positionName: "Tester",
+    positionCode: "TESTER",
+    departmentId: "dept20250101001",
+  },
+  {
+    positionId: "pos20250101003",
+    positionName: "Business Analyst",
+    positionCode: "BA",
+    departmentId: "dept20250101001",
+  },
+  {
+    positionId: "pos20250101004",
+    positionName: "IT Operations",
+    positionCode: "OPS",
+    departmentId: "dept20250101001",
+  },
+
+  {
+    positionId: "pos20250101005",
+    positionName: "HR Generalist",
+    positionCode: "HRG",
+    departmentId: "dept20250101002",
+  },
+  {
+    positionId: "pos20250101006",
+    positionName: "Recruiter",
+    positionCode: "REC",
+    departmentId: "dept20250101002",
+  },
+  {
+    positionId: "pos20250101007",
+    positionName: "HR Admin",
+    positionCode: "ADM",
+    departmentId: "dept20250101002",
   },
 ];
 
 const levels = [
   {
-    levelId: "lvl1",
-    levelCode: "INTERN",
-    levelName: "Intern",
-    positionId: "pos1",
+    levelId: "lvl20250101001",
+    levelCode: "FRESHER",
+    levelName: "Fresher",
+    positionId: "pos20250101001",
   },
   {
-    levelId: "lvl2",
+    levelId: "lvl20250101002",
     levelCode: "JUNIOR",
     levelName: "Junior",
-    positionId: "pos1",
+    positionId: "pos20250101001",
   },
   {
-    levelId: "lvl3",
+    levelId: "lvl20250101003",
     levelCode: "MIDDLE",
     levelName: "Middle",
-    positionId: "pos2",
+    positionId: "pos20250101001",
   },
   {
-    levelId: "lvl4",
+    levelId: "lvl20250101004",
     levelCode: "SENIOR",
     levelName: "Senior",
-    positionId: "pos3",
+    positionId: "pos20250101001",
+  },
+
+  {
+    levelId: "lvl20250101005",
+    levelCode: "FRESHER",
+    levelName: "Fresher",
+    positionId: "pos20250101002",
+  },
+  {
+    levelId: "lvl20250101006",
+    levelCode: "JUNIOR",
+    levelName: "Junior",
+    positionId: "pos20250101002",
+  },
+  {
+    levelId: "lvl20250101007",
+    levelCode: "MIDDLE",
+    levelName: "Middle",
+    positionId: "pos20250101002",
+  },
+  {
+    levelId: "lvl20250101008",
+    levelCode: "SENIOR",
+    levelName: "Senior",
+    positionId: "pos20250101002",
+  },
+
+  {
+    levelId: "lvl20250101009",
+    levelCode: "FRESHER",
+    levelName: "Fresher",
+    positionId: "pos20250101003",
+  },
+  {
+    levelId: "lvl20250101010",
+    levelCode: "JUNIOR",
+    levelName: "Junior",
+    positionId: "pos20250101003",
+  },
+  {
+    levelId: "lvl20250101011",
+    levelCode: "MIDDLE",
+    levelName: "Middle",
+    positionId: "pos20250101003",
+  },
+  {
+    levelId: "lvl20250101012",
+    levelCode: "JUNIOR",
+    levelName: "Junior",
+    positionId: "pos20250101003",
+  },
+
+  {
+    levelId: "lvl20250101013",
+    levelCode: "MIDDLE",
+    levelName: "Middle",
+    positionId: "pos20250101004",
+  },
+  {
+    levelId: "lvl20250101014",
+    levelCode: "SENIOR",
+    levelName: "Senior",
+    positionId: "pos20250101004",
+  },
+
+  {
+    levelId: "lvl20250101015",
+    levelCode: "JUNIOR",
+    levelName: "Junior",
+    positionId: "pos20250101005",
+  },
+  {
+    levelId: "lvl20250101016",
+    levelCode: "MIDDLE",
+    levelName: "Middle",
+    positionId: "pos20250101005",
+  },
+  {
+    levelId: "lvl20250101017",
+    levelCode: "SENIOR",
+    levelName: "Senior",
+    positionId: "pos20250101005",
   },
 ];
 

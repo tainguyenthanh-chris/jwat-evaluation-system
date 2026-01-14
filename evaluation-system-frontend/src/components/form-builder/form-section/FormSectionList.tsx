@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { FormSectionItem } from "./FormSectionItem";
 import { toaster } from "../../ui/toaster";
-import type { SelectionContextRef } from "../../../pages/form/FormBuilderPage";
+import type { SelectionContextRef } from "../../../adminPages/adminEmployeePage/form/FormBuilderPage";
 import type { Criteria } from "../../../types/criteria";
 
 export type SectionCriteria = {
