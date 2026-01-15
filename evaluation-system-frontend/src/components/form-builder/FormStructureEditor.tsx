@@ -9,7 +9,13 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import {
@@ -22,9 +28,11 @@ import { axiosInstant } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
 import { queryClient } from "../../lib/queryClient";
 import { useReviewConfigs } from "../../context/ReviewConfigContext";
-import type { SelectionContextRef } from "../../adminPages/adminEmployeePage/form/FormBuilderPage";
+import type { SelectionContextRef } from "../../adminPages/form/FormBuilderPage";
 import type { Criteria } from "../../types/criteria";
-import SelectOrCreateInput from "../SelectOrCreateInput";
+import SelectOrCreateInput, { type SelectOption } from "../SelectOrCreateInput";
+import { useSection, type SectionQuery } from "../../hooks/useSection";
+import type { Section } from "./section/SectionItem";
 
 type AddSectionForm = {
   sectionTitle: string;
@@ -155,6 +163,16 @@ export const FormStructureEditor = forwardRef<
   //       s.toLowerCase().includes(keyword.toLowerCase())
   //     )
   //   : [];
+  // const sectionQuery: SectionQuery = {};
+  // const { data: sections = [] } = useSection(sectionQuery);
+  // const sectionOptions = useMemo<SelectOption[]>(() => {
+  //   return sections.map((s) => ({
+  //     label: s.sectionTitle,
+  //     value: s.sectionId,
+  //   }));
+  // }, [sections]);
+  // const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <Field.Root invalid={!!error}>
       <Field.Label>Form structure</Field.Label>
@@ -169,7 +187,10 @@ export const FormStructureEditor = forwardRef<
 
             <Card.Root>
               <Card.Body padding="16px">
-                <form onSubmit={handleSubmit(handleAddNewSection)}>
+                <form
+                  // ref={formRef}
+                  onSubmit={handleSubmit(handleAddNewSection)}
+                >
                   <Flex flexDirection="column" gap="16px">
                     <Text fontSize="md" fontWeight="semibold">
                       Add New Section
@@ -193,41 +214,12 @@ export const FormStructureEditor = forwardRef<
                           })}
                         />
                         {/* <SelectOrCreateInput
-                          // options={levelOptions}
-                          placeholder="Select or type level"
+                          options={sectionOptions}
+                          placeholder="Type or select section"
                           onSubmit={(val) => {
-                            // setNewLevel(val);
+                            formRef.current?.requestSubmit();
                           }}
                         /> */}
-                        {/* {filteredSuggestions.length > 0 && (
-                          <Box
-                            mt={1}
-                            border="1px solid"
-                            borderColor="gray.200"
-                            borderRadius="md"
-                            bg="white"
-                            zIndex={10}
-                          >
-                            {filteredSuggestions.map((item) => (
-                              <Box
-                                key={item}
-                                px={3}
-                                py={2}
-                                cursor="pointer"
-                                _hover={{ bg: "gray.100" }}
-                                onClick={() => {
-                                  setKeyword(item); // UI
-                                  // setValue("sectionTitle", item, {
-                                  //   shouldValidate: true,
-                                  //   shouldDirty: true,
-                                  // });
-                                }}
-                              >
-                                {item}
-                              </Box>
-                            ))}
-                          </Box>
-                        )} */}
 
                         {errors.sectionTitle && (
                           <Field.ErrorText>
@@ -277,7 +269,7 @@ export const FormStructureEditor = forwardRef<
                       size="sm"
                       colorPalette="blue"
                       alignSelf="flex-start"
-                      disabled={!isValid}
+                      // disabled={!isValid}
                     >
                       <FaPlus /> Add Section
                     </Button>

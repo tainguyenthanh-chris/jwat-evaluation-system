@@ -8,27 +8,27 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import AppCard from "../../../components/AppCard";
+import AppCard from "../../components/AppCard";
 import { FaArrowLeft } from "react-icons/fa";
 import {
   SectionList,
   type SectionListHandle,
-} from "../../../components/form-builder/section/SectionList";
-import type { Section } from "../../../components/form-builder/section/SectionItem";
+} from "../../components/form-builder/section/SectionList";
+import type { Section } from "../../components/form-builder/section/SectionItem";
 import {
   FormCreator,
   type FormCreatorHandler,
-} from "../../../components/form-builder/FormCreator";
+} from "../../components/form-builder/FormCreator";
 import { useQuery } from "@tanstack/react-query";
 import {
   ReviewConfigProvider,
   type ReviewConfig,
-} from "../../../context/ReviewConfigContext";
-import { axiosInstant, type ApiResponse } from "../../../lib/axios";
-import { useCriteria } from "../../../hooks/useCriteria";
-import type { SectionCriteria } from "../../../components/form-builder/form-section/FormSectionList";
-import { CriteriaList } from "../../../components/form-builder/criteria/CriteriaList";
-import type { Criteria } from "../../../types/criteria";
+} from "../../context/ReviewConfigContext";
+import { axiosInstant, type ApiResponse } from "../../lib/axios";
+import { useCriteria } from "../../hooks/useCriteria";
+import type { SectionCriteria } from "../../components/form-builder/form-section/FormSectionList";
+import { CriteriaList } from "../../components/form-builder/criteria/CriteriaList";
+import type { Criteria } from "../../types/criteria";
 
 export type SelectionContextRef = {
   selectedSectionIdRef: React.RefObject<string | null>;

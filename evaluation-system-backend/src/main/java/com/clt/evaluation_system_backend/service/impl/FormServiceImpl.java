@@ -107,27 +107,24 @@ public class FormServiceImpl implements FormService {
     @Override
     @Transactional
     public void createFormTemplate(CreateFormTemplateRequest request) {
+        String userId = CommonMethods.getCurrentUsrId();
         String formId = seqService.generateNewId(Form.class);
-
         Form form = new Form();
         form.setFormId(formId);
         form.setFormTitle(request.getFormTitle());
         form.setDeptCd(request.getDepartmentCode());
         form.setPosCd(request.getPositionCode());
         form.setLvlCd(request.getLevelCode());
-        form.setCreUsrId("SYSTEM");
+        form.setCreUsrId(userId);
 
         formMapper.insertForm(form);
-//        formMapper.insertFormDetails(form);
 
         List<FormDetail> allDetails = new ArrayList<>();
         List<Criteria> criteriaList = new ArrayList<>();
         List<CriteriaCue> criteriaCueList = new ArrayList<>();
 
         int fromDetailOrder = 1;
-
         for (CreateFormTemplateRequest.SectionDto section : request.getSectionList()) {
-
             FormDetail sectionDetail = new FormDetail();
             sectionDetail.setFormId(formId);
             sectionDetail.setSecId(section.getSectionId());
@@ -135,8 +132,7 @@ public class FormServiceImpl implements FormService {
             sectionDetail.setFormDetailOrdNo(fromDetailOrder++);
             sectionDetail.setFormDetailTitle(section.getSectionTitle());
             sectionDetail.setRevConfCd(section.getDefaultReviewConfigCode());
-            sectionDetail.setCreUsrId("SYSTEM");
-
+            sectionDetail.setCreUsrId(userId);
             allDetails.add(sectionDetail);
 
             List<CreateFormTemplateRequest.CriteriaDto> criteriaRequestList = section.getCriteriaList();
@@ -144,44 +140,53 @@ public class FormServiceImpl implements FormService {
             if (len == 0)
                 continue;
 
-            List<String> newIdList = seqService.generateListNewId(Criteria.class, len);
-
             for (int i = 0; i < len; i++) {
                 CreateFormTemplateRequest.CriteriaDto criteriaRequest = criteriaRequestList.get(i);
-
                 FormDetail criteriaDetail = new FormDetail();
+                criteriaDetail = new FormDetail();
                 criteriaDetail.setFormId(formId);
                 criteriaDetail.setSecId(null);
                 criteriaDetail.setParentSecId(section.getSectionId());
                 criteriaDetail.setFormDetailOrdNo(fromDetailOrder++);
                 criteriaDetail.setFormDetailTitle(criteriaRequest.getCriteriaTitle());
                 criteriaDetail.setRevConfCd(section.getReviewConfigType());
-                criteriaDetail.setCreUsrId("SYSTEM");
+                criteriaDetail.setCreUsrId(userId);
                 allDetails.add(criteriaDetail);
 
-                String criteriaId = newIdList.get(i);
                 Criteria newCriteria = new Criteria();
-                newCriteria.setCriteriaId(criteriaId);
                 newCriteria.setCriteriaCnt(criteriaRequest.getCriteriaTitle());
                 newCriteria.setSecId(section.getSectionId());
-                newCriteria.setCreUsrId("SYSTEM");
+                newCriteria.setCreUsrId(userId);
                 criteriaList.add(newCriteria);
 
-                List<CriteriaCue> sectionCueList = new ArrayList<>();
-                CriteriaCue deptCue = new CriteriaCue();
-                deptCue.setCriteriaCueId(seqService.generateNewId(CriteriaCue.class));
-                deptCue.setCriteriaId(criteriaId);
-                deptCue.setCueCd(request.getDepartmentCode());
-                sectionCueList.add(deptCue);
-
-                CriteriaCue posCue = new CriteriaCue();
-                posCue.setCriteriaCueId(seqService.generateNewId(CriteriaCue.class));
-                posCue.setCriteriaId(criteriaId);
-                posCue.setCueCd(request.getPositionCode());
-                sectionCueList.add(posCue);
-
-                criteriaCueList.addAll(sectionCueList);
             }
+        }
+
+        List<String> newIdList = seqService.generateListNewId(Criteria.class, criteriaList.size());
+        int i=0;
+        for(Criteria criteria : criteriaList){
+            criteria.setCriteriaId(newIdList.get(i));
+            i++;
+            CriteriaCue cue = new CriteriaCue();
+            cue.setCriteriaId(criteria.getCriteriaId());
+
+            if (request.getDepartmentCode() != null) {
+                CriteriaCue deptCue = new CriteriaCue();
+                deptCue.setCriteriaId(criteria.getCriteriaId());
+                deptCue.setCueCd(request.getDepartmentCode());
+                criteriaCueList.add(deptCue);
+            }
+
+            if (request.getPositionCode() != null) {
+                CriteriaCue posCue = new CriteriaCue();
+                posCue.setCriteriaId(criteria.getCriteriaId());
+                posCue.setCueCd(request.getPositionCode());
+                criteriaCueList.add(posCue);
+            }
+        }
+
+        for(CriteriaCue criteriaCue : criteriaCueList){
+            System.out.println(criteriaCue.toString());
         }
 
         formMapper.insertFormDetails(allDetails);

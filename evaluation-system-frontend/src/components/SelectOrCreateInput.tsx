@@ -70,10 +70,9 @@ const SelectOrCreateInput = ({
         onChange={(e) => handleInputChange(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            e.preventDefault(); // 👈 rất quan trọng
+            e.preventDefault();
             setOpen(false);
 
-            // báo giá trị hiện tại cho parent
             onChange?.(value);
             onSubmit?.(value);
           }

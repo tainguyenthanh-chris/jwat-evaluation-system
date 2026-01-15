@@ -1,5 +1,11 @@
 import { Card, Flex, Spinner, Text } from "@chakra-ui/react";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { SectionItem, type Section } from "./SectionItem";
 import { axiosInstant, type ApiResponse } from "../../../lib/axios";
@@ -11,6 +17,7 @@ import {
 } from "./SectionDialogs";
 import { queryClient } from "../../../lib/queryClient";
 import { toaster } from "../../ui/toaster";
+import { useSection, type SectionQuery } from "../../../hooks/useSection";
 
 export interface SectionListHandle {
   getSection: (sectionId: string) => Section | undefined;
@@ -37,22 +44,19 @@ export const SectionList = forwardRef<SectionListHandle, SectionListProps>(
     const [sectionsState, setSectionsState] = useState<Section[]>([]);
     const updateDialogRef = useRef<UpdateSectionDialogRef>(null);
     const deleteDialogRef = useRef<DeleteSectionDialogRef>(null);
-
+    const sectionQuery: SectionQuery = {};
     const {
-      // data: sections = [],
+      data: sections = [],
       isLoading,
       isError,
       error,
-    } = useQuery({
-      queryKey: ["sections"],
-      queryFn: async () => {
-        const response = await axiosInstant.get<ApiResponse<Section[]>>(
-          "/section"
-        );
-        setSectionsState(response.data.data);
-        return response.data.data;
-      },
-    });
+    } = useSection(sectionQuery);
+
+    useEffect(() => {
+      if (sections) {
+        setSectionsState(sections);
+      }
+    }, [sections]);
 
     const updateMutation = useMutation({
       mutationFn: async ({

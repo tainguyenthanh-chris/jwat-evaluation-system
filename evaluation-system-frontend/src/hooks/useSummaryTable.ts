@@ -7,8 +7,8 @@ export const useSummaryTable = (query: SummaryTableQuery) => {
   return useQuery({
     queryKey: ["summary-table", query],
     queryFn: () => getSummaryTable(query),
-    enabled:
-      !!query.employeeNo
+    // enabled:
+    //   !!query.employeeNo
   });
 };
 

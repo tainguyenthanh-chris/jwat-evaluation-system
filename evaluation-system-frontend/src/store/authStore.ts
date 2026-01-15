@@ -8,6 +8,7 @@ type AuthState = {
     roles: string[];
     permissions: string[];
     isAuthenticated: boolean;
+    username: string;
 
     login: (payload: LoginResponseData) => void;
     logout: () => void;
@@ -21,6 +22,7 @@ type LoginResponseData = {
     roles: string[];
     token: string;
     type: string;
+    username: string;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -32,6 +34,7 @@ export const useAuthStore = create<AuthState>()(
             roles: [],
             permissions: [],
             isAuthenticated: false,
+            username: "",
 
             login: (data) =>
                 set({
@@ -41,6 +44,7 @@ export const useAuthStore = create<AuthState>()(
                     roles: data.roles,
                     permissions: data.permissions,
                     isAuthenticated: true,
+                    username: data.username,
                 }),
 
             logout: () =>
@@ -51,6 +55,7 @@ export const useAuthStore = create<AuthState>()(
                     roles: [],
                     permissions: [],
                     isAuthenticated: false,
+                    username: "",
                 }),
 
             setAccessToken: (token) =>

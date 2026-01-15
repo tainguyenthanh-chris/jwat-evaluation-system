@@ -33,6 +33,10 @@ const HistoryPage = () => {
   };
   const { data } = useSummaryTable(summaryTableQuery);
 
+  useEffect(() => {
+    console.log(employeeInfo);
+  }, [employeeInfo]);
+
   // console.log("data:" + JSON.stringify(data, null, 2));
   const [searchInput, setSearchInput] = useState<string>("");
   const filteredData = useMemo(() => {

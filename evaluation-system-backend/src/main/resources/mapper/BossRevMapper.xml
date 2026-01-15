@@ -77,13 +77,34 @@
     </select>
 
     <insert id="insertBatchBossRev">
-        INSERT INTO boss_rev ( form_subm_id, emp_no, boss_no,
-        boss_rev_role, boss_rev_ord_no, isFinal, cre_usr_id, upd_usr_id ) VALUES
+        INSERT INTO boss_rev (
+        form_subm_id,
+        emp_no,
+        boss_no,
+        boss_rev_role,
+        boss_rev_ord_no,
+        isFinal,
+        cre_usr_id,
+        upd_usr_id
+        )
+        VALUES
         <foreach
-                collection="bossRevs" item="rev" separator=",">( #{formSubmId}, #{empNo},
-            #{rev.bossEmpNo}, #{rev.bossRevRole}, #{rev.orderNo}, 'F', 'default', 'default' )
+                collection="bossRevs"
+                item="rev"
+                separator=",">
+            (
+            #{formSubmId},
+            #{empNo},
+            #{rev.bossEmpNo},
+            #{rev.bossRevRole},
+            #{rev.orderNo},
+            'F',
+            'default',
+            'default'
+            )
         </foreach>
     </insert>
+
 
 
     <delete id="deleteBatchBossRev">

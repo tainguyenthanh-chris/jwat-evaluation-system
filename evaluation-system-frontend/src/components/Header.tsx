@@ -24,7 +24,7 @@ interface HeaderProps {
 
 const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }: HeaderProps) => {
   const navigate = useNavigate();
-  const { accessToken, refreshToken, logout } = useAuthStore();
+  const { accessToken, refreshToken, logout, username } = useAuthStore();
 
   const handleLogout = async () => {
     try {
@@ -34,6 +34,8 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }: HeaderProps) => {
     } catch (err) {
       console.error("Logout API failed", err);
     } finally {
+      console.log("true");
+
       logout();
       navigate("/login", { replace: true });
 
@@ -105,10 +107,15 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, isMobile }: HeaderProps) => {
 
               <Menu.Root positioning={{ placement: "bottom-end" }}>
                 <Menu.Trigger rounded="full" focusRing="outside">
-                  <Avatar.Root size="sm">
-                    <Avatar.Fallback name={"Hoang Ha"} />
-                    <Avatar.Image />
-                  </Avatar.Root>
+                  <Flex gap="8px" alignItems={"center"}>
+                    <Avatar.Root size="sm">
+                      <Avatar.Fallback name={username} />
+                      <Avatar.Image />
+                    </Avatar.Root>
+                    <Text fontStyle={"italic"}>
+                      Hi {username && ", " + username}
+                    </Text>
+                  </Flex>
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>

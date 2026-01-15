@@ -97,7 +97,6 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User userDetails = (User) authentication.getPrincipal();
         Usr usr = usrService.findByEmail(email);
-
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
@@ -126,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
         loginResponse.setEmail(userDetails.getUsername());
         loginResponse.setRoles(roles);
         loginResponse.setPermissions(permissions);
-
+        loginResponse.setUsername(emp!=null ? emp.getEmpNm() : "");
         return loginResponse;
     }
 

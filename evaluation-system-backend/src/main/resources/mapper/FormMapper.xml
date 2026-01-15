@@ -100,10 +100,27 @@
         ORDER BY FD.form_detail_ord_no;
     </select>
 
-    <insert id="insertSubmList"> INSERT INTO subm_value ( form_subm_id, form_detail_id,
-        subm_value_role, subm_value ) VALUES <foreach collection="list" item="item" separator=","> (
-        #{item.formSubmissionId}, #{item.formDetailId}, #{item.role}, #{item.value} ) </foreach>
+    <insert id="insertSubmList">
+        INSERT INTO subm_value (
+        form_subm_id,
+        form_detail_id,
+        subm_value_role,
+        subm_value
+        )
+        VALUES
+        <foreach
+                collection="list"
+                item="item"
+                separator=",">
+            (
+            #{item.formSubmissionId},
+            #{item.formDetailId},
+            #{item.role},
+            #{item.value}
+            )
+        </foreach>
     </insert>
+
 
     <select id="selectFormSubmission" resultType="com.clt.evaluation_system_backend.dto.row.FormSubmissionRow">
         SELECT
@@ -150,12 +167,40 @@
         WHERE
             SV.form_subm_id = #{formSubmissionId}
     </select>
-    <insert id="insertFormDetails" parameterType="java.util.List"> INSERT INTO form_detail (
-        form_id, sec_id, parent_sec_id, form_detail_ord_no, form_detail_title, rev_conf_cd,
-        cre_usr_id, cre_dt, del_flg ) VALUES <foreach collection="list" item="item" separator=","> (
-        #{item.formId}, #{item.secId}, #{item.parentSecId}, #{item.formDetailOrdNo},
-        #{item.formDetailTitle}, #{item.revConfCd}, #{item.creUsrId}, CURRENT_TIMESTAMP, 'F' ) </foreach>
+    <insert
+            id="insertFormDetails"
+            parameterType="java.util.List">
+
+        INSERT INTO form_detail (
+        form_id,
+        sec_id,
+        parent_sec_id,
+        form_detail_ord_no,
+        form_detail_title,
+        rev_conf_cd,
+        cre_usr_id,
+        cre_dt,
+        del_flg
+        )
+        VALUES
+        <foreach
+                collection="list"
+                item="item"
+                separator=",">
+            (
+            #{item.formId},
+            #{item.secId},
+            #{item.parentSecId},
+            #{item.formDetailOrdNo},
+            #{item.formDetailTitle},
+            #{item.revConfCd},
+            #{item.creUsrId},
+            CURRENT_TIMESTAMP,
+            'F'
+            )
+        </foreach>
     </insert>
+
 
     <resultMap id="FormResultMap" type="com.clt.evaluation_system_backend.model.Form">
         <id property="formId" column="form_id" />

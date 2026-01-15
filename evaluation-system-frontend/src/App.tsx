@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ReviewPage from "./pages/reviewPage/ReviewPage";
-import FormBuilderPage from "./adminPages/adminEmployeePage/form/FormBuilderPage";
+import FormBuilderPage from "./adminPages/form/FormBuilderPage";
 import EvaluationProgressPage from "./pages/evaluationProgress/EvaluationProgressPage";
 import EmpTablePage from "./pages/emp/EmpTablePage";
 import HistoryPage from "./pages/historyPage/HistoryPage";
@@ -22,10 +22,9 @@ function App() {
       <Toaster />
       <Routes>
         <Route path="/login" element={<SigninPage />} />
+        <Route path="/" element={<SigninPage />} />
 
         <Route element={<Layout />}>
-          {/* public */}
-          <Route path="/" element={<HomePage />} />
           {/* protected */}
           <Route
             path="/review"

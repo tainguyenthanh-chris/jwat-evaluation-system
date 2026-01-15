@@ -16,10 +16,26 @@
     </resultMap>
 
     <!-- Insert -->
-    <insert id="insert" parameterType="com.clt.evaluation_system_backend.model.LoggedOutToken">
-        INSERT INTO logged_out_token (token_id, expiry_date, cre_usr_id, upd_usr_id, del_flg)
-        VALUES (#{tokenId}, #{expiryDate}, #{creUsrId}, #{updUsrId}, #{delFlg})
+    <insert
+            id="insert"
+            parameterType="com.clt.evaluation_system_backend.model.LoggedOutToken">
+
+        INSERT INTO logged_out_token (
+            token_id,
+            expiry_date,
+            cre_usr_id,
+            upd_usr_id,
+            del_flg
+        )
+        VALUES (
+                   #{tokenId},
+                   #{expiryDate},
+                   #{creUsrId},
+                   #{updUsrId},
+                   #{delFlg}
+               )
     </insert>
+
 
     <!-- Find by token id (not deleted) -->
     <select id="findByTokenId"

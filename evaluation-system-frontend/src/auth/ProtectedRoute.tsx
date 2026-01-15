@@ -32,6 +32,10 @@ type Props = {
 export const protectedMenuList = protectedMenuListAll;
 
 const ProtectedRoute = ({ menuKey, children }: Props) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
   // const userMenus = protectedMenuList;
   const userMenus = useAuthStore((state) => state.permissions);
   // console.log("userMenus: " + JSON.stringify(userMenus, null, 2));

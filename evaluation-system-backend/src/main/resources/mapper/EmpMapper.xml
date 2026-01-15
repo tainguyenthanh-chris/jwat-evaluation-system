@@ -38,10 +38,28 @@
     </resultMap>
 
     <select id="findByEmail"
-        parameterType="string"
-        resultMap="EmpResultMap"> SELECT emp_id, emp_nm, emp_no, emp_email, comp_role_cd, dept_cd,
-        pos_cd, lvl_cd, salary_lvl, team_id, emp_status_cd, cre_usr_id, cre_dt, upd_usr_id, upd_dt,
-        del_flg FROM emp WHERE emp_email = #{email} AND del_flg = 'F' </select>
+            parameterType="string"
+            resultMap="EmpResultMap">
+        SELECT emp_id,
+               emp_nm,
+               emp_no,
+               emp_email,
+               comp_role_cd,
+               dept_cd,
+               pos_cd,
+               lvl_cd,
+               salary_lvl,
+               team_id,
+               emp_status_cd,
+               cre_usr_id,
+               cre_dt,
+               upd_usr_id,
+               upd_dt,
+               del_flg
+        FROM emp
+        WHERE emp_email = #{email}
+          AND del_flg = 'F'
+    </select>
 
 
     <resultMap id="EmpResultMapListAllBossRev"

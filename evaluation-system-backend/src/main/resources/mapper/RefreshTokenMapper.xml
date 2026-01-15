@@ -43,16 +43,35 @@
     <!-- ===================== -->
     <!-- insert -->
     <!-- ===================== -->
-    <insert id="insert"
+    <insert
+            id="insert"
             parameterType="com.clt.evaluation_system_backend.model.RefreshToken"
             useGeneratedKeys="true"
             keyProperty="refreshTokenId"
             keyColumn="refresh_token_id">
-        INSERT INTO refresh_token (token, expiry_date, usr_id,
-                                   cre_usr_id, cre_dt, upd_usr_id, upd_dt, del_flg)
-        VALUES (#{token}, #{expiryDate},
-                #{userId}, #{createBy}, #{createDate}, #{updateBy}, #{updateDate}, #{deleteFlag})
+
+        INSERT INTO refresh_token (
+            token,
+            expiry_date,
+            usr_id,
+            cre_usr_id,
+            cre_dt,
+            upd_usr_id,
+            upd_dt,
+            del_flg
+        )
+        VALUES (
+                   #{token},
+                   #{expiryDate},
+                   #{userId},
+                   #{createBy},
+                   #{createDate},
+                   #{updateBy},
+                   #{updateDate},
+                   #{deleteFlag}
+               )
     </insert>
+
 
     <!-- ===================== -->
     <!-- deleteByUser -->

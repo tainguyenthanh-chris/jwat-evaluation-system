@@ -9,7 +9,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstant, type ApiResponse } from "../../lib/axios";
 import { toaster } from "../ui/toaster";
-import type { SelectionContextRef } from "../../adminPages/adminEmployeePage/form/FormBuilderPage";
+import type { SelectionContextRef } from "../../adminPages/form/FormBuilderPage";
 import type { Criteria } from "../../types/criteria";
 
 export type AddFormTemplate = {
@@ -53,8 +53,8 @@ export const FormCreator = forwardRef<FormCreatorHandler, FormCreatorProps>(
           type: "success",
         });
 
-        metaRef.current?.reset();
-        structureRef.current?.clearSections();
+        // metaRef.current?.reset();
+        // structureRef.current?.clearSections();
       },
     });
 
@@ -73,6 +73,8 @@ export const FormCreator = forwardRef<FormCreatorHandler, FormCreatorProps>(
         levelCode: metaFormData!.levelCode!,
         sectionList: sectionData,
       };
+
+      console.log("payload: " + JSON.stringify(payload, null, 2));
 
       createFormTemplateMutation.mutate(payload);
     };

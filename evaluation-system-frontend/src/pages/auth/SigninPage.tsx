@@ -29,8 +29,15 @@ export default function SigninPage() {
       });
 
       loginStore(res.data.data);
-      navigate("/", { replace: true });
+      // console.log();
+      // navigate("/", { replace: true });
+
+      const userMenus = res.data.data.permissions;
+      if (!userMenus) navigate("/403");
+      navigate("/" + userMenus[0], { replace: true });
     } catch (err: unknown) {
+      console.log(err);
+
       const error = err as AxiosError<any>;
       setError(error.response?.data?.message || "Login failed");
     } finally {
